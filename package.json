@@ -2,7 +2,7 @@
   "name": "react-numeric-input",
   "version": "1.0.0",
   "description": "Numeric input component for react",
-  "main": "index.js",
+  "main": "src/NumericInput.jsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,0 +1,90 @@
+.numeric-input-wrap {
+  position: relative;
+  display: inline-block;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.numeric-input-wrap .numeric-input-input {
+  padding-right: 30px;
+  box-sizing: border-box;
+}
+.numeric-input-wrap .numeric-input-up,
+.numeric-input-wrap .numeric-input-down {
+  position: absolute;
+  right: 3px;
+  width: 2.2ex;
+  background: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+.numeric-input-wrap .numeric-input-up:hover,
+.numeric-input-wrap .numeric-input-down:hover {
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3);
+}
+.numeric-input-wrap .numeric-input-up:active,
+.numeric-input-wrap .numeric-input-down:active {
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.4);
+}
+.numeric-input-wrap .numeric-input-up {
+  top: 3px;
+  bottom: 50%;
+  border-radius: 2px 2px 0 0;
+  margin-bottom: 1px;
+}
+.numeric-input-wrap .numeric-input-up:after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  bottom: -1px;
+  left: -2px;
+}
+.numeric-input-wrap .numeric-input-down {
+  bottom: 3px;
+  top: 50%;
+  border-radius: 0 0 2px 2px;
+  margin-top: 1px;
+}
+.numeric-input-wrap .numeric-input-down:after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -3px;
+  bottom: -3px;
+  left: -2px;
+}
+.numeric-input-wrap .numeric-input-up-arrow,
+.numeric-input-wrap .numeric-input-down-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.numeric-input-wrap .numeric-input-up-arrow {
+  border-width: 0 0.6ex 0.6ex 0.6ex;
+  border-color: transparent transparent #999;
+  border-color: transparent transparent rgba(0, 0, 0, 0.7);
+  margin: -0.3ex 0 0 -0.6ex;
+}
+.numeric-input-wrap .numeric-input-down-arrow {
+  border-width: 0.6ex 0.6ex 0 0.6ex;
+  border-color: #999 transparent transparent;
+  border-color: rgba(0, 0, 0, 0.7) transparent transparent;
+  margin: -0.3ex 0 0 -0.6ex;
+}
+.disabled .numeric-input-up,
+.disabled .numeric-input-down {
+  opacity: 0.3;
+  pointer-events: none;
+  box-shadow: none;
+}
