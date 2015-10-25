@@ -1,0 +1,27 @@
+{
+  "name": "react-numeric-input",
+  "version": "1.0.0",
+  "description": "Numeric input component for react",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vlad-ignatov/react-numeric-input.git"
+  },
+  "keywords": [
+    "react",
+    "input",
+    "number",
+    "numeric",
+    "widget",
+    "component"
+  ],
+  "author": "Vladimir Ignatov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vlad-ignatov/react-numeric-input/issues"
+  },
+  "homepage": "https://github.com/vlad-ignatov/react-numeric-input#readme"
+}
