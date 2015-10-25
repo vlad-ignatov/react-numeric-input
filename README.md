@@ -18,7 +18,7 @@ var NumericInput = require('react-numeric-input');
 ## Usage
 ##### Minimal Usage:
 This will behave exactly like `<input type="number">`. It will create an empty numeric input that starts changing from zero. The difference that this works on any browser and does have the same appearance on each browser.
-```js
+```jsx
 <NumericInput/>
 // or:
 <NumericInput className="form-control"/>
@@ -26,19 +26,19 @@ This will behave exactly like `<input type="number">`. It will create an empty n
 
 ##### Typical Usage
 Most of the time you will need to specify `min`, `max` and `value`:
-```html
+```jsx
 <NumericInput min={0} max={100} value={50}/>
 ```
 
 #### Working with floats
 You can use to use `step` and `precision` props to make your input working with floating point numbers:
-```js
+```jsx
 <NumericInput step={0.1} precision={2} value={50.3}/>
 ```
 
 #### Custom format
 By default the component displays the value number as is. However, you can provide your own `format` function that will be called with the numeric value and is expected to return the string that will be rendered in the input:
-```js
+```jsx
 function myFormat(num) {
     return num + '$';
 }
