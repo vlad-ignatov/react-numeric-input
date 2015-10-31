@@ -1,12 +1,11 @@
-var React = require('react');
-var PropTypes = React.PropTypes;
+import { PropTypes, Component } from 'react';
 
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
 const SPEED        = 50;
 const DELAY        = 500;
 
-export default class NumericInput extends React.Component
+export default class NumericInput extends Component
 {
     static propTypes = {
         step      : PropTypes.number,
@@ -210,7 +209,7 @@ export default class NumericInput extends React.Component
             'precision',
             'parse',
             'format',
-            'className',
+            // 'className',
             'value'
         ];
         for (var key in this.props) {
