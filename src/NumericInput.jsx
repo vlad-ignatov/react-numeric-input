@@ -209,7 +209,6 @@ export default class NumericInput extends Component
             'precision',
             'parse',
             'format',
-            // 'className',
             'value'
         ];
         for (var key in this.props) {
@@ -239,19 +238,15 @@ export default class NumericInput extends Component
             btnUp : {
                 onMouseDown : this.increase.bind(this, false)
             },
-            btnUpArrow : {},
             btnDown : {
                 onMouseDown : this.decrease.bind(this, false)
-            },
-            btnDownArrow : {}
+            }
         };
 
         attrs.wrap.className.push('numeric-input-wrap');
         attrs.input.className.push('numeric-input-input');
-        attrs.btnUp.className        = 'numeric-input-up';
-        attrs.btnUpArrow.className   = 'numeric-input-up-arrow';
-        attrs.btnDown.className      = 'numeric-input-down';
-        attrs.btnDownArrow.className = 'numeric-input-down-arrow';
+        attrs.btnUp.className   = 'numeric-input-up';
+        attrs.btnDown.className = 'numeric-input-down';
 
         if (attrs.input.readOnly) {
             attrs.wrap.className.push('readonly');
@@ -267,12 +262,8 @@ export default class NumericInput extends Component
         return (
             <span {...attrs.wrap}>
                 <input {...attrs.input}/>
-                <a {...attrs.btnUp}>
-                    <b {...attrs.btnUpArrow}/>
-                </a>
-                <a {...attrs.btnDown}>
-                    <b {...attrs.btnDownArrow}/>
-                </a>
+                <a {...attrs.btnUp}/>
+                <a {...attrs.btnDown}/>
             </span>
         );
     }

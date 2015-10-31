@@ -10,11 +10,13 @@
     display : inline-block;
     .unselectable;
 
+    // The input ---------------------------------------------------------------
     .numeric-input-input {
         padding-right: 30px;
         box-sizing   : border-box;
     }
 
+    // The Up/Down buttons -----------------------------------------------------
     .numeric-input-up,
     .numeric-input-down {
         position   : absolute;
@@ -23,18 +25,25 @@
         background : rgba(0, 0, 0, 0.1);
         box-shadow : 0 0 0 0.5px rgba(0, 0, 0, 0.2);
         text-align : center;
+        cursor     : default;
+        opacity    : 0.75;
+        transition : all 0.2s;
 
-        &:hover {
-            background: rgba(0, 0, 0, 0.2);
-            box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3);
-        }
-
-        &:active {
-            background: rgba(0, 0, 0, 0.3);
-            box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.4);
+        // arrow triangles -----------------------------------------------------
+        &:before {
+            content     : '';
+            width       : 0;
+            height      : 0;
+            border-style: solid;
+            position    : absolute;
+            top         : 50%;
+            left        : 50%;
+            margin      : -0.3ex 0 0 -0.6ex;
+            .unselectable;
         }
     }
 
+    // Up button ---------------------------------------------------------------
     .numeric-input-up {
         top           : 3px;
         bottom        : 50%;
@@ -49,8 +58,15 @@
             bottom   : -1px;
             left     : -2px;
         }
+
+        &:before {
+            border-width: 0 0.6ex 0.6ex 0.6ex;
+            border-color: transparent transparent #999;
+            border-color: transparent transparent rgba(0, 0, 0, 0.7);
+        }
     }
 
+    // Down button -------------------------------------------------------------
     .numeric-input-down {
         bottom        : 3px;
         top           : 50%;
@@ -65,36 +81,46 @@
             bottom   : -3px;
             left     : -2px;
         }
+
+        &:before {
+            border-width: 0.6ex 0.6ex 0 0.6ex;
+            border-color: #999 transparent transparent;
+            border-color: rgba(0, 0, 0, 0.7) transparent transparent;
+        }
     }
 
-    .numeric-input-up-arrow,
-    .numeric-input-down-arrow {
-        width       : 0;
-        height      : 0;
-        border-style: solid;
-        position    : absolute;
-        top         : 50%;
-        left        : 50%;
-        .unselectable;
+    // Chnage some things on hover ---------------------------------------------
+    &:hover {
+        .numeric-input-up,
+        .numeric-input-down {
+            background : rgba(0, 0, 0, 0.1);
+            box-shadow : 0 0 0 0.5px rgba(0, 0, 0, 0.2);
+            opacity    : 1;
+        }
     }
 
-    .numeric-input-up-arrow {
-        border-width: 0 0.6ex 0.6ex 0.6ex;
-        border-color: transparent transparent #999;
-        border-color: transparent transparent rgba(0, 0, 0, 0.7);
-        margin      : -0.3ex 0 0 -0.6ex;
+    .numeric-input-up,
+    .numeric-input-down {
+        &:hover {
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3);
+        }
 
+        &:active {
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.4);
+        }
     }
 
-    .numeric-input-down-arrow {
-        border-width: 0.6ex 0.6ex 0 0.6ex;
-        border-color: #999 transparent transparent;
-        border-color: rgba(0, 0, 0, 0.7) transparent transparent;
-        margin      : -0.3ex 0 0 -0.6ex;
+    &.disabled {
+        pointer-events: none;
     }
 }
 
 .disabled {
+    .numeric-input-wrap {
+        pointer-events: none;
+    }
     .numeric-input-up, .numeric-input-down {
         opacity       : 0.3;
         pointer-events: none;
