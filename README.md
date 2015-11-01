@@ -5,6 +5,8 @@ the browsers. Additionally this component offers more flexible options and can
 be used for any values (differently formatted representations of the internal
 numeric value).
 
+[Live demo](http://react-numeric-input.jsdevel.com/)
+
 ## Installation
 ```sh
 npm install react-number-nput --save
@@ -74,6 +76,11 @@ This component comes with styles written in LESS and precompiled to CSS in
 * Setup less preprocessing from [src/style/NumericInput.less](./src/style/NumericInput.less) to wherever you need.
 * Use modern tool like webpack and then just do `require('node_modules/react-numeric-input/src/style/NumericInput.less');`.
   See [examples/examples.jsx](./examples/examples.jsx) for example.
+
+## Keyboard navigation
+* You can use <kbd>Up</kbd> and <kbd>Down</kbd> arrow keys to increment/decrement the input value.
+* <kbd>Ctrl/Command + Up</kbd> and <kbd>Ctrl/Command + Down</kbd> to use smaller step (`step / 10`).
+* <kbd>Shift + Up</kbd> and <kbd>Shift + Down</kbd> to use bigger step (`step * 10`).
 
 ## License
 MIT
