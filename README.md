@@ -1,6 +1,3 @@
-# Coming soon
-This component is still in development. Please do not use until 1.0.0!
-
 # React Numeric Input
 Number input component that can replace the native number input which is not yet
 very well supported and where it is, it does not have the same appearance across
