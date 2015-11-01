@@ -5,6 +5,8 @@ the browsers. Additionally this component offers more flexible options and can
 be used for any values (differently formatted representations of the internal
 numeric value).
 
+[Live demo](http://react-numeric-input.jsdevel.com/)
+
 ## Installation
 ```sh
 npm install react-number-nput --save
