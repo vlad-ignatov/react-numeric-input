@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>React number input examples</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
+        <style media="screen">
+            .code {
+                background: transparent;
+                font-family: Menlo, monospace;
+                font-size: 1.6rem !important;
+                white-space: pre-wrap;
+            }
+            fieldset {
+                margin: 30px 0 60px;
+            }
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-with-addons.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <fieldset>
+                        <legend class="text-success">Minimal Usage</legend>
+                        <p>
+                            This will behave exactly like <code>&lt;input type="number"></code>.
+                            It will create an empty numeric input that starts changing from zero.
+                            The difference is that this works on any browser and does have the same
+                            appearnce everywhere.
+                        </p>
+                        <blockquote>
+                            <div class="code jsx">&lt;NumericInput/></div>
+                            <script class="jsx" type="text/plain">{}</script>
+                        </blockquote>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-success">With className</legend>
+                        <p>
+                            You can use <code>className</code> for adding CSS classes.
+                            This component was designed play well with Bootstrap.
+                        </p>
+                        <blockquote>
+                            <div class="code jsx">&lt;NumericInput className="form-control"/></div>
+                            <script class="jsx" type="text/plain">{"className": "form-control"}</script>
+                        </blockquote>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-success">Typical Usage</legend>
+                        <p>
+                            Most of the time you will need to specify <code>min</code>,
+                            <code>max</code> and <code>value</code>:
+                        </p>
+                        <blockquote>
+                            <div class="code jsx">&lt;NumericInput min={0} max={100} value={50}/></div>
+                            <script class="jsx" type="text/plain">{"className": "form-control","min":0,"max":100,"value":50}</script>
+                        </blockquote>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-success">Working with floats</legend>
+                        <p>
+                            You can use to use <code>step</code> and <code>precision</code>
+                            props to make your input working with floating point numbers:
+                        </p>
+                        <blockquote>
+                            <div class="code jsx">&lt;NumericInput step={0.1} precision={2} value={50.3}/></div>
+                            <script class="jsx" type="text/plain">{"className":"form-control","step":0.1,"precision":2,"value":50.3}</script>
+                        </blockquote>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-success">Custom format</legend>
+                        <p>
+                            By default the component displays the value number as is. However,
+                            you can provide your own <code>format</code> funtion that will be
+                            called with the numeric value and is expected to return the string
+                            that will be rendered in the input:
+                        </p>
+                        <blockquote>
+<div class="code js">function myFormat(num) {
+    return num + '$';
+}</div>
+                            <div class="code jsx">&lt;NumericInput precision={2} value={50.3} step={0.1} format={myFormat}/></div>
+                            <script class="jsx" type="text/plain">
+                            {
+                                className: "form-control",
+                                precision: 2,
+                                value: 50.3,
+                                step: 0.1,
+                                readOnly: true,
+                                disabled: true,
+                                style: { color: 'red' },
+                                format: function(num) {
+                                    return num + '$';
+                                }
+                            }
+                            </script>
+                        </blockquote>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-success">Other HTML props</legend>
+                        <p>
+                            You can use any additional HTML attributes that make
+                            sence, just don't forget to camelCase them as JSX
+                            requires. Only the <code>type</code> attribute will
+                            be overriden to <code>text</code>. Here is an example:
+                        </p>
+<div class="code xml">&lt;NumericInput
+    name="my_number"
+    readOnly
+    disabled
+    autoComplete="on"
+    autoCorrect="on"
+    autoFocus
+    form="some-form"
+    placeholder="Please enter a number"
+    required
+    size="10"
+    spellcheck="false"
+    tabindex="5"/></div>
+                        <script class="jsx" type="text/plain">
+                        {
+                            name        : "my_number",
+                            readOnly    : false,
+                            disabled    : false,
+                            autoComplete: "on",
+                            autoCorrect : "on",
+                            autoFocus   : true,
+                            form        : "some-form",
+                            placeholder : "Please enter a number",
+                            required    : true,
+                            size        : "20",
+                            spellCheck  : "false",
+                            tabIndex    : "5"
+                        }
+                        </script>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <script src="examples.js"></script>
+    </body>
+</html>

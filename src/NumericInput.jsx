@@ -127,7 +127,7 @@ export default class NumericInput extends Component
     _onChange(e: Event): void
     {
         this.setState({
-            value: this.props.parse(e.target.value)
+            value: this._parse(e.target.value)
         });
     }
 
