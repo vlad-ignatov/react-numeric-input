@@ -55,13 +55,13 @@ function myFormat(num) {
 ## Options
 Option       | Type     |Default
 -------------|----------|:-------:
-**value**    |`number`  |null
-**min**      |`number`  |0
-**max**      |`number`  |100
+**value**    |`number`  |0
+**min**      |`number`  |`Number.MIN_SAFE_INTEGER`
+**max**      |`number`  |`Number.MAX_SAFE_INTEGER`
 **step**     |`number`  |1
 **precision**|`number`  |0
 **parse**    |`function`|parseFloat
-**format**   |`function`|null
+**format**   |`function`|none
 
 Any other option is passed directly the input created by the component. Just
 don't forget to camelCase the attributes. For example `readonly` must be `readOnly`.
