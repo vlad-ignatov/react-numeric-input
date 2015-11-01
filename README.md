@@ -1,4 +1,5 @@
-# React Numeric Input
+# <img align="right" src="http://react-numeric-input.jsdevel.com/ReactNumericInput.png" width="197"/>React Numeric Input
+
 Number input component that can replace the native number input which is not yet
 very well supported and where it is, it does not have the same appearance across
 the browsers. Additionally this component offers more flexible options and can
