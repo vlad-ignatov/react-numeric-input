@@ -113,11 +113,10 @@ export default class NumericInput extends Component
         let _n = this._toNumber(
             (this.state.value || 0) + this.state.step * n
         );
+
         if (_n !== this.state.value) {
             this.setState({ value: _n });
-            return false;
         }
-        return true;
     }
 
     /**
@@ -169,7 +168,7 @@ export default class NumericInput extends Component
     {
         this.stop();
         this._step(1);
-        if (this.state.value < this.props.max) {
+        if (isNaN(this.state.value) || this.state.value < this.props.max) {
             this._timer = setTimeout(() => {
                 this.increase(true);
             }, _recursive ? SPEED : DELAY);
@@ -188,7 +187,7 @@ export default class NumericInput extends Component
     {
         this.stop();
         this._step(-1);
-        if (this.state.value > this.props.min) {
+        if (isNaN(this.state.value) || this.state.value > this.props.min) {
             this._timer = setTimeout(() => {
                 this.decrease(true);
             }, _recursive ? SPEED : DELAY);
