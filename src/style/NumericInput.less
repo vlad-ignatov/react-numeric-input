@@ -20,8 +20,8 @@
     .numeric-input-up,
     .numeric-input-down {
         position   : absolute;
-        right      : 3px;
-        width      : 2.2ex;
+        right      : 2px;
+        width      : 2.26ex;
         background : rgba(0, 0, 0, 0.1);
         box-shadow : 0 0 0 0.5px rgba(0, 0, 0, 0.2);
         text-align : center;
@@ -45,10 +45,10 @@
 
     // Up button ---------------------------------------------------------------
     .numeric-input-up {
-        top           : 3px;
+        top           : 2px;
         bottom        : 50%;
-        border-radius : 2px 2px 0 0;
-        margin-bottom : 1px;
+        border-radius : 1px;
+        // margin-bottom : 1px;
 
         &:after {
             content  : '';
@@ -68,10 +68,10 @@
 
     // Down button -------------------------------------------------------------
     .numeric-input-down {
-        bottom        : 3px;
+        bottom        : 2px;
         top           : 50%;
-        border-radius : 0 0 2px 2px;
-        margin-top    : 1px;
+        border-radius : 1px;
+        // margin-top    : 1px;
 
         &:after {
             content  : '';
@@ -114,6 +114,22 @@
 
     &.disabled {
         pointer-events: none;
+    }
+
+    // Bootstrap styling -------------------------------------------------------
+    &.bs-form-control {
+        .numeric-input-up {
+            right: 3px;
+            top: 3px;
+            border-radius: 1px 2px 1px 1px;
+            margin-bottom : 1px;
+        }
+        .numeric-input-down {
+            right: 3px;
+            bottom: 3px;
+            border-radius: 1px 1px 2px 1px;
+            margin-top : 1px;
+        }
     }
 }
 

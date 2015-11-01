@@ -256,6 +256,11 @@ export default class NumericInput extends Component
         }
 
         attrs.input.className = attrs.input.className.join(' ');
+
+        if ((/\bform-control\b/).test(attrs.input.className)) {
+            attrs.wrap.className.push('bs-form-control');
+        }
+
         attrs.wrap.className  = attrs.wrap.className.join(' ');
 
         return (
