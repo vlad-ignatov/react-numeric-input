@@ -1,7 +1,8 @@
+/* global process */
 module.exports = function (config) {
     config.set({
-        browsers: [ 'Chrome' ],
-        singleRun: false,
+        browsers: [ process.env.CONTINUOUS_INTEGRATION ? 'Firefox' : 'Chrome' ],
+        singleRun: true,
         frameworks: [ 'mocha' ],
         files: [
             'https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-with-addons.js',
