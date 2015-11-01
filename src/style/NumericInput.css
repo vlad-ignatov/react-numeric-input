@@ -45,10 +45,10 @@
 .numeric-input-wrap .numeric-input-up:after {
   content: '';
   position: absolute;
-  top: -3px;
-  right: -3px;
+  top: -1px;
+  right: -1px;
   bottom: -1px;
-  left: -2px;
+  left: -1px;
 }
 .numeric-input-wrap .numeric-input-up:before {
   border-width: 0 0.6ex 0.6ex 0.6ex;
@@ -64,9 +64,9 @@
   content: '';
   position: absolute;
   top: -1px;
-  right: -3px;
-  bottom: -3px;
-  left: -2px;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
 }
 .numeric-input-wrap .numeric-input-down:before {
   border-width: 0.6ex 0.6ex 0 0.6ex;
@@ -93,12 +93,12 @@
   pointer-events: none;
 }
 .numeric-input-wrap.std input {
-  border: 0px solid transparent;
+  border: 1px solid #ccc;
   border-radius: 2px;
-  box-shadow: 0 0 1px 0px rgba(0, 0, 0, 0.8) inset;
   padding-left: 4px;
   display: block;
   -webkit-appearance: none;
+  line-height: normal;
 }
 .numeric-input-wrap.bs-form-control .numeric-input-up {
   right: 3px;

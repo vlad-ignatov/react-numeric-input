@@ -164,14 +164,20 @@ export default class NumericInput extends Component
      *  it is in recursive mode.
      * @return void
      */
-    increase(_recursive: boolean): void
+    increase(_recursive: boolean, doFocus: boolean, evt): void
     {
+        if (evt) {
+            evt.preventDefault();
+        }
         this.stop();
         this._step(1);
         if (isNaN(this.state.value) || this.state.value < this.props.max) {
             this._timer = setTimeout(() => {
                 this.increase(true);
             }, _recursive ? SPEED : DELAY);
+        }
+        if (doFocus) {
+            setTimeout(() => {this.refs.input.focus();});
         }
     }
 
@@ -183,14 +189,20 @@ export default class NumericInput extends Component
      *  it is in recursive mode.
      * @return void
      */
-    decrease(_recursive: boolean): void
+    decrease(_recursive: boolean, doFocus: boolean, evt): void
     {
+        if (evt) {
+            evt.preventDefault();
+        }
         this.stop();
         this._step(-1);
         if (isNaN(this.state.value) || this.state.value > this.props.min) {
             this._timer = setTimeout(() => {
                 this.decrease(true);
             }, _recursive ? SPEED : DELAY);
+        }
+        if (doFocus) {
+            setTimeout(() => {this.refs.input.focus();});
         }
     }
 
@@ -200,7 +212,9 @@ export default class NumericInput extends Component
      */
     render()
     {
-        var inputProps = {};
+        var inputProps = {
+            ref: 'input'
+        };
         var widgetProps = [
             'step',
             'min',
@@ -236,11 +250,11 @@ export default class NumericInput extends Component
             input : inputProps,
             btnUp : {
                 href: 'javascript:void 0',
-                onMouseDown : this.increase.bind(this, false)
+                onMouseDown : this.increase.bind(this, false, true)
             },
             btnDown : {
                 href: 'javascript:void 0',
-                onMouseDown : this.decrease.bind(this, false)
+                onMouseDown : this.decrease.bind(this, false, true)
             }
         };
 

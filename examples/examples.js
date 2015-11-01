@@ -270,15 +270,23 @@
 	         */
 	    }, {
 	        key: 'increase',
-	        value: function increase(_recursive) {
+	        value: function increase(_recursive, doFocus, evt) {
 	            var _this = this;
 
+	            if (evt) {
+	                evt.preventDefault();
+	            }
 	            this.stop();
 	            this._step(1);
 	            if (isNaN(this.state.value) || this.state.value < this.props.max) {
 	                this._timer = setTimeout(function () {
 	                    _this.increase(true);
 	                }, _recursive ? SPEED : DELAY);
+	            }
+	            if (doFocus) {
+	                setTimeout(function () {
+	                    _this.refs.input.focus();
+	                });
 	            }
 	        }
 
@@ -292,15 +300,23 @@
 	         */
 	    }, {
 	        key: 'decrease',
-	        value: function decrease(_recursive) {
+	        value: function decrease(_recursive, doFocus, evt) {
 	            var _this2 = this;
 
+	            if (evt) {
+	                evt.preventDefault();
+	            }
 	            this.stop();
 	            this._step(-1);
 	            if (isNaN(this.state.value) || this.state.value > this.props.min) {
 	                this._timer = setTimeout(function () {
 	                    _this2.decrease(true);
 	                }, _recursive ? SPEED : DELAY);
+	            }
+	            if (doFocus) {
+	                setTimeout(function () {
+	                    _this2.refs.input.focus();
+	                });
 	            }
 	        }
 
@@ -311,7 +327,9 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var inputProps = {};
+	            var inputProps = {
+	                ref: 'input'
+	            };
 	            var widgetProps = ['step', 'min', 'max', 'precision', 'parse', 'format', 'value'];
 	            for (var key in this.props) {
 	                if (widgetProps.indexOf(key) == -1) {
@@ -337,11 +355,11 @@
 	                input: inputProps,
 	                btnUp: {
 	                    href: 'javascript:void 0',
-	                    onMouseDown: this.increase.bind(this, false)
+	                    onMouseDown: this.increase.bind(this, false, true)
 	                },
 	                btnDown: {
 	                    href: 'javascript:void 0',
-	                    onMouseDown: this.decrease.bind(this, false)
+	                    onMouseDown: this.decrease.bind(this, false, true)
 	                }
 	            };
 
@@ -425,7 +443,7 @@
 
 
 	// module
-	exports.push([module.id, ".numeric-input-wrap {\n  position: relative;\n  display: inline-block;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.numeric-input-wrap .numeric-input-input {\n  padding-right: 3ex;\n  box-sizing: border-box;\n}\n.numeric-input-wrap .numeric-input-up,\n.numeric-input-wrap .numeric-input-down {\n  position: absolute;\n  right: 2px;\n  width: 2.26ex;\n  background: rgba(0, 0, 0, 0.1);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);\n  text-align: center;\n  cursor: default;\n  opacity: 0.75;\n  transition: all 0.2s;\n}\n.numeric-input-wrap .numeric-input-up:before,\n.numeric-input-wrap .numeric-input-down:before {\n  content: '';\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  margin: -0.3ex 0 0 -0.6ex;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.numeric-input-wrap .numeric-input-up {\n  top: 2px;\n  bottom: 50%;\n  border-radius: 1px;\n}\n.numeric-input-wrap .numeric-input-up:after {\n  content: '';\n  position: absolute;\n  top: -3px;\n  right: -3px;\n  bottom: -1px;\n  left: -2px;\n}\n.numeric-input-wrap .numeric-input-up:before {\n  border-width: 0 0.6ex 0.6ex 0.6ex;\n  border-color: transparent transparent #999;\n  border-color: transparent transparent rgba(0, 0, 0, 0.7);\n}\n.numeric-input-wrap .numeric-input-down {\n  bottom: 2px;\n  top: 50%;\n  border-radius: 1px;\n}\n.numeric-input-wrap .numeric-input-down:after {\n  content: '';\n  position: absolute;\n  top: -1px;\n  right: -3px;\n  bottom: -3px;\n  left: -2px;\n}\n.numeric-input-wrap .numeric-input-down:before {\n  border-width: 0.6ex 0.6ex 0 0.6ex;\n  border-color: #999 transparent transparent;\n  border-color: rgba(0, 0, 0, 0.7) transparent transparent;\n}\n.numeric-input-wrap:hover .numeric-input-up,\n.numeric-input-wrap:hover .numeric-input-down {\n  background: rgba(0, 0, 0, 0.1);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);\n  opacity: 1;\n}\n.numeric-input-wrap .numeric-input-up:hover,\n.numeric-input-wrap .numeric-input-down:hover {\n  background: rgba(0, 0, 0, 0.2);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3);\n}\n.numeric-input-wrap .numeric-input-up:active,\n.numeric-input-wrap .numeric-input-down:active {\n  background: rgba(0, 0, 0, 0.3);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.4);\n}\n.numeric-input-wrap.disabled {\n  pointer-events: none;\n}\n.numeric-input-wrap.std input {\n  border: 0px solid transparent;\n  border-radius: 2px;\n  box-shadow: 0 0 1px 0px rgba(0, 0, 0, 0.8) inset;\n  padding-left: 4px;\n  display: block;\n  -webkit-appearance: none;\n}\n.numeric-input-wrap.bs-form-control .numeric-input-up {\n  right: 3px;\n  top: 3px;\n  border-radius: 1px 2px 1px 1px;\n  margin-bottom: 1px;\n}\n.numeric-input-wrap.bs-form-control .numeric-input-down {\n  right: 3px;\n  bottom: 3px;\n  border-radius: 1px 1px 2px 1px;\n  margin-top: 1px;\n}\n.disabled .numeric-input-wrap {\n  pointer-events: none;\n}\n.disabled .numeric-input-up,\n.disabled .numeric-input-down {\n  opacity: 0.3;\n  pointer-events: none;\n  box-shadow: none;\n}\n", ""]);
+	exports.push([module.id, ".numeric-input-wrap {\n  position: relative;\n  display: inline-block;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.numeric-input-wrap .numeric-input-input {\n  padding-right: 3ex;\n  box-sizing: border-box;\n}\n.numeric-input-wrap .numeric-input-up,\n.numeric-input-wrap .numeric-input-down {\n  position: absolute;\n  right: 2px;\n  width: 2.26ex;\n  background: rgba(0, 0, 0, 0.1);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);\n  text-align: center;\n  cursor: default;\n  opacity: 0.75;\n  transition: all 0.2s;\n}\n.numeric-input-wrap .numeric-input-up:before,\n.numeric-input-wrap .numeric-input-down:before {\n  content: '';\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  margin: -0.3ex 0 0 -0.6ex;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.numeric-input-wrap .numeric-input-up {\n  top: 2px;\n  bottom: 50%;\n  border-radius: 1px;\n}\n.numeric-input-wrap .numeric-input-up:after {\n  content: '';\n  position: absolute;\n  top: -1px;\n  right: -1px;\n  bottom: -1px;\n  left: -1px;\n}\n.numeric-input-wrap .numeric-input-up:before {\n  border-width: 0 0.6ex 0.6ex 0.6ex;\n  border-color: transparent transparent #999;\n  border-color: transparent transparent rgba(0, 0, 0, 0.7);\n}\n.numeric-input-wrap .numeric-input-down {\n  bottom: 2px;\n  top: 50%;\n  border-radius: 1px;\n}\n.numeric-input-wrap .numeric-input-down:after {\n  content: '';\n  position: absolute;\n  top: -1px;\n  right: -1px;\n  bottom: -1px;\n  left: -1px;\n}\n.numeric-input-wrap .numeric-input-down:before {\n  border-width: 0.6ex 0.6ex 0 0.6ex;\n  border-color: #999 transparent transparent;\n  border-color: rgba(0, 0, 0, 0.7) transparent transparent;\n}\n.numeric-input-wrap:hover .numeric-input-up,\n.numeric-input-wrap:hover .numeric-input-down {\n  background: rgba(0, 0, 0, 0.1);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);\n  opacity: 1;\n}\n.numeric-input-wrap .numeric-input-up:hover,\n.numeric-input-wrap .numeric-input-down:hover {\n  background: rgba(0, 0, 0, 0.2);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3);\n}\n.numeric-input-wrap .numeric-input-up:active,\n.numeric-input-wrap .numeric-input-down:active {\n  background: rgba(0, 0, 0, 0.3);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.4);\n}\n.numeric-input-wrap.disabled {\n  pointer-events: none;\n}\n.numeric-input-wrap.std input {\n  border: 1px solid #ccc;\n  border-radius: 2px;\n  padding-left: 4px;\n  display: block;\n  -webkit-appearance: none;\n  line-height: normal;\n}\n.numeric-input-wrap.bs-form-control .numeric-input-up {\n  right: 3px;\n  top: 3px;\n  border-radius: 1px 2px 1px 1px;\n  margin-bottom: 1px;\n}\n.numeric-input-wrap.bs-form-control .numeric-input-down {\n  right: 3px;\n  bottom: 3px;\n  border-radius: 1px 1px 2px 1px;\n  margin-top: 1px;\n}\n.disabled .numeric-input-wrap {\n  pointer-events: none;\n}\n.disabled .numeric-input-up,\n.disabled .numeric-input-down {\n  opacity: 0.3;\n  pointer-events: none;\n  box-shadow: none;\n}\n", ""]);
 
 	// exports
 
