@@ -80,6 +80,7 @@ This component comes with styles written in LESS and precompiled to CSS in
 ## Keyboard navigation
 * You can use <kbd>Up</kbd> and <kbd>Down</kbd> arrow keys to increment/decrement the input value.
 * <kbd>Ctrl/Command + Up</kbd> and <kbd>Ctrl/Command + Down</kbd> to use smaller step (`step / 10`).
+  Note that this will only work if you have specified a `precision` option that supports it.
 * <kbd>Shift + Up</kbd> and <kbd>Shift + Down</kbd> to use bigger step (`step * 10`).
 
 ## License
