@@ -96,9 +96,6 @@
                                 precision: 2,
                                 value: 50.3,
                                 step: 0.1,
-                                readOnly: true,
-                                disabled: true,
-                                style: { color: 'red' },
                                 format: function(num) {
                                     return num + '$';
                                 }
@@ -121,13 +118,14 @@
     disabled
     autoComplete="on"
     autoCorrect="on"
-    autoFocus
+    autoFocus={false}
     form="some-form"
     placeholder="Please enter a number"
     required
     size="10"
     spellcheck="false"
-    tabindex="5"/></div>
+    tabindex="5"
+    style={ fontSize: 40, color: '#99002D', background: '#FFF1C2' }/></div>
                         <script class="jsx" type="text/plain">
                         {
                             name        : "my_number",
@@ -135,13 +133,18 @@
                             disabled    : false,
                             autoComplete: "on",
                             autoCorrect : "on",
-                            autoFocus   : true,
+                            autoFocus   : false,
                             form        : "some-form",
                             placeholder : "Please enter a number",
                             required    : true,
                             size        : "20",
                             spellCheck  : "false",
-                            tabIndex    : "5"
+                            tabIndex    : "5",
+                            style : {
+                                fontSize: 30,
+                                background: '#FFF1C2',
+                                color: '#99002D'
+                            }
                         }
                         </script>
                     </fieldset>

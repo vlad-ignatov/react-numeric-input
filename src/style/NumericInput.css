@@ -7,7 +7,7 @@
   user-select: none;
 }
 .numeric-input-wrap .numeric-input-input {
-  padding-right: 30px;
+  padding-right: 3ex;
   box-sizing: border-box;
 }
 .numeric-input-wrap .numeric-input-up,
@@ -91,6 +91,14 @@
 }
 .numeric-input-wrap.disabled {
   pointer-events: none;
+}
+.numeric-input-wrap.std input {
+  border: 0px solid transparent;
+  border-radius: 2px;
+  box-shadow: 0 0 1px 0px rgba(0, 0, 0, 0.8) inset;
+  padding-left: 4px;
+  display: block;
+  -webkit-appearance: none;
 }
 .numeric-input-wrap.bs-form-control .numeric-input-up {
   right: 3px;

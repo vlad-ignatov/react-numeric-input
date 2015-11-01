@@ -235,9 +235,11 @@ export default class NumericInput extends Component
             },
             input : inputProps,
             btnUp : {
+                href: 'javascript:void 0',
                 onMouseDown : this.increase.bind(this, false)
             },
             btnDown : {
+                href: 'javascript:void 0',
                 onMouseDown : this.decrease.bind(this, false)
             }
         };
@@ -259,6 +261,9 @@ export default class NumericInput extends Component
 
         if ((/\bform-control\b/).test(attrs.input.className)) {
             attrs.wrap.className.push('bs-form-control');
+        }
+        else {
+            attrs.wrap.className.push('std');
         }
 
         attrs.wrap.className  = attrs.wrap.className.join(' ');
