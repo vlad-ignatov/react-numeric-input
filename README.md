@@ -72,11 +72,11 @@ See examples/index.html for examples.
 
 ## Styling
 This component comes with styles written in LESS and precompiled to CSS in
-`src/style`. It's up to you to decide how to use them but here are a few options:
-* Copy `src/style/NumericInput.css` code to your css
-* Setup less preprocessing from `src/style/NumericInput.less` to wherever you need.
+[src/style](./src/style). It's up to you to decide how to use them but here are a few options:
+* Copy [src/style/NumericInput.css](./src/style/NumericInput.css) code to your css
+* Setup less preprocessing from [src/style/NumericInput.less](./src/style/NumericInput.less) to wherever you need.
 * Use modern tool like webpack and then just do `require('node_modules/react-numeric-input/src/style/NumericInput.less');`.
-  See `examples/examples.jsx` for example.
+  See [examples/examples.jsx](./examples/examples.jsx) for example.
 
 ## License
 MIT
