@@ -7,10 +7,10 @@ module.exports = function (config) {
         files: [
             'https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-with-addons.js',
             'https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js',
-            'tests.webpack.js'
+            './__tests__/tests.webpack.js'
         ],
         preprocessors: {
-            'tests.webpack.js': [ 'webpack', 'sourcemap' ]
+            './__tests__/tests.webpack.js': [ 'webpack', 'sourcemap' ]
         },
         reporters: [ 'dots' ],
         webpack: {
