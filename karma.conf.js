@@ -2,7 +2,7 @@
 module.exports = function (config) {
     config.set({
         browsers: [ process.env.CONTINUOUS_INTEGRATION ? 'Firefox' : 'Chrome' ],
-        singleRun: true,
+        singleRun: !!process.env.CONTINUOUS_INTEGRATION,
         frameworks: [ 'mocha' ],
         files: [
             'https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-with-addons.js',
