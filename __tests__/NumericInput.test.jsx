@@ -54,6 +54,82 @@ describe('NumericInput', () => {
         expect(inputNode.value).toEqual('4.90');
     });
 
+    it('can auto-increase', (done) => {
+        var widget     = TestUtils.renderIntoDocument(<NumericInput/>),
+            widgetNode = ReactDOM.findDOMNode(widget),
+            inputNode  = widgetNode.firstChild,
+            btnUp      = inputNode.nextElementSibling;
+
+        TestUtils.Simulate.mouseDown(btnUp);
+        expect(inputNode.value).toEqual('1');
+
+        setTimeout(() => {
+            expect(inputNode.value).toEqual('2');
+            TestUtils.Simulate.mouseUp(btnUp);
+            setTimeout(() => {
+                expect(inputNode.value).toEqual('2');
+                done();
+            }, 500);
+        }, 500);
+    });
+
+    it('can auto-decrease', (done) => {
+        var widget     = TestUtils.renderIntoDocument(<NumericInput/>),
+            widgetNode = ReactDOM.findDOMNode(widget),
+            inputNode  = widgetNode.firstChild,
+            btnDown    = widgetNode.lastChild;
+
+        TestUtils.Simulate.mouseDown(btnDown);
+        expect(inputNode.value).toEqual('-1');
+
+        setTimeout(() => {
+            expect(inputNode.value).toEqual('-2');
+            TestUtils.Simulate.mouseUp(btnDown);
+            setTimeout(() => {
+                expect(inputNode.value).toEqual('-2');
+                done();
+            }, 500);
+        }, 500);
+    });
+
+    it('will stop increasing on mouse-out', (done) => {
+        var widget     = TestUtils.renderIntoDocument(<NumericInput/>),
+            widgetNode = ReactDOM.findDOMNode(widget),
+            inputNode  = widgetNode.firstChild,
+            btnUp      = inputNode.nextElementSibling;
+
+        TestUtils.Simulate.mouseDown(btnUp);
+        expect(inputNode.value).toEqual('1');
+
+        setTimeout(() => {
+            expect(inputNode.value).toEqual('2');
+            TestUtils.Simulate.mouseOut(btnUp);
+            setTimeout(() => {
+                expect(inputNode.value).toEqual('2');
+                done();
+            }, 500);
+        }, 500);
+    });
+
+    it('will stop decreasing on mouse-out', (done) => {
+        var widget     = TestUtils.renderIntoDocument(<NumericInput/>),
+            widgetNode = ReactDOM.findDOMNode(widget),
+            inputNode  = widgetNode.firstChild,
+            btnDown    = widgetNode.lastChild;
+
+        TestUtils.Simulate.mouseDown(btnDown);
+        expect(inputNode.value).toEqual('-1');
+
+        setTimeout(() => {
+            expect(inputNode.value).toEqual('-2');
+            TestUtils.Simulate.mouseOut(btnDown);
+            setTimeout(() => {
+                expect(inputNode.value).toEqual('-2');
+                done();
+            }, 500);
+        }, 500);
+    });
+
     it('uses "format" and "parse" methods', () => {
 
         function format(n) {
