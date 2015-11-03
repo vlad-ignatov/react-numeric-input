@@ -197,7 +197,6 @@ export default class NumericInput extends Component
     onMouseDown(dir, e)
     {
         e.preventDefault();
-        console.log(e.type);
         if (dir == 'down') {
             this.decrease();
         }
@@ -210,7 +209,6 @@ export default class NumericInput extends Component
     onTouchStart(dir, e)
     {
         e.preventDefault();
-        console.log(e.type);
         if (dir == 'down') {
             this.decrease();
         }

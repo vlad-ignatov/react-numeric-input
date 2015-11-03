@@ -313,7 +313,6 @@
 	            var _this3 = this;
 
 	            e.preventDefault();
-	            console.log(e.type);
 	            if (dir == 'down') {
 	                this.decrease();
 	            } else if (dir == 'up') {
@@ -327,7 +326,6 @@
 	        key: 'onTouchStart',
 	        value: function onTouchStart(dir, e) {
 	            e.preventDefault();
-	            console.log(e.type);
 	            if (dir == 'down') {
 	                this.decrease();
 	            } else if (dir == 'up') {
