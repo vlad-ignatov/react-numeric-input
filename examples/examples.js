@@ -98,7 +98,10 @@
 	var KEYCODE_UP = 38;
 	var KEYCODE_DOWN = 40;
 	var SPEED = 50;
+	exports.SPEED = SPEED;
 	var DELAY = 500;
+
+	exports.DELAY = DELAY;
 
 	var NumericInput = (function (_Component) {
 	    _inherits(NumericInput, _Component);
@@ -417,7 +420,6 @@
 	})(_react.Component);
 
 	exports['default'] = NumericInput;
-	module.exports = exports['default'];
 
 /***/ },
 /* 2 */

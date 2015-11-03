@@ -2,8 +2,8 @@ import { PropTypes, Component } from 'react';
 
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
-const SPEED        = 50;
-const DELAY        = 500;
+export const SPEED = 50;
+export const DELAY = 500;
 
 export default class NumericInput extends Component
 {

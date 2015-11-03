@@ -1,6 +1,6 @@
 /* global describe, it, ReactDOM, React */
 import expect from 'expect';
-import NumericInput from '../src/NumericInput.jsx';
+import { default as NumericInput, DELAY } from '../src/NumericInput.jsx';
 
 const TestUtils    = React.addons.TestUtils;
 const KEYCODE_UP   = 38;
@@ -69,8 +69,8 @@ describe('NumericInput', () => {
             setTimeout(() => {
                 expect(inputNode.value).toEqual('2');
                 done();
-            }, 500);
-        }, 500);
+            }, DELAY);
+        }, DELAY);
     });
 
     it('can auto-decrease', (done) => {
@@ -88,8 +88,8 @@ describe('NumericInput', () => {
             setTimeout(() => {
                 expect(inputNode.value).toEqual('-2');
                 done();
-            }, 500);
-        }, 500);
+            }, DELAY);
+        }, DELAY);
     });
 
     it('will stop increasing on mouse-out', (done) => {
@@ -107,8 +107,8 @@ describe('NumericInput', () => {
             setTimeout(() => {
                 expect(inputNode.value).toEqual('2');
                 done();
-            }, 500);
-        }, 500);
+            }, DELAY);
+        }, DELAY);
     });
 
     it('will stop decreasing on mouse-out', (done) => {
@@ -126,8 +126,8 @@ describe('NumericInput', () => {
             setTimeout(() => {
                 expect(inputNode.value).toEqual('-2');
                 done();
-            }, 500);
-        }, 500);
+            }, DELAY);
+        }, DELAY);
     });
 
     it('uses "format" and "parse" methods', () => {
