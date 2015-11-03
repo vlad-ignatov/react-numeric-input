@@ -164,20 +164,14 @@ export default class NumericInput extends Component
      *  it is in recursive mode.
      * @return void
      */
-    increase(_recursive: boolean, doFocus: boolean, evt): void
+    increase(_recursive: boolean): void
     {
-        if (evt) {
-            evt.preventDefault();
-        }
         this.stop();
         this._step(1);
         if (isNaN(this.state.value) || this.state.value < this.props.max) {
             this._timer = setTimeout(() => {
                 this.increase(true);
             }, _recursive ? SPEED : DELAY);
-        }
-        if (doFocus) {
-            setTimeout(() => {this.refs.input.focus();});
         }
     }
 
@@ -189,11 +183,8 @@ export default class NumericInput extends Component
      *  it is in recursive mode.
      * @return void
      */
-    decrease(_recursive: boolean, doFocus: boolean, evt): void
+    decrease(_recursive: boolean): void
     {
-        if (evt) {
-            evt.preventDefault();
-        }
         this.stop();
         this._step(-1);
         if (isNaN(this.state.value) || this.state.value > this.props.min) {
@@ -201,8 +192,30 @@ export default class NumericInput extends Component
                 this.decrease(true);
             }, _recursive ? SPEED : DELAY);
         }
-        if (doFocus) {
-            setTimeout(() => {this.refs.input.focus();});
+    }
+
+    onMouseDown(dir, e)
+    {
+        e.preventDefault();
+        console.log(e.type);
+        if (dir == 'down') {
+            this.decrease();
+        }
+        else if (dir == 'up') {
+            this.increase();
+        }
+        setTimeout(() => { this.refs.input.focus(); });
+    }
+
+    onTouchStart(dir, e)
+    {
+        e.preventDefault();
+        console.log(e.type);
+        if (dir == 'down') {
+            this.decrease();
+        }
+        else if (dir == 'up') {
+            this.increase();
         }
     }
 
@@ -250,11 +263,15 @@ export default class NumericInput extends Component
             input : inputProps,
             btnUp : {
                 href: 'javascript:void 0',
-                onMouseDown : this.increase.bind(this, false, true)
+                onTouchStart: this.onTouchStart.bind(this, 'up'),
+                onTouchEnd  : this.stop.bind(this),
+                onMouseDown : this.onMouseDown.bind(this, 'up')
             },
             btnDown : {
-                href: 'javascript:void 0',
-                onMouseDown : this.decrease.bind(this, false, true)
+                href        : 'javascript:void 0',
+                onTouchStart: this.onTouchStart.bind(this, 'down'),
+                onTouchEnd  : this.stop.bind(this),
+                onMouseDown : this.onMouseDown.bind(this, 'down')
             }
         };
 
@@ -285,8 +302,8 @@ export default class NumericInput extends Component
         return (
             <span {...attrs.wrap}>
                 <input {...attrs.input}/>
-                <a {...attrs.btnUp}/>
-                <a {...attrs.btnDown}/>
+                <b {...attrs.btnUp}/>
+                <b {...attrs.btnDown}/>
             </span>
         );
     }

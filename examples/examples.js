@@ -62,6 +62,10 @@
 
 	        $(s).replaceWith(div);
 	        ReactDOM.render(React.createElement(_srcNumericInputJsx2['default'], props), div[0]);
+
+	        div.append('<br/><br/>Touch:<br/>');
+	        div = $('<div class="mobile"/>').appendTo(div);
+	        ReactDOM.render(React.createElement(_srcNumericInputJsx2['default'], props), div[0]);
 	    });
 
 	    hljs.configure({ useBR: false });
@@ -270,23 +274,15 @@
 	         */
 	    }, {
 	        key: 'increase',
-	        value: function increase(_recursive, doFocus, evt) {
+	        value: function increase(_recursive) {
 	            var _this = this;
 
-	            if (evt) {
-	                evt.preventDefault();
-	            }
 	            this.stop();
 	            this._step(1);
 	            if (isNaN(this.state.value) || this.state.value < this.props.max) {
 	                this._timer = setTimeout(function () {
 	                    _this.increase(true);
 	                }, _recursive ? SPEED : DELAY);
-	            }
-	            if (doFocus) {
-	                setTimeout(function () {
-	                    _this.refs.input.focus();
-	                });
 	            }
 	        }
 
@@ -300,12 +296,9 @@
 	         */
 	    }, {
 	        key: 'decrease',
-	        value: function decrease(_recursive, doFocus, evt) {
+	        value: function decrease(_recursive) {
 	            var _this2 = this;
 
-	            if (evt) {
-	                evt.preventDefault();
-	            }
 	            this.stop();
 	            this._step(-1);
 	            if (isNaN(this.state.value) || this.state.value > this.props.min) {
@@ -313,10 +306,32 @@
 	                    _this2.decrease(true);
 	                }, _recursive ? SPEED : DELAY);
 	            }
-	            if (doFocus) {
-	                setTimeout(function () {
-	                    _this2.refs.input.focus();
-	                });
+	        }
+	    }, {
+	        key: 'onMouseDown',
+	        value: function onMouseDown(dir, e) {
+	            var _this3 = this;
+
+	            e.preventDefault();
+	            console.log(e.type);
+	            if (dir == 'down') {
+	                this.decrease();
+	            } else if (dir == 'up') {
+	                this.increase();
+	            }
+	            setTimeout(function () {
+	                _this3.refs.input.focus();
+	            });
+	        }
+	    }, {
+	        key: 'onTouchStart',
+	        value: function onTouchStart(dir, e) {
+	            e.preventDefault();
+	            console.log(e.type);
+	            if (dir == 'down') {
+	                this.decrease();
+	            } else if (dir == 'up') {
+	                this.increase();
 	            }
 	        }
 
@@ -355,11 +370,15 @@
 	                input: inputProps,
 	                btnUp: {
 	                    href: 'javascript:void 0',
-	                    onMouseDown: this.increase.bind(this, false, true)
+	                    onTouchStart: this.onTouchStart.bind(this, 'up'),
+	                    onTouchEnd: this.stop.bind(this),
+	                    onMouseDown: this.onMouseDown.bind(this, 'up')
 	                },
 	                btnDown: {
 	                    href: 'javascript:void 0',
-	                    onMouseDown: this.decrease.bind(this, false, true)
+	                    onTouchStart: this.onTouchStart.bind(this, 'down'),
+	                    onTouchEnd: this.stop.bind(this),
+	                    onMouseDown: this.onMouseDown.bind(this, 'down')
 	                }
 	            };
 
@@ -390,8 +409,8 @@
 	                'span',
 	                attrs.wrap,
 	                React.createElement('input', attrs.input),
-	                React.createElement('a', attrs.btnUp),
-	                React.createElement('a', attrs.btnDown)
+	                React.createElement('b', attrs.btnUp),
+	                React.createElement('b', attrs.btnDown)
 	            );
 	        }
 	    }]);
@@ -443,7 +462,7 @@
 
 
 	// module
-	exports.push([module.id, ".numeric-input-wrap {\n  position: relative;\n  display: inline-block;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.numeric-input-wrap .numeric-input-input {\n  padding-right: 3ex;\n  box-sizing: border-box;\n}\n.numeric-input-wrap .numeric-input-up,\n.numeric-input-wrap .numeric-input-down {\n  position: absolute;\n  right: 2px;\n  width: 2.26ex;\n  background: rgba(0, 0, 0, 0.1);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);\n  text-align: center;\n  cursor: default;\n  opacity: 0.75;\n  transition: all 0.2s;\n}\n.numeric-input-wrap .numeric-input-up:before,\n.numeric-input-wrap .numeric-input-down:before {\n  content: '';\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  margin: -0.3ex 0 0 -0.6ex;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.numeric-input-wrap .numeric-input-up {\n  top: 2px;\n  bottom: 50%;\n  border-radius: 1px;\n}\n.numeric-input-wrap .numeric-input-up:after {\n  content: '';\n  position: absolute;\n  top: -1px;\n  right: -1px;\n  bottom: -1px;\n  left: -1px;\n}\n.numeric-input-wrap .numeric-input-up:before {\n  border-width: 0 0.6ex 0.6ex 0.6ex;\n  border-color: transparent transparent #999;\n  border-color: transparent transparent rgba(0, 0, 0, 0.7);\n}\n.numeric-input-wrap .numeric-input-down {\n  bottom: 2px;\n  top: 50%;\n  border-radius: 1px;\n}\n.numeric-input-wrap .numeric-input-down:after {\n  content: '';\n  position: absolute;\n  top: -1px;\n  right: -1px;\n  bottom: -1px;\n  left: -1px;\n}\n.numeric-input-wrap .numeric-input-down:before {\n  border-width: 0.6ex 0.6ex 0 0.6ex;\n  border-color: #999 transparent transparent;\n  border-color: rgba(0, 0, 0, 0.7) transparent transparent;\n}\n.numeric-input-wrap:hover .numeric-input-up,\n.numeric-input-wrap:hover .numeric-input-down {\n  background: rgba(0, 0, 0, 0.1);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);\n  opacity: 1;\n}\n.numeric-input-wrap .numeric-input-up:hover,\n.numeric-input-wrap .numeric-input-down:hover {\n  background: rgba(0, 0, 0, 0.2);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3);\n}\n.numeric-input-wrap .numeric-input-up:active,\n.numeric-input-wrap .numeric-input-down:active {\n  background: rgba(0, 0, 0, 0.3);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.4);\n}\n.numeric-input-wrap.disabled {\n  pointer-events: none;\n}\n.numeric-input-wrap.std input {\n  border: 1px solid #ccc;\n  border-radius: 2px;\n  padding-left: 4px;\n  display: block;\n  -webkit-appearance: none;\n  line-height: normal;\n}\n.numeric-input-wrap.bs-form-control .numeric-input-up {\n  right: 3px;\n  top: 3px;\n  border-radius: 1px 2px 1px 1px;\n  margin-bottom: 1px;\n}\n.numeric-input-wrap.bs-form-control .numeric-input-down {\n  right: 3px;\n  bottom: 3px;\n  border-radius: 1px 1px 2px 1px;\n  margin-top: 1px;\n}\n.disabled .numeric-input-wrap {\n  pointer-events: none;\n}\n.disabled .numeric-input-up,\n.disabled .numeric-input-down {\n  opacity: 0.3;\n  pointer-events: none;\n  box-shadow: none;\n}\n", ""]);
+	exports.push([module.id, ".numeric-input-wrap {\n  position: relative;\n  display: inline-block;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.numeric-input-wrap .numeric-input-input {\n  padding-right: 3ex;\n  box-sizing: border-box;\n}\n.numeric-input-wrap .numeric-input-up,\n.numeric-input-wrap .numeric-input-down {\n  position: absolute;\n  right: 2px;\n  width: 2.26ex;\n  background: rgba(0, 0, 0, 0.1);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);\n  text-align: center;\n  cursor: default;\n  opacity: 0.75;\n  transition: all 0.2s;\n}\n.numeric-input-wrap .numeric-input-up:before,\n.numeric-input-wrap .numeric-input-down:before {\n  content: '';\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  margin: -0.3ex 0 0 -0.6ex;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n.numeric-input-wrap .numeric-input-up {\n  top: 2px;\n  bottom: 50%;\n  border-radius: 1px;\n}\n.numeric-input-wrap .numeric-input-up:after {\n  content: '';\n  position: absolute;\n  top: -1px;\n  right: -1px;\n  bottom: -1px;\n  left: -1px;\n}\n.numeric-input-wrap .numeric-input-up:before {\n  border-width: 0 0.6ex 0.6ex 0.6ex;\n  border-color: transparent transparent #999;\n  border-color: transparent transparent rgba(0, 0, 0, 0.7);\n}\n.numeric-input-wrap .numeric-input-down {\n  bottom: 2px;\n  top: 50%;\n  border-radius: 1px;\n}\n.numeric-input-wrap .numeric-input-down:after {\n  content: '';\n  position: absolute;\n  top: -1px;\n  right: -1px;\n  bottom: -1px;\n  left: -1px;\n}\n.numeric-input-wrap .numeric-input-down:before {\n  border-width: 0.6ex 0.6ex 0 0.6ex;\n  border-color: #999 transparent transparent;\n  border-color: rgba(0, 0, 0, 0.7) transparent transparent;\n}\n.numeric-input-wrap:hover .numeric-input-up,\n.numeric-input-wrap:hover .numeric-input-down {\n  background: rgba(0, 0, 0, 0.1);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);\n  opacity: 1;\n}\n.numeric-input-wrap .numeric-input-up:hover,\n.numeric-input-wrap .numeric-input-down:hover {\n  background: rgba(0, 0, 0, 0.2);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3);\n}\n.numeric-input-wrap .numeric-input-up:active,\n.numeric-input-wrap .numeric-input-down:active {\n  background: rgba(0, 0, 0, 0.3);\n  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.4);\n}\n.numeric-input-wrap.disabled {\n  pointer-events: none;\n}\n.numeric-input-wrap.std input {\n  border: 1px solid #ccc;\n  border-radius: 2px;\n  padding-left: 4px;\n  display: block;\n  -webkit-appearance: none;\n  line-height: normal;\n}\n.numeric-input-wrap.bs-form-control .numeric-input-up {\n  right: 3px;\n  top: 3px;\n  border-radius: 1px 2px 1px 1px;\n  margin-bottom: 1px;\n}\n.numeric-input-wrap.bs-form-control .numeric-input-down {\n  right: 3px;\n  bottom: 3px;\n  border-radius: 1px 1px 2px 1px;\n  margin-top: 1px;\n}\n.mobile .numeric-input-wrap input {\n  padding-left: 3.4ex;\n  padding-right: 3.4ex;\n  text-align: center;\n  border-radius: 2px;\n}\n.mobile .numeric-input-wrap .numeric-input-up,\n.mobile .numeric-input-wrap .numeric-input-down {\n  width: 3.3ex;\n  top: 1px;\n  bottom: 1px;\n  box-shadow: none;\n  margin: 0;\n}\n.mobile .numeric-input-wrap .numeric-input-up:before,\n.mobile .numeric-input-wrap .numeric-input-down:before,\n.mobile .numeric-input-wrap .numeric-input-up:after,\n.mobile .numeric-input-wrap .numeric-input-down:after {\n  content: '';\n  border: 0;\n  background: #000;\n  border-radius: 1px;\n  top: 50%;\n  left: 50%;\n}\n.mobile .numeric-input-wrap .numeric-input-up {\n  right: 1px;\n  border-radius: 0 1px 1px 0;\n  box-shadow: 1px 0 0 0 rgba(0, 0, 0, 0.1) inset;\n}\n.mobile .numeric-input-wrap .numeric-input-up:before {\n  margin: -1px 0 0 -7px;\n  height: 2px;\n  width: 14px;\n}\n.mobile .numeric-input-wrap .numeric-input-up:after {\n  margin: -7px 0 0 -1px;\n  height: 14px;\n  width: 2px;\n}\n.mobile .numeric-input-wrap .numeric-input-down {\n  left: 1px;\n  right: auto;\n  border-radius: 1px 0 0 1px;\n  box-shadow: -1px 0 0 0 rgba(0, 0, 0, 0.1) inset;\n}\n.mobile .numeric-input-wrap .numeric-input-down:before {\n  margin: -1px 0 0 -7px;\n  height: 2px;\n  width: 14px;\n}\n.mobile .numeric-input-wrap .numeric-input-down:after {\n  display: none;\n}\n.mobile .numeric-input-wrap.bs-form-control input {\n  border-radius: 4px;\n}\n.mobile .numeric-input-wrap.bs-form-control .numeric-input-up {\n  border-radius: 0 3px 3px 0;\n}\n.mobile .numeric-input-wrap.bs-form-control .numeric-input-down {\n  border-radius: 3px 0 0 3px;\n}\n.disabled .numeric-input-wrap {\n  pointer-events: none;\n}\n.disabled .numeric-input-up,\n.disabled .numeric-input-down {\n  opacity: 0.3;\n  pointer-events: none;\n  box-shadow: none;\n}\n", ""]);
 
 	// exports
 
