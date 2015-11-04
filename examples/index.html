@@ -105,6 +105,30 @@
                     </fieldset>
 
                     <fieldset>
+                        <legend class="text-success">Disabled</legend>
+                        <blockquote>
+                            <div class="code jsx">&lt;NumericInput disabled value={23.45}/></div>
+                            <script class="jsx" type="text/plain">{
+                                value: 23.45,
+                                disabled: true,
+                                className : 'form-control'
+                            }</script>
+                        </blockquote>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-success">Read only</legend>
+                        <blockquote>
+                            <div class="code jsx">&lt;NumericInput readOnly value={23.45}/></div>
+                            <script class="jsx" type="text/plain">{
+                                value: 23.45,
+                                readOnly: true,
+                                className : 'form-control'
+                            }</script>
+                        </blockquote>
+                    </fieldset>
+
+                    <fieldset>
                         <legend class="text-success">Other HTML props</legend>
                         <p>
                             You can use any additional HTML attributes that make
