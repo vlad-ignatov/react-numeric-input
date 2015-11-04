@@ -21,7 +21,7 @@ module.exports = function (config) {
                         test: /\.jsx?$/,
                         loaders: [
                             'jsx-loader?stripTypes',
-                            'babel?stage=0'
+                            'babel?stage=0&optional=runtime'
                         ],
                         exclude: /node_modules/
                     }
