@@ -18,7 +18,7 @@ describe('NumericInput', () => {
 
         expect(inputNode.value).toEqual('');
         expect(inputNode.type).toEqual('text');
-        expect(inputNode.className).toEqual('numeric-input-input');
+        // expect(inputNode.className).toEqual('numeric-input-input');
     });
 
     it('accepts all the props', () => {
@@ -37,7 +37,7 @@ describe('NumericInput', () => {
 
 		// Test the precision
         expect(inputNode.value).toEqual('5.00');
-        expect(inputNode.className).toEqual('form-control numeric-input-input');
+        expect(inputNode.className).toEqual('form-control');
 
 		// Test the step
         TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
@@ -92,7 +92,7 @@ describe('NumericInput', () => {
         }, DELAY);
     });
 
-    it('will stop increasing on mouse-out', (done) => {
+    it('will stop increasing on mouseleave', (done) => {
         var widget     = TestUtils.renderIntoDocument(<NumericInput/>),
             widgetNode = ReactDOM.findDOMNode(widget),
             inputNode  = widgetNode.firstChild,
@@ -103,7 +103,7 @@ describe('NumericInput', () => {
 
         setTimeout(() => {
             expect(inputNode.value).toEqual('2');
-            TestUtils.Simulate.mouseOut(btnUp);
+            TestUtils.Simulate.mouseLeave(btnUp);
             setTimeout(() => {
                 expect(inputNode.value).toEqual('2');
                 done();
@@ -122,7 +122,7 @@ describe('NumericInput', () => {
 
         setTimeout(() => {
             expect(inputNode.value).toEqual('-2');
-            TestUtils.Simulate.mouseOut(btnDown);
+            TestUtils.Simulate.mouseLeave(btnDown);
             setTimeout(() => {
                 expect(inputNode.value).toEqual('-2');
                 done();
@@ -164,11 +164,14 @@ describe('NumericInput', () => {
                 <NumericInput disabled readOnly/>
             ),
             widgetNode = ReactDOM.findDOMNode(widget),
-            inputNode  = widgetNode.firstChild;
+            inputNode  = widgetNode.firstChild,
+            btnUp      = inputNode.nextElementSibling;
 
         expect(inputNode.disabled).toEqual(true);
         expect(inputNode.readOnly).toEqual(true);
-        expect(widgetNode.className).toMatch(/\bdisabled\b/);
-        expect(widgetNode.className).toMatch(/\breadonly\b/);
+        // expect(widgetNode.className).toMatch(/\bdisabled\b/);
+        // expect(widgetNode.className).toMatch(/\breadonly\b/);
+        TestUtils.Simulate.mouseDown(btnUp);
+        expect(inputNode.value).toEqual('');
     });
 });
