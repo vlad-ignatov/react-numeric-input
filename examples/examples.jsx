@@ -1,7 +1,7 @@
 /* global ReactDOM, $, hljs */
 import NumericInput from '../src/NumericInput.jsx';
 
-require('../src/style/NumericInput.less');// webpack magic
+// require('../src/style/NumericInput.less');// webpack magic
 
 $(function() {
     $('script.jsx').each(function(i, s) {
