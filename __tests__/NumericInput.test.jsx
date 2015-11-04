@@ -92,7 +92,7 @@ describe('NumericInput', () => {
         }, DELAY);
     });
 
-    it('will stop increasing on mouse-out', (done) => {
+    it('will stop increasing on mouseleave', (done) => {
         var widget     = TestUtils.renderIntoDocument(<NumericInput/>),
             widgetNode = ReactDOM.findDOMNode(widget),
             inputNode  = widgetNode.firstChild,
@@ -103,7 +103,7 @@ describe('NumericInput', () => {
 
         setTimeout(() => {
             expect(inputNode.value).toEqual('2');
-            TestUtils.Simulate.mouseOut(btnUp);
+            TestUtils.Simulate.mouseLeave(widgetNode);
             setTimeout(() => {
                 expect(inputNode.value).toEqual('2');
                 done();
@@ -111,7 +111,7 @@ describe('NumericInput', () => {
         }, DELAY);
     });
 
-    it('will stop decreasing on mouse-out', (done) => {
+    it('will stop decreasing on mouseleave', (done) => {
         var widget     = TestUtils.renderIntoDocument(<NumericInput/>),
             widgetNode = ReactDOM.findDOMNode(widget),
             inputNode  = widgetNode.firstChild,
@@ -122,7 +122,7 @@ describe('NumericInput', () => {
 
         setTimeout(() => {
             expect(inputNode.value).toEqual('-2');
-            TestUtils.Simulate.mouseOut(btnDown);
+            TestUtils.Simulate.mouseLeave(widgetNode);
             setTimeout(() => {
                 expect(inputNode.value).toEqual('-2');
                 done();

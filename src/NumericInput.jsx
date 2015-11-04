@@ -254,9 +254,9 @@ export default class NumericInput extends Component
 
         var attrs = {
             wrap : {
-                onMouseUp  : this.stop.bind(this),
-                onMouseOut : this.stop.bind(this),
-                className  : []
+                onMouseUp   : this.stop.bind(this),
+                onMouseLeave: this.stop.bind(this),
+                className   : []
             },
             input : inputProps,
             btnUp : {
