@@ -5,6 +5,111 @@ const KEYCODE_DOWN = 40;
 export const SPEED = 50;
 export const DELAY = 500;
 
+const style = {
+
+    // The wrapper (span)
+    'wrap' : {
+        position: 'relative',
+        display : 'inline-block'
+    },
+
+    // The increase button arrow (i)
+    'arrowUp' : {
+        position   : 'absolute',
+        top        : '50%',
+        left       : '50%',
+        width      : 0,
+        height     : 0,
+        borderWidth: '0 0.6ex 0.6ex 0.6ex',
+        borderColor: 'transparent transparent rgba(0, 0, 0, 0.7)',
+        borderStyle: 'solid',
+        margin     : '-0.3ex 0 0 -0.6ex'
+    },
+
+    // The decrease button arrow (i)
+    'arrowDown' : {
+        position   : 'absolute',
+        top        : '50%',
+        left       : '50%',
+        width      : 0,
+        height     : 0,
+        borderWidth: '0.6ex 0.6ex 0 0.6ex',
+        borderColor: 'rgba(0, 0, 0, 0.7) transparent transparent',
+        borderStyle: 'solid',
+        margin     : '-0.3ex 0 0 -0.6ex'
+    },
+
+    // The buttons (b)
+    'btn' : (dir, component) => {
+        var out = {
+            position   : 'absolute',
+            right      : 2,
+            width      : '2.26ex',
+            borderColor: 'rgba(0, 0, 0, 0.1)',
+            borderStyle: 'solid',
+            textAlign  : 'center',
+            cursor     : 'default',
+            transition : 'all 0.1s',
+            background : 'rgba(0, 0, 0, 0.1)',
+            boxShadow  : '-1px -1px 3px rgba(0, 0, 0, 0.1) inset, 1px 1px 3px rgba(255, 255, 255, 0.7) inset'
+        };
+
+        if (dir == 'up') {
+            out.top          = 2;
+            out.bottom       = '50%';
+            out.borderRadius = '2px 2px 0 0';
+            out.borderWidth  = '1px 1px 0 1px';
+
+            if (component.state.btnUpActive) {
+                out.background = 'rgba(0, 0, 0, 0.3)';
+                out.boxShadow  = '0 1px 3px rgba(0, 0, 0, 0.2) inset, -1px -1px 4px rgba(255, 255, 255, 0.5) inset';
+            }
+            else if (component.state.btnUpHover) {
+                out.background = 'rgba(0, 0, 0, 0.2)';
+            }
+        }
+        else if (dir == 'down') {
+            out.top          = '50%';
+            out.bottom       = 2;
+            out.borderRadius = '0 0 2px 2px';
+            out.borderWidth  = '0 1px 1px 1px';
+
+            if (component.state.btnDownActive) {
+                out.background = 'rgba(0, 0, 0, 0.3)';
+                out.boxShadow  = '0 1px 3px rgba(0, 0, 0, 0.2) inset, -1px -1px 4px rgba(255, 255, 255, 0.5) inset';
+            }
+            else if (component.state.btnDownHover) {
+                out.background = 'rgba(0, 0, 0, 0.2)';
+            }
+        }
+
+        if (component.props.disabled) {
+            out.opacity = 0.5;
+            out.boxShadow = 'none';
+        }
+        return out;
+    },
+
+    // The input (input[type="text"])
+    'input' : (isBootstrap) => {
+        var out = {
+            paddingRight: '3ex',
+            boxSizing   : 'border-box'
+        };
+
+        if (!isBootstrap) {
+            out.border           = '1px solid #ccc';
+            out.borderRadius     = 2;
+            out.paddingLeft      = 4;
+            out.display          = 'block';
+            out.WebkitAppearance = 'none';
+            out.lineHeight       = 'normal';
+        }
+
+        return out;
+    }
+};
+
 export default class NumericInput extends Component
 {
     static propTypes = {
@@ -15,6 +120,8 @@ export default class NumericInput extends Component
         parse     : PropTypes.func,
         format    : PropTypes.func,
         className : PropTypes.string,
+        disabled  : PropTypes.bool,
+        readOnly  : PropTypes.bool,
         value     : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ])
     };
 
@@ -50,6 +157,8 @@ export default class NumericInput extends Component
                     this._parse(String(props.value || '')) :
                     null
         };
+
+        this.stop = this.stop.bind(this);
     }
 
     /**
@@ -223,85 +332,109 @@ export default class NumericInput extends Component
      */
     render()
     {
-        var inputProps = {
-            ref: 'input'
-        };
-        var widgetProps = [
-            'step',
-            'min',
-            'max',
-            'precision',
-            'parse',
-            'format',
-            'value'
-        ];
-        for (var key in this.props) {
-            if (widgetProps.indexOf(key) == -1) {
-                inputProps[key] = this.props[key];
-            }
-        }
-        inputProps.type = 'text';
-        inputProps.value = this.state.value || this.state.value === 0 ?
-            this._format(this.state.value) :
-            '';
-        inputProps.onChange  = this._onChange.bind(this);
-        inputProps.onKeyDown = this._onKeyDown.bind(this);
-        inputProps.className = [];
+        var {
+            // These are ignored in rendering
+            step, min, max, precision, parse, format, value,
+            // type,
+            // style,
 
-        if (this.props.className) {
-            inputProps.className.push(this.props.className);
-        }
+            // The rest are passed to the input
+            ...rest
+        } = this.props;
 
         var attrs = {
             wrap : {
-                onMouseUp  : this.stop.bind(this),
-                onMouseOut : this.stop.bind(this),
+                onMouseUp    : this.stop,
+                onMouseLeave : this.stop,
                 className  : []
             },
-            input : inputProps,
-            btnUp : {
-                href: 'javascript:void 0',
-                onTouchStart: this.onTouchStart.bind(this, 'up'),
-                onTouchEnd  : this.stop.bind(this),
-                onMouseDown : this.onMouseDown.bind(this, 'up')
+            input : {
+                ref      : 'input',
+                type     : 'text',
+                onChange : this._onChange.bind(this),
+                onKeyDown: this._onKeyDown.bind(this),
+                style    : style.input(this.props.className && (/\bform-control\b/).test(this.props.className)),
+                value    : this.state.value || this.state.value === 0 ?
+                    this._format(this.state.value) :
+                    '',
+                ...rest
             },
-            btnDown : {
-                href        : 'javascript:void 0',
-                onTouchStart: this.onTouchStart.bind(this, 'down'),
-                onTouchEnd  : this.stop.bind(this),
-                onMouseDown : this.onMouseDown.bind(this, 'down')
-            }
+            btnUp : {},
+            btnDown : {}
         };
 
-        attrs.wrap.className.push('numeric-input-wrap');
-        attrs.input.className.push('numeric-input-input');
-        attrs.btnUp.className   = 'numeric-input-up';
-        attrs.btnDown.className = 'numeric-input-down';
+        // Attach event listeners if the widget is not disabled
+        if (!this.props.disabled) {
+            Object.assign(attrs.btnUp, {
+                onTouchStart: this.onTouchStart.bind(this, 'up'),
+                onTouchEnd: this.stop,
+                onMouseEnter: () => {
+                    this.setState({
+                        btnUpHover : true
+                    });
+                },
+                onMouseLeave: () => {
+                    this.stop();
+                    this.setState({
+                        btnUpHover : false,
+                        btnUpActive: false
+                    });
+                },
+                onMouseUp: () => {
+                    this.setState({
+                        btnUpHover  : true,
+                        btnUpActive : false
+                    });
+                },
+                onMouseDown: (e) => {
+                    this.setState({
+                        btnUpHover  : true,
+                        btnUpActive : true
+                    });
+                    this.onMouseDown('up', e);
+                }
+            });
 
-        if (attrs.input.readOnly) {
-            attrs.wrap.className.push('readonly');
+            Object.assign(attrs.btnDown, {
+                onTouchStart: this.onTouchStart.bind(this, 'down'),
+                onTouchEnd: this.stop,
+                onMouseEnter: () => {
+                    this.setState({
+                        btnDownHover : true
+                    });
+                },
+                onMouseLeave: () => {
+                    this.stop();
+                    this.setState({
+                        btnDownHover : false,
+                        btnDownActive: false
+                    });
+                },
+                onMouseUp: () => {
+                    this.setState({
+                        btnDownHover  : true,
+                        btnDownActive : false
+                    });
+                },
+                onMouseDown: (e) => {
+                    this.setState({
+                        btnDownHover  : true,
+                        btnDownActive : true
+                    });
+                    this.onMouseDown('down', e);
+                }
+            });
         }
-
-        if (attrs.input.disabled) {
-            attrs.wrap.className.push('disabled');
-        }
-
-        attrs.input.className = attrs.input.className.join(' ');
-
-        if ((/\bform-control\b/).test(attrs.input.className)) {
-            attrs.wrap.className.push('bs-form-control');
-        }
-        else {
-            attrs.wrap.className.push('std');
-        }
-
-        attrs.wrap.className  = attrs.wrap.className.join(' ');
 
         return (
-            <span {...attrs.wrap}>
+            <span {...attrs.wrap} style={style.wrap}>
                 <input {...attrs.input}/>
-                <b {...attrs.btnUp}/>
-                <b {...attrs.btnDown}/>
+                <b {...attrs.btnUp} style={style.btn('up', this)}>
+                    <i style={style.arrowUp}/>
+                </b>
+                <b {...attrs.btnDown} style={style.btn('down', this)}>
+                    <i style={style.arrowDown}/>
+                </b>
             </span>
         );
     }
