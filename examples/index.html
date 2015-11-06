@@ -8,9 +8,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
         <style media="screen">
             .code {
-                background: transparent;
+                background : transparent;
                 font-family: Menlo, monospace;
-                font-size: 1.6rem !important;
+                font-size  : 1.6rem !important;
                 white-space: pre-wrap;
             }
             fieldset {
@@ -105,13 +105,105 @@
                     </fieldset>
 
                     <fieldset>
+                        <legend class="text-success">Disabled</legend>
+                        <blockquote>
+                            <div class="code jsx">&lt;NumericInput disabled value={23.45}/></div>
+                            <script class="jsx" type="text/plain">{
+                                value: 23.45,
+                                disabled: true,
+                                className : 'form-control'
+                            }</script>
+                        </blockquote>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-success">Read only</legend>
+                        <blockquote>
+                            <div class="code jsx">&lt;NumericInput readOnly value={23.45}/></div>
+                            <script class="jsx" type="text/plain">{
+                                value: 23.45,
+                                readOnly: true,
+                                className : 'form-control'
+                            }</script>
+                        </blockquote>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-success">Custom style</legend>
+                        <blockquote>
+                            <div class="code xml">&lt;NumericInput
+    value={23.45}
+    precision={2}
+    size={6}
+    step={0.01}
+    style={{
+        wrap: {
+            background: '#E2E2E2',
+            boxShadow: '0 0 1px 1px #fff inset, 1px 1px 5px -1px #000',
+            padding: '2px 2.26ex 2px 2px',
+            borderRadius: '6px 3px 3px 6px',
+            fontSize: 32
+        },
+        input: {
+            borderRadius: '4px 2px 2px 4px',
+            color: '#988869',
+            padding: '0.1ex 1ex',
+            border: '1px solid #ccc',
+            marginRight: 4,
+            display: 'block',
+            fontWeight: 100,
+            textShadow: 1px 1px 1px rgba(0, 0, 0, 0.1)
+        },
+        arrowUp: {
+            borderBottomColor: 'rgba(66, 54, 0, 0.63)'
+        },
+        arrowDown: {
+            borderTopColor: 'rgba(66, 54, 0, 0.63)'
+        }
+    }}/></div>
+                            <script class="jsx" type="text/plain">{
+                                value: 23.45,
+                                precision : 2,
+                                size: 6,
+                                step: 0.01,
+                                style : {
+                                    wrap: {
+                                        background: '#E2E2E2',
+                                        boxShadow: '0 0 1px 1px #fff inset, 1px 1px 5px -1px #000',
+                                        padding: '2px 2.26ex 2px 2px',
+                                        borderRadius: '6px 3px 3px 6px',
+                                        fontSize: 32
+                                    },
+                                    input: {
+                                        borderRadius: '4px 2px 2px 4px',
+                                        color       : '#988869',
+                                        padding     : '0.1ex 1ex',
+                                        border      : '1px solid #ccc',
+                                        marginRight : 4,
+                                        display     : 'block',
+                                        fontWeight  : 100,
+                                        textShadow  : '1px 1px 1px rgba(0, 0, 0, 0.1)'
+                                    },
+                                    arrowUp: {
+                                        borderBottomColor: 'rgba(66, 54, 0, 0.63)'
+                                    },
+                                    arrowDown: {
+                                        borderTopColor: 'rgba(66, 54, 0, 0.63)'
+                                    }
+                                }
+                            }</script>
+                        </blockquote>
+                    </fieldset>
+
+                    <fieldset>
                         <legend class="text-success">Other HTML props</legend>
-                        <p>
-                            You can use any additional HTML attributes that make
-                            sence, just don't forget to camelCase them as JSX
-                            requires. Only the <code>type</code> attribute will
-                            be overriden to <code>text</code>. Here is an example:
-                        </p>
+                        <blockquote>
+                            <p>
+                                You can use any additional HTML attributes that make
+                                sence, just don't forget to camelCase them as JSX
+                                requires. Only the <code>type</code> attribute will
+                                be overriden to <code>text</code>. Here is an example:
+                            </p>
 <div class="code xml">&lt;NumericInput
     name="my_number"
     readOnly
@@ -122,31 +214,26 @@
     form="some-form"
     placeholder="Enter a number"
     required
-    size="16"
+    size="14"
     spellcheck="false"
-    tabindex="5"
-    style={ fontSize: 24, color: '#99002D', background: '#FFF1C2' }/></div>
-                        <script class="jsx" type="text/plain">
-                        {
-                            name        : "my_number",
-                            readOnly    : true,
-                            disabled    : false,
-                            autoComplete: "on",
-                            autoCorrect : "on",
-                            autoFocus   : false,
-                            form        : "some-form",
-                            placeholder : "Enter a number",
-                            required    : true,
-                            size        : "16",
-                            spellCheck  : "false",
-                            tabIndex    : "5",
-                            style : {
-                                fontSize: 24,
-                                background: '#FFF1C2',
-                                color: '#99002D'
+    tabindex="5"/></div>
+                            <script class="jsx" type="text/plain">
+                            {
+                                name        : "my_number",
+                                readOnly    : true,
+                                disabled    : false,
+                                autoComplete: "on",
+                                autoCorrect : "on",
+                                autoFocus   : false,
+                                form        : "some-form",
+                                placeholder : "Enter a number",
+                                required    : true,
+                                size        : "14",
+                                spellCheck  : "false",
+                                tabIndex    : "5"
                             }
-                        }
-                        </script>
+                            </script>
+                        </blockquote>
                     </fieldset>
                 </div>
             </div>

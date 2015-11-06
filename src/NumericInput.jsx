@@ -15,6 +15,11 @@ export default class NumericInput extends Component
         parse     : PropTypes.func,
         format    : PropTypes.func,
         className : PropTypes.string,
+        disabled  : PropTypes.bool,
+        readOnly  : PropTypes.bool,
+        style     : PropTypes.object,
+        type      : PropTypes.string,
+        size      : PropTypes.number,
         value     : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ])
     };
 
@@ -29,7 +34,108 @@ export default class NumericInput extends Component
         max       : Number.MAX_SAFE_INTEGER ||  9007199254740991,
         precision : 0,
         parse     : null,
-        format    : null
+        format    : null,
+        className : '',
+        style     : {}
+    };
+
+    /**
+     * This are the default styles that act as base for all the component
+     * instances. One can modify this object to change the default styles
+     * of all the widgets on the page.
+     */
+    static style = {
+
+        // The wrapper (span)
+        wrap: {
+            position: 'relative',
+            display : 'inline-block'
+        },
+
+        // The increase button arrow (i)
+        arrowUp: {
+            position   : 'absolute',
+            top        : '50%',
+            left       : '50%',
+            width      : 0,
+            height     : 0,
+            borderWidth: '0 0.6ex 0.6ex 0.6ex',
+            borderColor: 'transparent transparent rgba(0, 0, 0, 0.7)',
+            borderStyle: 'solid',
+            margin     : '-0.3ex 0 0 -0.56ex'
+        },
+
+        // The decrease button arrow (i)
+        arrowDown: {
+            position   : 'absolute',
+            top        : '50%',
+            left       : '50%',
+            width      : 0,
+            height     : 0,
+            borderWidth: '0.6ex 0.6ex 0 0.6ex',
+            borderColor: 'rgba(0, 0, 0, 0.7) transparent transparent',
+            borderStyle: 'solid',
+            margin     : '-0.3ex 0 0 -0.56ex'
+        },
+
+        // Common styles for the up/down buttons (b)
+        btn: {
+            position   : 'absolute',
+            right      : 2,
+            width      : '2.26ex',
+            borderColor: 'rgba(0,0,0,.1)',
+            borderStyle: 'solid',
+            textAlign  : 'center',
+            cursor     : 'default',
+            transition : 'all 0.1s',
+            background : 'rgba(0,0,0,.1)',
+            boxShadow  : '-1px -1px 3px rgba(0,0,0,.1) inset, 1px 1px 3px rgba(255,255,255,.7) inset'
+        },
+
+        btnUp: {
+            top         : 2,
+            bottom      : '50%',
+            borderRadius: '2px 2px 0 0',
+            borderWidth : '1px 1px 0 1px'
+        },
+
+        btnDown: {
+            top         : '50%',
+            bottom      : 2,
+            borderRadius: '0 0 2px 2px',
+            borderWidth : '0 1px 1px 1px'
+        },
+
+        'btn:hover': {
+            background: 'rgba(0,0,0,.2)'
+        },
+
+        'btn:active': {
+            background: 'rgba(0,0,0,.3)',
+            boxShadow : '0 1px 3px rgba(0,0,0,.2) inset, -1px -1px 4px rgba(255,255,255,.5) inset'
+        },
+
+        'btn:disabled': {
+            opacity: .5,
+            boxShadow: 'none',
+            cursor: 'not-allowed'
+        },
+
+        // The input (input[type="text"])
+        input: {
+            paddingRight: '3ex',
+            boxSizing   : 'border-box'
+        },
+
+        // The input with bootstrap class
+        'input:not(.form-control)': {
+            border           : '1px solid #ccc',
+            borderRadius     : 2,
+            paddingLeft      : 4,
+            display          : 'block',
+            WebkitAppearance : 'none',
+            lineHeight       : 'normal'
+        }
     };
 
     /**
@@ -46,10 +152,17 @@ export default class NumericInput extends Component
             step : props.step,
             min  : props.min,
             max  : props.max,
+            style: {},
             value: 'value' in props ?
                     this._parse(String(props.value || '')) :
                     null
         };
+
+        for (let x in NumericInput.style) {
+            this.state.style[x] = Object.assign({}, NumericInput.style[x], props.style[x] || {});
+        }
+
+        this.stop = this.stop.bind(this);
     }
 
     /**
@@ -60,6 +173,13 @@ export default class NumericInput extends Component
         this.stop();
     }
 
+    /**
+     * Used internally to parse the argument x to it's numeric representation.
+     * If the argument cannot be converted to finite number returns 0; If a
+     * "precision" prop is specified uses it round the number with that
+     * precision (no fixed precision here because the return value is float, not
+     * string).
+     */
     _toNumber(x: any): number
     {
         let n = parseFloat(x);
@@ -194,6 +314,11 @@ export default class NumericInput extends Component
         }
     }
 
+    /**
+     * Handles the mousedown event on the up/down buttons. Changes The
+     * internal value and sets up a delay for auto increment/decrement
+     * (until mouseup or mouseleave)
+     */
     onMouseDown(dir, e)
     {
         e.preventDefault();
@@ -206,6 +331,12 @@ export default class NumericInput extends Component
         setTimeout(() => { this.refs.input.focus(); });
     }
 
+    /**
+     * Handles the touchstart event on the up/down buttons. Changes The
+     * internal value and DOES NOT sets up a delay for auto increment/decrement.
+     * Note that this calls e.preventDefault() so the event is not used for
+     * creating a virtual mousedown after it
+     */
     onTouchStart(dir, e)
     {
         e.preventDefault();
@@ -223,85 +354,146 @@ export default class NumericInput extends Component
      */
     render()
     {
-        var inputProps = {
-            ref: 'input'
-        };
-        var widgetProps = [
-            'step',
-            'min',
-            'max',
-            'precision',
-            'parse',
-            'format',
-            'value'
-        ];
-        for (var key in this.props) {
-            if (widgetProps.indexOf(key) == -1) {
-                inputProps[key] = this.props[key];
-            }
-        }
-        inputProps.type = 'text';
-        inputProps.value = this.state.value || this.state.value === 0 ?
-            this._format(this.state.value) :
-            '';
-        inputProps.onChange  = this._onChange.bind(this);
-        inputProps.onKeyDown = this._onKeyDown.bind(this);
-        inputProps.className = [];
+        let {
+                // These are ignored in rendering
+                step, min, max, precision, parse, format, value, type, style,
 
-        if (this.props.className) {
-            inputProps.className.push(this.props.className);
-        }
+                // The rest are passed to the input
+                ...rest
+            } = this.props,
 
-        var attrs = {
-            wrap : {
-                onMouseUp   : this.stop.bind(this),
-                onMouseLeave: this.stop.bind(this),
-                className   : []
-            },
-            input : inputProps,
-            btnUp : {
-                href: 'javascript:void 0',
+            attrs = {
+                wrap : {
+                    style    : Object.assign({}, NumericInput.style.wrap, this.props.style.wrap),
+                    className: 'react-numeric-input'
+                },
+                input : {
+                    ref: 'input',
+                    type: 'text',
+                    style: Object.assign(
+                        {},
+                        this.state.style.input,
+                        this.props.className && !(/\bform-control\b/).test(this.props.className) ?
+                            this.state.style['input:not(.form-control)'] :
+                            {}
+                        ),
+                    value: this.state.value || this.state.value === 0 ?
+                        this._format(this.state.value) :
+                        '',
+                    ...rest
+                },
+                btnUp: {
+                    style: Object.assign(
+                        {},
+                        this.state.style.btn,
+                        this.state.style.btnUp,
+                        this.props.disabled ?
+                            this.state.style['btn:disabled'] :
+                            this.state.btnUpActive ?
+                                this.state.style['btn:active'] :
+                                this.state.btnUpHover ?
+                                    this.state.style['btn:hover'] :
+                                    {}
+                    )
+                },
+                btnDown: {
+                    style: Object.assign(
+                        {},
+                        this.state.style.btn,
+                        this.state.style.btnDown,
+                        this.props.disabled ?
+                            this.state.style['btn:disabled'] :
+                            this.state.btnDownActive ?
+                                this.state.style['btn:active'] :
+                                this.state.btnDownHover ?
+                                    this.state.style['btn:hover'] :
+                                    {}
+                    )
+                }
+            };
+
+        // Attach event listeners if the widget is not disabled
+        if (!this.props.disabled) {
+            Object.assign(attrs.wrap, {
+                onMouseUp    : this.stop,
+                onMouseLeave : this.stop
+            });
+
+            Object.assign(attrs.btnUp, {
                 onTouchStart: this.onTouchStart.bind(this, 'up'),
-                onTouchEnd  : this.stop.bind(this),
-                onMouseDown : this.onMouseDown.bind(this, 'up')
-            },
-            btnDown : {
-                href        : 'javascript:void 0',
+                onTouchEnd: this.stop,
+                onMouseEnter: () => {
+                    this.setState({
+                        btnUpHover : true
+                    });
+                },
+                onMouseLeave: () => {
+                    this.stop();
+                    this.setState({
+                        btnUpHover : false,
+                        btnUpActive: false
+                    });
+                },
+                onMouseUp: () => {
+                    this.setState({
+                        btnUpHover  : true,
+                        btnUpActive : false
+                    });
+                },
+                onMouseDown: (e) => {
+                    this.setState({
+                        btnUpHover  : true,
+                        btnUpActive : true
+                    });
+                    this.onMouseDown('up', e);
+                }
+            });
+
+            Object.assign(attrs.btnDown, {
                 onTouchStart: this.onTouchStart.bind(this, 'down'),
-                onTouchEnd  : this.stop.bind(this),
-                onMouseDown : this.onMouseDown.bind(this, 'down')
-            }
-        };
+                onTouchEnd: this.stop,
+                onMouseEnter: () => {
+                    this.setState({
+                        btnDownHover : true
+                    });
+                },
+                onMouseLeave: () => {
+                    this.stop();
+                    this.setState({
+                        btnDownHover : false,
+                        btnDownActive: false
+                    });
+                },
+                onMouseUp: () => {
+                    this.setState({
+                        btnDownHover  : true,
+                        btnDownActive : false
+                    });
+                },
+                onMouseDown: (e) => {
+                    this.setState({
+                        btnDownHover  : true,
+                        btnDownActive : true
+                    });
+                    this.onMouseDown('down', e);
+                }
+            });
 
-        attrs.wrap.className.push('numeric-input-wrap');
-        attrs.input.className.push('numeric-input-input');
-        attrs.btnUp.className   = 'numeric-input-up';
-        attrs.btnDown.className = 'numeric-input-down';
-
-        if (attrs.input.readOnly) {
-            attrs.wrap.className.push('readonly');
+            Object.assign(attrs.input, {
+                onChange : this._onChange.bind(this),
+                onKeyDown: this._onKeyDown.bind(this)
+            });
         }
-
-        if (attrs.input.disabled) {
-            attrs.wrap.className.push('disabled');
-        }
-
-        attrs.input.className = attrs.input.className.join(' ');
-
-        if ((/\bform-control\b/).test(attrs.input.className)) {
-            attrs.wrap.className.push('bs-form-control');
-        }
-        else {
-            attrs.wrap.className.push('std');
-        }
-
-        attrs.wrap.className  = attrs.wrap.className.join(' ');
 
         return (
             <span {...attrs.wrap}>
                 <input {...attrs.input}/>
-                <b {...attrs.btnUp}/>
-                <b {...attrs.btnDown}/>
+                <b {...attrs.btnUp}>
+                    <i style={this.state.style.arrowUp}/>
+                </b>
+                <b {...attrs.btnDown}>
+                    <i style={this.state.style.arrowDown}/>
+                </b>
             </span>
         );
     }
