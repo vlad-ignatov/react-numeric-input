@@ -63,9 +63,10 @@
 	        $(s).replaceWith(div);
 	        ReactDOM.render(React.createElement(_srcNumericInputJsx2['default'], props), div[0]);
 
-	        div.append('<br/><br/>Touch:<br/>');
-	        div = $('<div class="mobile"/>').appendTo(div);
-	        ReactDOM.render(React.createElement(_srcNumericInputJsx2['default'], props), div[0]);
+	        // Touch
+	        // div.append('<br/><br/>Touch:<br/>');
+	        // div = $('<div class="mobile"/>').appendTo(div);
+	        // ReactDOM.render(<NumericInput {...props}/>, div[0]);
 	    });
 
 	    hljs.configure({ useBR: false });
@@ -106,107 +107,6 @@
 	var DELAY = 500;
 
 	exports.DELAY = DELAY;
-	var style = {
-
-	    // The wrapper (span)
-	    'wrap': {
-	        position: 'relative',
-	        display: 'inline-block'
-	    },
-
-	    // The increase button arrow (i)
-	    'arrowUp': {
-	        position: 'absolute',
-	        top: '50%',
-	        left: '50%',
-	        width: 0,
-	        height: 0,
-	        borderWidth: '0 0.6ex 0.6ex 0.6ex',
-	        borderColor: 'transparent transparent rgba(0, 0, 0, 0.7)',
-	        borderStyle: 'solid',
-	        margin: '-0.3ex 0 0 -0.6ex'
-	    },
-
-	    // The decrease button arrow (i)
-	    'arrowDown': {
-	        position: 'absolute',
-	        top: '50%',
-	        left: '50%',
-	        width: 0,
-	        height: 0,
-	        borderWidth: '0.6ex 0.6ex 0 0.6ex',
-	        borderColor: 'rgba(0, 0, 0, 0.7) transparent transparent',
-	        borderStyle: 'solid',
-	        margin: '-0.3ex 0 0 -0.6ex'
-	    },
-
-	    // The buttons (b)
-	    'btn': function btn(dir, component) {
-	        var out = {
-	            position: 'absolute',
-	            right: 2,
-	            width: '2.26ex',
-	            borderColor: 'rgba(0, 0, 0, 0.1)',
-	            borderStyle: 'solid',
-	            textAlign: 'center',
-	            cursor: 'default',
-	            transition: 'all 0.1s',
-	            background: 'rgba(0, 0, 0, 0.1)',
-	            boxShadow: '-1px -1px 3px rgba(0, 0, 0, 0.1) inset, 1px 1px 3px rgba(255, 255, 255, 0.7) inset'
-	        };
-
-	        if (dir == 'up') {
-	            out.top = 2;
-	            out.bottom = '50%';
-	            out.borderRadius = '2px 2px 0 0';
-	            out.borderWidth = '1px 1px 0 1px';
-
-	            if (component.state.btnUpActive) {
-	                out.background = 'rgba(0, 0, 0, 0.3)';
-	                out.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.2) inset, -1px -1px 4px rgba(255, 255, 255, 0.5) inset';
-	            } else if (component.state.btnUpHover) {
-	                out.background = 'rgba(0, 0, 0, 0.2)';
-	            }
-	        } else if (dir == 'down') {
-	            out.top = '50%';
-	            out.bottom = 2;
-	            out.borderRadius = '0 0 2px 2px';
-	            out.borderWidth = '0 1px 1px 1px';
-
-	            if (component.state.btnDownActive) {
-	                out.background = 'rgba(0, 0, 0, 0.3)';
-	                out.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.2) inset, -1px -1px 4px rgba(255, 255, 255, 0.5) inset';
-	            } else if (component.state.btnDownHover) {
-	                out.background = 'rgba(0, 0, 0, 0.2)';
-	            }
-	        }
-
-	        if (component.props.disabled) {
-	            out.opacity = 0.5;
-	            out.boxShadow = 'none';
-	        }
-	        return out;
-	    },
-
-	    // The input (input[type="text"])
-	    'input': function input(isBootstrap) {
-	        var out = {
-	            paddingRight: '3ex',
-	            boxSizing: 'border-box'
-	        };
-
-	        if (!isBootstrap) {
-	            out.border = '1px solid #ccc';
-	            out.borderRadius = 2;
-	            out.paddingLeft = 4;
-	            out.display = 'block';
-	            out.WebkitAppearance = 'none';
-	            out.lineHeight = 'normal';
-	        }
-
-	        return out;
-	    }
-	};
 
 	var NumericInput = (function (_Component) {
 	    _inherits(NumericInput, _Component);
@@ -223,6 +123,9 @@
 	            className: _react.PropTypes.string,
 	            disabled: _react.PropTypes.bool,
 	            readOnly: _react.PropTypes.bool,
+	            style: _react.PropTypes.object,
+	            type: _react.PropTypes.string,
+	            size: _react.PropTypes.number,
 	            value: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.string])
 	        },
 
@@ -240,7 +143,111 @@
 	            max: Number.MAX_SAFE_INTEGER || 9007199254740991,
 	            precision: 0,
 	            parse: null,
-	            format: null
+	            format: null,
+	            className: '',
+	            style: {}
+	        },
+
+	        /**
+	         * This are the default styles that act as base for all the component
+	         * instances. One can modify this object to change the default styles
+	         * of all the widgets on the page.
+	         */
+	        enumerable: true
+	    }, {
+	        key: 'style',
+	        value: {
+
+	            // The wrapper (span)
+	            wrap: {
+	                position: 'relative',
+	                display: 'inline-block'
+	            },
+
+	            // The increase button arrow (i)
+	            arrowUp: {
+	                position: 'absolute',
+	                top: '50%',
+	                left: '50%',
+	                width: 0,
+	                height: 0,
+	                borderWidth: '0 0.6ex 0.6ex 0.6ex',
+	                borderColor: 'transparent transparent rgba(0, 0, 0, 0.7)',
+	                borderStyle: 'solid',
+	                margin: '-0.3ex 0 0 -0.56ex'
+	            },
+
+	            // The decrease button arrow (i)
+	            arrowDown: {
+	                position: 'absolute',
+	                top: '50%',
+	                left: '50%',
+	                width: 0,
+	                height: 0,
+	                borderWidth: '0.6ex 0.6ex 0 0.6ex',
+	                borderColor: 'rgba(0, 0, 0, 0.7) transparent transparent',
+	                borderStyle: 'solid',
+	                margin: '-0.3ex 0 0 -0.56ex'
+	            },
+
+	            // Common styles for the up/down buttons (b)
+	            btn: {
+	                position: 'absolute',
+	                right: 2,
+	                width: '2.26ex',
+	                borderColor: 'rgba(0,0,0,.1)',
+	                borderStyle: 'solid',
+	                textAlign: 'center',
+	                cursor: 'default',
+	                transition: 'all 0.1s',
+	                background: 'rgba(0,0,0,.1)',
+	                boxShadow: '-1px -1px 3px rgba(0,0,0,.1) inset, 1px 1px 3px rgba(255,255,255,.7) inset'
+	            },
+
+	            btnUp: {
+	                top: 2,
+	                bottom: '50%',
+	                borderRadius: '2px 2px 0 0',
+	                borderWidth: '1px 1px 0 1px'
+	            },
+
+	            btnDown: {
+	                top: '50%',
+	                bottom: 2,
+	                borderRadius: '0 0 2px 2px',
+	                borderWidth: '0 1px 1px 1px'
+	            },
+
+	            'btn:hover': {
+	                background: 'rgba(0,0,0,.2)'
+	            },
+
+	            'btn:active': {
+	                background: 'rgba(0,0,0,.3)',
+	                boxShadow: '0 1px 3px rgba(0,0,0,.2) inset, -1px -1px 4px rgba(255,255,255,.5) inset'
+	            },
+
+	            'btn:disabled': {
+	                opacity: .5,
+	                boxShadow: 'none',
+	                cursor: 'not-allowed'
+	            },
+
+	            // The input (input[type="text"])
+	            input: {
+	                paddingRight: '3ex',
+	                boxSizing: 'border-box'
+	            },
+
+	            // The input with bootstrap class
+	            'input:not(.form-control)': {
+	                border: '1px solid #ccc',
+	                borderRadius: 2,
+	                paddingLeft: 4,
+	                display: 'block',
+	                WebkitAppearance: 'none',
+	                lineHeight: 'normal'
+	            }
 	        },
 
 	        /**
@@ -261,8 +268,13 @@
 	            step: props.step,
 	            min: props.min,
 	            max: props.max,
+	            style: {},
 	            value: 'value' in props ? this._parse(String(props.value || '')) : null
 	        };
+
+	        for (var x in NumericInput.style) {
+	            this.state.style[x] = Object.assign({}, NumericInput.style[x], props.style[x] || {});
+	        }
 
 	        this.stop = this.stop.bind(this);
 	    }
@@ -276,6 +288,14 @@
 	        value: function componentWillUnmount() {
 	            this.stop();
 	        }
+
+	        /**
+	         * Used internally to parse the argument x to it's numeric representation.
+	         * If the argument cannot be converted to finite number returns 0; If a
+	         * "precision" prop is specified uses it round the number with that
+	         * precision (no fixed precision here because the return value is float, not
+	         * string).
+	         */
 	    }, {
 	        key: '_toNumber',
 	        value: function _toNumber(x) {
@@ -419,6 +439,12 @@
 	                }, _recursive ? SPEED : DELAY);
 	            }
 	        }
+
+	        /**
+	         * Handles the mousedown event on the up/down buttons. Changes The
+	         * internal value and sets up a delay for auto increment/decrement
+	         * (until mouseup or mouseleave)
+	         */
 	    }, {
 	        key: 'onMouseDown',
 	        value: function onMouseDown(dir, e) {
@@ -434,6 +460,13 @@
 	                _this3.refs.input.focus();
 	            });
 	        }
+
+	        /**
+	         * Handles the touchstart event on the up/down buttons. Changes The
+	         * internal value and DOES NOT sets up a delay for auto increment/decrement.
+	         * Note that this calls e.preventDefault() so the event is not used for
+	         * creating a virtual mousedown after it
+	         */
 	    }, {
 	        key: 'onTouchStart',
 	        value: function onTouchStart(dir, e) {
@@ -464,29 +497,36 @@
 	            var parse = _props.parse;
 	            var format = _props.format;
 	            var value = _props.value;
-
-	            var rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'value']);
+	            var type = _props.type;
+	            var style = _props.style;
+	            var rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'value', 'type', 'style']);
 
 	            var attrs = {
 	                wrap: {
-	                    onMouseUp: this.stop,
-	                    onMouseLeave: this.stop,
-	                    className: []
+	                    style: Object.assign({}, NumericInput.style.wrap, this.props.style.wrap),
+	                    className: 'react-numeric-input'
 	                },
 	                input: _extends({
 	                    ref: 'input',
 	                    type: 'text',
-	                    onChange: this._onChange.bind(this),
-	                    onKeyDown: this._onKeyDown.bind(this),
-	                    style: style.input(this.props.className && /\bform-control\b/.test(this.props.className)),
+	                    style: Object.assign({}, this.state.style.input, this.props.className && !/\bform-control\b/.test(this.props.className) ? this.state.style['input:not(.form-control)'] : {}),
 	                    value: this.state.value || this.state.value === 0 ? this._format(this.state.value) : ''
 	                }, rest),
-	                btnUp: {},
-	                btnDown: {}
+	                btnUp: {
+	                    style: Object.assign({}, this.state.style.btn, this.state.style.btnUp, this.props.disabled ? this.state.style['btn:disabled'] : this.state.btnUpActive ? this.state.style['btn:active'] : this.state.btnUpHover ? this.state.style['btn:hover'] : {})
+	                },
+	                btnDown: {
+	                    style: Object.assign({}, this.state.style.btn, this.state.style.btnDown, this.props.disabled ? this.state.style['btn:disabled'] : this.state.btnDownActive ? this.state.style['btn:active'] : this.state.btnDownHover ? this.state.style['btn:hover'] : {})
+	                }
 	            };
 
 	            // Attach event listeners if the widget is not disabled
 	            if (!this.props.disabled) {
+	                Object.assign(attrs.wrap, {
+	                    onMouseUp: this.stop,
+	                    onMouseLeave: this.stop
+	                });
+
 	                Object.assign(attrs.btnUp, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'up'),
 	                    onTouchEnd: this.stop,
@@ -546,21 +586,26 @@
 	                        _this4.onMouseDown('down', e);
 	                    }
 	                });
+
+	                Object.assign(attrs.input, {
+	                    onChange: this._onChange.bind(this),
+	                    onKeyDown: this._onKeyDown.bind(this)
+	                });
 	            }
 
 	            return React.createElement(
 	                'span',
-	                _extends({}, attrs.wrap, { style: style.wrap }),
+	                attrs.wrap,
 	                React.createElement('input', attrs.input),
 	                React.createElement(
 	                    'b',
-	                    _extends({}, attrs.btnUp, { style: style.btn('up', this) }),
-	                    React.createElement('i', { style: style.arrowUp })
+	                    attrs.btnUp,
+	                    React.createElement('i', { style: this.state.style.arrowUp })
 	                ),
 	                React.createElement(
 	                    'b',
-	                    _extends({}, attrs.btnDown, { style: style.btn('down', this) }),
-	                    React.createElement('i', { style: style.arrowDown })
+	                    attrs.btnDown,
+	                    React.createElement('i', { style: this.state.style.arrowDown })
 	                )
 	            );
 	        }
@@ -570,9 +615,6 @@
 	})(_react.Component);
 
 	exports['default'] = NumericInput;
-
-	// type,
-	// style,
 
 	// The rest are passed to the input
 
