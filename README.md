@@ -85,11 +85,7 @@ This component comes with styles written in LESS and precompiled to CSS in
 * Use modern tool like webpack and then just do `require('node_modules/react-numeric-input/src/style/NumericInput.less');`.
   See [examples/examples.jsx](./examples/examples.jsx) for example.
 
-## Keyboard navigation
-* You can use <kbd>Up</kbd> and <kbd>Down</kbd> arrow keys to increment/decrement the input value.
-* <kbd>Ctrl/Command + Up</kbd> and <kbd>Ctrl/Command + Down</kbd> to use smaller step (`step / 10`).
-  Note that this will only work if you have specified a `precision` option that supports it.
-* <kbd>Shift + Up</kbd> and <kbd>Shift + Down</kbd> to use bigger step (`step * 10`).
+
 
 ####v2.0.0 (not released yet)
 
@@ -117,5 +113,13 @@ Finally, you can still use CSS if you want. Each component's root element has th
 	color: red;
 }
 ```
+
+## Keyboard navigation
+* You can use <kbd>Up</kbd> and <kbd>Down</kbd> arrow keys to increment/decrement the input value.
+* <kbd>Ctrl/Command + Up</kbd> and <kbd>Ctrl/Command + Down</kbd> to use smaller step (`step / 10`).
+  Note that this will only work if you have specified a `precision` option that supports it.
+* <kbd>Shift + Up</kbd> and <kbd>Shift + Down</kbd> to use bigger step (`step * 10`).
+
+
 ## License
 MIT
