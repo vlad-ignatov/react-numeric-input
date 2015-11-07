@@ -15,14 +15,6 @@ module.exports = {
                     'babel?stage=0'
                 ],
                 exclude: /node_modules/
-            },
-            {
-                test: /\.less$/,
-                loaders: [
-                    'style-loader',
-                    'css-loader',
-                    'less-loader'
-                ]
             }
         ]
     },
