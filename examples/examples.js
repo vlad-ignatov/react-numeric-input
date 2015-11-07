@@ -125,7 +125,7 @@
 	            readOnly: _react.PropTypes.bool,
 	            style: _react.PropTypes.object,
 	            type: _react.PropTypes.string,
-	            size: _react.PropTypes.number,
+	            size: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.string]),
 	            value: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.string])
 	        },
 
@@ -247,7 +247,9 @@
 	                display: 'block',
 	                WebkitAppearance: 'none',
 	                lineHeight: 'normal'
-	            }
+	            },
+
+	            'input:focus': {}
 	        },
 
 	        /**
@@ -509,7 +511,7 @@
 	                input: _extends({
 	                    ref: 'input',
 	                    type: 'text',
-	                    style: Object.assign({}, this.state.style.input, this.props.className && !/\bform-control\b/.test(this.props.className) ? this.state.style['input:not(.form-control)'] : {}),
+	                    style: Object.assign({}, this.state.style.input, this.props.className && !/\bform-control\b/.test(this.props.className) ? this.state.style['input:not(.form-control)'] : {}, this.state.inputFocus ? this.state.style['input:focus'] : {}),
 	                    value: this.state.value || this.state.value === 0 ? this._format(this.state.value) : ''
 	                }, rest),
 	                btnUp: {
@@ -589,7 +591,13 @@
 
 	                Object.assign(attrs.input, {
 	                    onChange: this._onChange.bind(this),
-	                    onKeyDown: this._onKeyDown.bind(this)
+	                    onKeyDown: this._onKeyDown.bind(this),
+	                    onFocus: function onFocus() {
+	                        _this4.setState({ inputFocus: true });
+	                    },
+	                    onBlur: function onBlur() {
+	                        _this4.setState({ inputFocus: false });
+	                    }
 	                });
 	            }
 

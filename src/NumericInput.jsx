@@ -19,7 +19,7 @@ export default class NumericInput extends Component
         readOnly  : PropTypes.bool,
         style     : PropTypes.object,
         type      : PropTypes.string,
-        size      : PropTypes.number,
+        size      : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
         value     : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ])
     };
 
@@ -135,7 +135,9 @@ export default class NumericInput extends Component
             display          : 'block',
             WebkitAppearance : 'none',
             lineHeight       : 'normal'
-        }
+        },
+
+        'input:focus': {}
     };
 
     /**
@@ -375,8 +377,9 @@ export default class NumericInput extends Component
                         this.state.style.input,
                         this.props.className && !(/\bform-control\b/).test(this.props.className) ?
                             this.state.style['input:not(.form-control)'] :
-                            {}
-                        ),
+                            {},
+                        this.state.inputFocus ? this.state.style['input:focus'] : {}
+                    ),
                     value: this.state.value || this.state.value === 0 ?
                         this._format(this.state.value) :
                         '',
@@ -481,7 +484,13 @@ export default class NumericInput extends Component
 
             Object.assign(attrs.input, {
                 onChange : this._onChange.bind(this),
-                onKeyDown: this._onKeyDown.bind(this)
+                onKeyDown: this._onKeyDown.bind(this),
+                onFocus : () => {
+                    this.setState({ inputFocus: true });
+                },
+                onBlur : () => {
+                    this.setState({ inputFocus: false });
+                }
             });
         }
 

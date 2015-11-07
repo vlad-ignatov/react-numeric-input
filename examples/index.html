@@ -132,7 +132,7 @@
                         <legend class="text-success">Custom style</legend>
                         <blockquote>
                             <div class="code xml">&lt;NumericInput
-    value={23.45}
+    value={-23.45}
     precision={2}
     size={6}
     step={0.01}
@@ -154,6 +154,10 @@
             fontWeight: 100,
             textShadow: 1px 1px 1px rgba(0, 0, 0, 0.1)
         },
+        'input:focus' : {
+            border: '1px inset #69C',
+            outline: 'none'
+        },
         arrowUp: {
             borderBottomColor: 'rgba(66, 54, 0, 0.63)'
         },
@@ -162,7 +166,7 @@
         }
     }}/></div>
                             <script class="jsx" type="text/plain">{
-                                value: 23.45,
+                                value: -23.45,
                                 precision : 2,
                                 size: 6,
                                 step: 0.01,
@@ -183,6 +187,10 @@
                                         display     : 'block',
                                         fontWeight  : 100,
                                         textShadow  : '1px 1px 1px rgba(0, 0, 0, 0.1)'
+                                    },
+                                    'input:focus' : {
+                                        border: '1px inset #69C',
+                                        outline: 'none'
                                     },
                                     arrowUp: {
                                         borderBottomColor: 'rgba(66, 54, 0, 0.63)'
