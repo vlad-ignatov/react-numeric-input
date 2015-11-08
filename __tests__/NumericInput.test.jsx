@@ -10,15 +10,9 @@ const KEYCODE_DOWN = 40;
 describe('NumericInput', () => {
 
     it('works like inpit[type="number"] by default', () => {
-        var widget = TestUtils.renderIntoDocument(
-                <NumericInput />
-            ),
-            widgetNode = ReactDOM.findDOMNode(widget),
-            inputNode  = widgetNode.firstChild;
-
-        expect(inputNode.value).toEqual('');
-        expect(inputNode.type).toEqual('text');
-        // expect(inputNode.className).toEqual('numeric-input-input');
+        var widget = TestUtils.renderIntoDocument(<NumericInput />);
+        expect(widget.refs.input.value).toEqual('');
+        expect(widget.refs.input.type).toEqual('text');
     });
 
     it('accepts all the props', () => {
@@ -32,10 +26,9 @@ describe('NumericInput', () => {
                     className="form-control"
                 />
             ),
-            widgetNode = ReactDOM.findDOMNode(widget),
-            inputNode  = widgetNode.firstChild;
+            inputNode  = widget.refs.input;
 
-		// Test the precision
+        // Test the precision
         expect(inputNode.value).toEqual('5.00');
         expect(inputNode.className).toEqual('form-control');
 
@@ -175,6 +168,14 @@ describe('NumericInput', () => {
         // expect(widgetNode.className).toMatch(/\breadonly\b/);
         TestUtils.Simulate.mouseDown(btnUp);
         expect(inputNode.value).toEqual('');
+    });
+
+    // setValue() and getValueAsNumber() -----------------------------------------------
+    it('exposes setValue() and getValueAsNumber() on the input', () => {
+        var widget = TestUtils.renderIntoDocument(<NumericInput />);
+        expect(widget.refs.input.getValueAsNumber()).toEqual(0);
+        widget.refs.input.setValue(123.56);
+        expect(widget.refs.input.getValueAsNumber()).toEqual(123.56);
     });
 
     // Testing styles ------------------------------------------------------------------

@@ -282,6 +282,25 @@
 	        value: function componentWillUnmount() {
 	            this.stop();
 	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _this = this;
+
+	            // Object.defineProperty(this.refs.input, '_valueAsNumber', {
+	            //     get: () => this.state.value || 0
+	            // });
+
+	            this.refs.input.getValue = function () {
+	                return _this.state.value || 0;
+	            };
+
+	            this.refs.input.setValue = function (x) {
+	                _this.setState({
+	                    value: _this._parse(x)
+	                });
+	            };
+	        }
 
 	        /**
 	         * Used internally to parse the argument x to it's numeric representation.
@@ -401,13 +420,13 @@
 	    }, {
 	        key: 'increase',
 	        value: function increase(_recursive) {
-	            var _this = this;
+	            var _this2 = this;
 
 	            this.stop();
 	            this._step(1);
 	            if (isNaN(this.state.value) || this.state.value < this.props.max) {
 	                this._timer = setTimeout(function () {
-	                    _this.increase(true);
+	                    _this2.increase(true);
 	                }, _recursive ? SPEED : DELAY);
 	            }
 	        }
@@ -423,13 +442,13 @@
 	    }, {
 	        key: 'decrease',
 	        value: function decrease(_recursive) {
-	            var _this2 = this;
+	            var _this3 = this;
 
 	            this.stop();
 	            this._step(-1);
 	            if (isNaN(this.state.value) || this.state.value > this.props.min) {
 	                this._timer = setTimeout(function () {
-	                    _this2.decrease(true);
+	                    _this3.decrease(true);
 	                }, _recursive ? SPEED : DELAY);
 	            }
 	        }
@@ -442,7 +461,7 @@
 	    }, {
 	        key: 'onMouseDown',
 	        value: function onMouseDown(dir, e) {
-	            var _this3 = this;
+	            var _this4 = this;
 
 	            e.preventDefault();
 	            if (dir == 'down') {
@@ -451,7 +470,7 @@
 	                this.increase();
 	            }
 	            setTimeout(function () {
-	                _this3.refs.input.focus();
+	                _this4.refs.input.focus();
 	            });
 	        }
 
@@ -479,7 +498,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this4 = this;
+	            var _this5 = this;
 
 	            var _props = this.props;
 	            var
@@ -525,29 +544,29 @@
 	                    onTouchStart: this.onTouchStart.bind(this, 'up'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
-	                        _this4.setState({
+	                        _this5.setState({
 	                            btnUpHover: true
 	                        });
 	                    },
 	                    onMouseLeave: function onMouseLeave() {
-	                        _this4.stop();
-	                        _this4.setState({
+	                        _this5.stop();
+	                        _this5.setState({
 	                            btnUpHover: false,
 	                            btnUpActive: false
 	                        });
 	                    },
 	                    onMouseUp: function onMouseUp() {
-	                        _this4.setState({
+	                        _this5.setState({
 	                            btnUpHover: true,
 	                            btnUpActive: false
 	                        });
 	                    },
 	                    onMouseDown: function onMouseDown(e) {
-	                        _this4.setState({
+	                        _this5.setState({
 	                            btnUpHover: true,
 	                            btnUpActive: true
 	                        });
-	                        _this4.onMouseDown('up', e);
+	                        _this5.onMouseDown('up', e);
 	                    }
 	                });
 
@@ -555,29 +574,29 @@
 	                    onTouchStart: this.onTouchStart.bind(this, 'down'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
-	                        _this4.setState({
+	                        _this5.setState({
 	                            btnDownHover: true
 	                        });
 	                    },
 	                    onMouseLeave: function onMouseLeave() {
-	                        _this4.stop();
-	                        _this4.setState({
+	                        _this5.stop();
+	                        _this5.setState({
 	                            btnDownHover: false,
 	                            btnDownActive: false
 	                        });
 	                    },
 	                    onMouseUp: function onMouseUp() {
-	                        _this4.setState({
+	                        _this5.setState({
 	                            btnDownHover: true,
 	                            btnDownActive: false
 	                        });
 	                    },
 	                    onMouseDown: function onMouseDown(e) {
-	                        _this4.setState({
+	                        _this5.setState({
 	                            btnDownHover: true,
 	                            btnDownActive: true
 	                        });
-	                        _this4.onMouseDown('down', e);
+	                        _this5.onMouseDown('down', e);
 	                    }
 	                });
 
@@ -585,10 +604,10 @@
 	                    onChange: this._onChange.bind(this),
 	                    onKeyDown: this._onKeyDown.bind(this),
 	                    onFocus: function onFocus() {
-	                        _this4.setState({ inputFocus: true });
+	                        _this5.setState({ inputFocus: true });
 	                    },
 	                    onBlur: function onBlur() {
-	                        _this4.setState({ inputFocus: false });
+	                        _this5.setState({ inputFocus: false });
 	                    }
 	                });
 	            }

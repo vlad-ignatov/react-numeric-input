@@ -176,6 +176,20 @@ export default class NumericInput extends Component
     }
 
     /**
+     * Adds getValueAsNumber and setValue methods to the input DOM element.
+     */
+    componentDidMount(): void
+    {
+        this.refs.input.getValueAsNumber = () => this.state.value || 0;
+
+        this.refs.input.setValue = (value) => {
+            this.setState({
+                value: this._parse(value)
+            });
+        };
+    }
+
+    /**
      * Used internally to parse the argument x to it's numeric representation.
      * If the argument cannot be converted to finite number returns 0; If a
      * "precision" prop is specified uses it round the number with that

@@ -113,6 +113,29 @@ rules. Example:
   Note that this will only work if you have specified a `precision` option that supports it.
 * <kbd>Shift + Up</kbd> and <kbd>Shift + Down</kbd> to use bigger step (`step * 10`).
 
+## Integration with external scripts
+This component aims to provide good integration not only with React but with any third party script
+that might want to work with it on the current page.
+
+### valueAsNumber
+The native number inputs have special property called `valueAsNumber`. It provides access to the
+value as number to be used by scripts. In this react component this becomes even more desirable as
+the display value might be formatted and have nothing in common with the underlying value meaning
+that one might need to call parse to find out what the numeric value is. For that reason this
+component exposes `_valueAsNumber` property on the input element. Note the underscore in front -
+the `valueAsNumber` is readonly and not even accessible on input[type="text"]. Also keep in mind
+that this really is a number (float) so it might be different from the displayed value. For
+example an input showing "12.30" will have `_valueAsNumber` of `12.3`.
+
+### setValue()
+An external script that does not "understand" React can still work with this component by reading
+the `_valueAsNumber` or by calling the `setValue()` method exposed on the input element. Here is
+an example with jQuery:
+```js
+$('input[name="some-input"]')[0].setValue('123mph');
+```
+Calling this method will invoke the component's `parse` method with the provided argument and then
+it will `setState` causing the usual re-rendering.
 
 ## License
 MIT
