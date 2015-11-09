@@ -1,10 +1,23 @@
 /* global process */
 module.exports = function (config) {
     config.set({
-        browsers: [ process.env.CONTINUOUS_INTEGRATION ? 'Firefox' : 'Chrome' ],
+        browsers: process.env.CONTINUOUS_INTEGRATION ?
+            'Firefox' :
+            [
+                'PhantomJS',
+                'Chrome',
+                'ChromeCanary',
+                'Firefox',
+                // 'Opera',
+                'Safari'
+            ],
         singleRun: true,
         frameworks: [ 'mocha' ],
         files: [
+
+            // This one is needed for testing in PhantomJS
+            'https://raw.githubusercontent.com/es-shims/es5-shim/master/es5-shim.js',
+
             'https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-with-addons.js',
             'https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js',
             './__tests__/tests.webpack.js'
