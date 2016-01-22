@@ -12,7 +12,7 @@ numeric value).
 
 ## Installation
 ```sh
-npm install react-number-nput --save
+npm install react-numeric-input --save
 ```
 Then in your scrips:
 ```js
