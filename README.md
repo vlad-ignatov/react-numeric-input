@@ -12,7 +12,7 @@ numeric value).
 
 ## Installation
 ```sh
-npm install react-number-nput --save
+npm install react-numeric-input --save
 ```
 Then in your scrips:
 ```js
@@ -58,20 +58,21 @@ function myFormat(num) {
 ```
 
 ## Props
-Option       | Type                | Default
--------------|---------------------|:-------:
-**value**    |`number` or `string` | `""` which converts to 0
-**min**      |`number`             | `Number.MIN_SAFE_INTEGER`
-**max**      |`number`             | `Number.MAX_SAFE_INTEGER`
-**step**     |`number`             | 1
-**precision**|`number`             | 0
-**parse**    |`function`           | parseFloat
-**format**   |`function`           | none
-**className**| `string`            | none
-**disabled** |`boolean`            | none
-**readOnly** |`boolean`            | none
-**style**    |`object`             | none
-**size**     |`number`             | none
+Option       | Type                                | Default
+-------------|-------------------------------------|:-------:
+**value**    |`number` or `string`                 | `""` which converts to 0
+**min**      |`number`                             | `Number.MIN_SAFE_INTEGER`
+**max**      |`number`                             | `Number.MAX_SAFE_INTEGER`
+**step**     |`number`                             | 1
+**precision**|`number`                             | 0
+**parse**    |`function`                           | parseFloat
+**format**   |`function`                           | none
+**className**|`string`                             | none
+**disabled** |`boolean`                            | none
+**readOnly** |`boolean`                            | none
+**style**    |`object`                             | none
+**size**     |`number` or `string`                 | none
+**mobile**   |`true`, `false`, 'auto' or `function`|`auto`
 
 Any other option is passed directly the input created by the component. Just
 don't forget to camelCase the attributes. For example `readonly` must be `readOnly`.
