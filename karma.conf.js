@@ -2,7 +2,7 @@
 module.exports = function (config) {
     config.set({
         browsers: process.env.CONTINUOUS_INTEGRATION ?
-            'Firefox' :
+            [ 'Firefox' ] :
             [
                 'PhantomJS',
                 'Chrome',
