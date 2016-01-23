@@ -1,11 +1,12 @@
-import { PropTypes, Component } from 'react';
+import React from "react";
 
+const PropTypes = React.PropTypes
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
-export const SPEED = 50;
-export const DELAY = 500;
+const SPEED = 50;
+const DELAY = 500;
 
-export default class NumericInput extends Component
+export class NumericInput extends React.Component
 {
     static propTypes = {
         step      : PropTypes.number,
@@ -20,7 +21,13 @@ export default class NumericInput extends Component
         style     : PropTypes.object,
         type      : PropTypes.string,
         size      : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
-        value     : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ])
+        value     : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
+        mobile(props, propName) {
+            let prop = props[propName]
+            if (prop !== true && prop !== false && prop !== 'auto' && typeof prop != 'function') {
+                return new Error('The "mobile" prop must be true, false, "auto" or a function');
+            }
+        }
     };
 
     /**
@@ -36,6 +43,7 @@ export default class NumericInput extends Component
         parse     : null,
         format    : null,
         className : '',
+        mobile    : 'auto',
         style     : {}
     };
 
@@ -50,6 +58,10 @@ export default class NumericInput extends Component
         wrap: {
             position: 'relative',
             display : 'inline-block'
+        },
+
+        'wrap.hasFormControl': {
+            display : 'block'
         },
 
         // The increase button arrow (i)
@@ -78,6 +90,28 @@ export default class NumericInput extends Component
             margin     : '-0.3ex 0 0 -0.56ex'
         },
 
+        // The vertical segment of the plus sign (for mobile only)
+        plus: {
+            position   : 'absolute',
+            top        : '50%',
+            left       : '50%',
+            width      : 2,
+            height     : 10,
+            background : 'rgba(0,0,0,.7)',
+            margin     : '-5px 0 0 -1px'
+        },
+
+        // The horizontal segment of the plus/minus signs (for mobile only)
+        minus: {
+            position   : 'absolute',
+            top        : '50%',
+            left       : '50%',
+            width      : 10,
+            height     : 2,
+            background : 'rgba(0,0,0,.7)',
+            margin     : '-1px 0 0 -5px'
+        },
+
         // Common styles for the up/down buttons (b)
         btn: {
             position   : 'absolute',
@@ -99,11 +133,30 @@ export default class NumericInput extends Component
             borderWidth : '1px 1px 0 1px'
         },
 
+        'btnUp.mobile': {
+            width        : '3.3ex',
+            bottom       : 2,
+            boxShadow    : 'none',
+            borderRadius : 2,
+            borderWidth  : 1
+        },
+
         btnDown: {
             top         : '50%',
             bottom      : 2,
             borderRadius: '0 0 2px 2px',
             borderWidth : '0 1px 1px 1px'
+        },
+
+        'btnDown.mobile': {
+            width        : '3.3ex',
+            bottom       : 2,
+            left         : 2,
+            top          : 2,
+            right        : 'auto',
+            boxShadow    : 'none',
+            borderRadius : 2,
+            borderWidth  : 1
         },
 
         'btn:hover': {
@@ -116,7 +169,7 @@ export default class NumericInput extends Component
         },
 
         'btn:disabled': {
-            opacity: .5,
+            opacity: 0.5,
             boxShadow: 'none',
             cursor: 'not-allowed'
         },
@@ -137,8 +190,17 @@ export default class NumericInput extends Component
             lineHeight       : 'normal'
         },
 
+        'input.mobile': {
+            paddingLeft :' 3.4ex',
+            paddingRight: '3.4ex',
+            textAlign   : 'center'
+        },
+
         'input:focus': {}
     };
+
+    static SPEED = SPEED;
+    static DELAY = DELAY;
 
     /**
      * Set the initial state and create the "_timer" property to contain the
@@ -160,8 +222,20 @@ export default class NumericInput extends Component
                     null
         };
 
+        // let mobile = props.mobile == 'auto' ?
+        //     'ontouchstart' in document :
+        //     props.mobile
+        // if (typeof mobile == "function") {
+        //     mobile = mobile.call(this)
+        // }
+        // this.state.mobile = !!mobile
+
         for (let x in NumericInput.style) {
-            this.state.style[x] = Object.assign({}, NumericInput.style[x], props.style[x] || {});
+            this.state.style[x] = Object.assign(
+                {},
+                NumericInput.style[x],
+                props.style[x] || {}
+            );
         }
 
         this.stop = this.stop.bind(this);
@@ -307,7 +381,7 @@ export default class NumericInput extends Component
         if (isNaN(this.state.value) || this.state.value < this.props.max) {
             this._timer = setTimeout(() => {
                 this.increase(true);
-            }, _recursive ? SPEED : DELAY);
+            }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
         }
     }
 
@@ -326,7 +400,7 @@ export default class NumericInput extends Component
         if (isNaN(this.state.value) || this.state.value > this.props.min) {
             this._timer = setTimeout(() => {
                 this.decrease(true);
-            }, _recursive ? SPEED : DELAY);
+            }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
         }
     }
 
@@ -370,67 +444,90 @@ export default class NumericInput extends Component
      */
     render()
     {
+        let props = this.props
+        let state = this.state
         let {
-                // These are ignored in rendering
-                step, min, max, precision, parse, format, value, type, style,
+            // These are ignored in rendering
+            step, min, max, precision, parse, format, value, type, style,
 
-                // The rest are passed to the input
+            // The rest are passed to the input
+            ...rest
+        } = props
+
+        let hasFormControl = props.className && (/\bform-control\b/).test(props.className)
+
+        let mobile = props.mobile == 'auto' ?
+            'ontouchstart' in document :
+            props.mobile
+        if (typeof mobile == "function") {
+            mobile = mobile.call(this)
+        }
+        mobile = !!mobile
+
+        let attrs = {
+            wrap : {
+                style    : Object.assign({}, NumericInput.style.wrap, props.style.wrap),
+                className: 'react-numeric-input'
+            },
+            input : {
+                ref: 'input',
+                type: 'text',
+                style: Object.assign(
+                    {},
+                    state.style.input,
+                    !hasFormControl ?
+                        state.style['input:not(.form-control)'] :
+                        {},
+                    state.inputFocus ? state.style['input:focus'] : {}
+                ),
+                value: state.value || state.value === 0 ?
+                    this._format(state.value) :
+                    '',
                 ...rest
-            } = this.props,
+            },
+            btnUp: {
+                style: Object.assign(
+                    {},
+                    state.style.btn,
+                    state.style.btnUp,
+                    props.disabled ?
+                        state.style['btn:disabled'] :
+                        state.btnUpActive ?
+                            state.style['btn:active'] :
+                            state.btnUpHover ?
+                                state.style['btn:hover'] :
+                                {}
+                )
+            },
+            btnDown: {
+                style: Object.assign(
+                    {},
+                    state.style.btn,
+                    state.style.btnDown,
+                    props.disabled ?
+                        state.style['btn:disabled'] :
+                        state.btnDownActive ?
+                            state.style['btn:active'] :
+                            state.btnDownHover ?
+                                state.style['btn:hover'] :
+                                {}
+                )
+            }
+        };
 
-            attrs = {
-                wrap : {
-                    style    : Object.assign({}, NumericInput.style.wrap, this.props.style.wrap),
-                    className: 'react-numeric-input'
-                },
-                input : {
-                    ref: 'input',
-                    type: 'text',
-                    style: Object.assign(
-                        {},
-                        this.state.style.input,
-                        this.props.className && !(/\bform-control\b/).test(this.props.className) ?
-                            this.state.style['input:not(.form-control)'] :
-                            {},
-                        this.state.inputFocus ? this.state.style['input:focus'] : {}
-                    ),
-                    value: this.state.value || this.state.value === 0 ?
-                        this._format(this.state.value) :
-                        '',
-                    ...rest
-                },
-                btnUp: {
-                    style: Object.assign(
-                        {},
-                        this.state.style.btn,
-                        this.state.style.btnUp,
-                        this.props.disabled ?
-                            this.state.style['btn:disabled'] :
-                            this.state.btnUpActive ?
-                                this.state.style['btn:active'] :
-                                this.state.btnUpHover ?
-                                    this.state.style['btn:hover'] :
-                                    {}
-                    )
-                },
-                btnDown: {
-                    style: Object.assign(
-                        {},
-                        this.state.style.btn,
-                        this.state.style.btnDown,
-                        this.props.disabled ?
-                            this.state.style['btn:disabled'] :
-                            this.state.btnDownActive ?
-                                this.state.style['btn:active'] :
-                                this.state.btnDownHover ?
-                                    this.state.style['btn:hover'] :
-                                    {}
-                    )
-                }
-            };
+        if (hasFormControl) {
+            Object.assign(attrs.wrap.style, state.style['wrap.hasFormControl'])
+        }
+
+        // mobile
+        if (mobile) {
+            Object.assign(attrs.input  .style, state.style['input.mobile'  ])
+            Object.assign(attrs.btnUp  .style, state.style['btnUp.mobile'  ])
+            Object.assign(attrs.btnDown.style, state.style['btnDown.mobile'])
+        }
 
         // Attach event listeners if the widget is not disabled
-        if (!this.props.disabled) {
+        if (!props.disabled) {
             Object.assign(attrs.wrap, {
                 onMouseUp    : this.stop,
                 onMouseLeave : this.stop
@@ -508,16 +605,33 @@ export default class NumericInput extends Component
             });
         }
 
+        if (mobile) {
+            return (
+                <span {...attrs.wrap}>
+                    <input {...attrs.input}/>
+                    <b {...attrs.btnUp}>
+                        <i style={state.style.minus}/>
+                        <i style={state.style.plus}/>
+                    </b>
+                    <b {...attrs.btnDown}>
+                        <i style={state.style.minus}/>
+                    </b>
+                </span>
+            )
+        }
+
         return (
             <span {...attrs.wrap}>
                 <input {...attrs.input}/>
                 <b {...attrs.btnUp}>
-                    <i style={this.state.style.arrowUp}/>
+                    <i style={state.style.arrowUp}/>
                 </b>
                 <b {...attrs.btnDown}>
-                    <i style={this.state.style.arrowDown}/>
+                    <i style={state.style.arrowDown}/>
                 </b>
             </span>
         );
     }
 }
+
+export default NumericInput
