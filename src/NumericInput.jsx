@@ -229,14 +229,6 @@ export class NumericInput extends React.Component
                     null
         };
 
-        // let mobile = props.mobile == 'auto' ?
-        //     'ontouchstart' in document :
-        //     props.mobile
-        // if (typeof mobile == "function") {
-        //     mobile = mobile.call(this)
-        // }
-        // this.state.mobile = !!mobile
-
         for (let x in NumericInput.style) {
             this.state.style[x] = Object.assign(
                 {},

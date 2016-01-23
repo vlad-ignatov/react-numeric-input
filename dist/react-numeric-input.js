@@ -116,14 +116,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            value: 'value' in props ? _this._parse(String(props.value || '')) : null
 	        };
 
-	        // let mobile = props.mobile == 'auto' ?
-	        //     'ontouchstart' in document :
-	        //     props.mobile
-	        // if (typeof mobile == "function") {
-	        //     mobile = mobile.call(this)
-	        // }
-	        // this.state.mobile = !!mobile
-
 	        for (var x in NumericInput.style) {
 	            _this.state.style[x] = Object.assign({}, NumericInput.style[x], props.style[x] || {});
 	        }
