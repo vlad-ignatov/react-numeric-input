@@ -1,13 +1,15 @@
 /* global describe, it, ReactDOM, React */
 import expect from 'expect';
-import { default as NumericInput, DELAY } from '../src/NumericInput.jsx';
+import NumericInput from '../src/NumericInput.jsx';
 
 const TestUtils    = React.addons.TestUtils;
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
+const DELAY        = NumericInput.DELAY;
 
 
-describe('NumericInput', () => {
+describe('NumericInput', function() {
+    this.timeout(10000);
 
     it('works like inpit[type="number"] by default', () => {
         var widget = TestUtils.renderIntoDocument(<NumericInput />);
@@ -48,6 +50,7 @@ describe('NumericInput', () => {
     });
 
     it('can auto-increase', (done) => {
+        this.timeout
         var widget     = TestUtils.renderIntoDocument(<NumericInput/>),
             widgetNode = ReactDOM.findDOMNode(widget),
             inputNode  = widgetNode.firstChild,
@@ -170,7 +173,7 @@ describe('NumericInput', () => {
         expect(inputNode.value).toEqual('');
     });
 
-    // setValue() and getValueAsNumber() -----------------------------------------------
+    // setValue() and getValueAsNumber() ---------------------------------------
     it('exposes setValue() and getValueAsNumber() on the input', () => {
         var widget = TestUtils.renderIntoDocument(<NumericInput />);
         expect(widget.refs.input.getValueAsNumber()).toEqual(0);
@@ -178,7 +181,7 @@ describe('NumericInput', () => {
         expect(widget.refs.input.getValueAsNumber()).toEqual(123.56);
     });
 
-    // Testing styles ------------------------------------------------------------------
+    // Testing styles ----------------------------------------------------------
     it('can set wrapper styles', () => {
         var widget = TestUtils.renderIntoDocument(
                 <NumericInput style={{
@@ -240,7 +243,7 @@ describe('NumericInput', () => {
                     arrowDown: {
                         fontStyle: 'italic'
                     }
-                }}/>
+                }} mobile={false}/>
             ),
             widgetNode = ReactDOM.findDOMNode(widget),
             arrowDown  = widgetNode.lastChild.firstChild;
@@ -254,7 +257,7 @@ describe('NumericInput', () => {
                     arrowUp: {
                         fontStyle: 'italic'
                     }
-                }}/>
+                }} mobile={false}/>
             ),
             widgetNode = ReactDOM.findDOMNode(widget),
             arrowUp    = widgetNode.firstChild.nextElementSibling.firstChild;
@@ -270,7 +273,7 @@ describe('NumericInput', () => {
                     'btn:hover'   : { color: 'rgb(2, 3, 4)' },
                     'btn:active'  : { color: 'rgb(3, 4, 5)' },
                     'btn:disabled': { color: 'rgb(4, 5, 6)' }
-                }}/>
+                }} mobile={false}/>
             ),
             widgetNode  = ReactDOM.findDOMNode(widget),
             btnUpNode   = widgetNode.firstChild.nextElementSibling,
@@ -299,7 +302,7 @@ describe('NumericInput', () => {
                 'btn:hover'   : { color: 'rgb(2, 3, 4)'},
                 'btn:active'  : { color: 'rgb(3, 4, 5)'},
                 'btn:disabled': { color: 'rgb(4, 5, 6)'}
-            }}/>
+            }} mobile={false}/>
         );
         widgetNode  = ReactDOM.findDOMNode(widget);
         btnUpNode   = widgetNode.firstChild.nextElementSibling;
@@ -316,4 +319,22 @@ describe('NumericInput', () => {
         TestUtils.Simulate.mouseDown(btnDownNode);
         expect(btnDownNode.style.color).toEqual('rgb(4, 5, 6)');
     });
+
+    it ('can set mobile styles', () => {
+        var widget = TestUtils.renderIntoDocument(<NumericInput mobile/>),
+            widgetNode  = ReactDOM.findDOMNode(widget),
+            btnUpNode   = widgetNode.firstChild.nextElementSibling,
+            btnDownNode = widgetNode.lastChild;
+
+        expect(btnUpNode.style.bottom).toEqual('2px');
+        expect(btnDownNode.style.left).toEqual('2px');
+
+        widget = TestUtils.renderIntoDocument(<NumericInput mobile={false}/>),
+            widgetNode  = ReactDOM.findDOMNode(widget),
+            btnUpNode   = widgetNode.firstChild.nextElementSibling,
+            btnDownNode = widgetNode.lastChild;
+
+        expect(btnUpNode.style.bottom).toEqual('50%');
+        expect(btnDownNode.style.top).toEqual('50%');
+    })
 });
