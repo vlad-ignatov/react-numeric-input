@@ -18,8 +18,8 @@ module.exports = function (config) {
             // This one is needed for testing in PhantomJS
             'https://raw.githubusercontent.com/es-shims/es5-shim/master/es5-shim.js',
 
-            'https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-with-addons.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-with-addons.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js',
             './__tests__/tests.webpack.js'
         ],
         preprocessors: {

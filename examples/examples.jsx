@@ -13,7 +13,6 @@ $(function() {
             React.createElement(NumericInput, props),
             div[0]
         );
-        console.log(widget)
         div.data("widget", widget)
     });
 
