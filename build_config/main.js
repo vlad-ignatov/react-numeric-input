@@ -9,9 +9,12 @@ module.exports = {
         loaders: [
             {
                 test: /\.jsx$/,
-                loaders: [
-                    "babel?presets[]=es2015&presets[]=stage-0&presets[]=react"
-                ],
+                loader: "babel",
+                query: {
+                    // https://github.com/babel/babel-loader#options
+                    presets: ['es2015', 'stage-0', 'react'],
+                    comments: false
+                },
                 exclude: /node_modules/
             }
         ]
