@@ -1,4 +1,4 @@
-# <img align="right" src="http://react-numeric-input.jsdevel.com/ReactNumericInput.png" width="197"/>React Numeric Input
+# <img align="right" src="http://vlad-ignatov.github.io/react-numeric-input/examples/v2.0.0/screenshot.png" width="123"/>React Numeric Input
 
 [![Build Status](https://travis-ci.org/vlad-ignatov/react-numeric-input.svg?branch=master)](https://travis-ci.org/vlad-ignatov/react-numeric-input)
 
