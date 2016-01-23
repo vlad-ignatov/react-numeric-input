@@ -3,8 +3,6 @@ import React from "react";
 const PropTypes = React.PropTypes
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
-const SPEED = 50;
-const DELAY = 500;
 
 export class NumericInput extends React.Component
 {
@@ -199,8 +197,17 @@ export class NumericInput extends React.Component
         'input:focus': {}
     };
 
-    static SPEED = SPEED;
-    static DELAY = DELAY;
+    /**
+     * When click and hold on a button - the speed of auto changin the value.
+     * This is a static property and can be modified if needed.
+     */
+    static SPEED = 50;
+
+    /**
+     * When click and hold on a button - the delay before auto changin the value.
+     * This is a static property and can be modified if needed.
+     */
+    static DELAY = 500;
 
     /**
      * Set the initial state and create the "_timer" property to contain the
