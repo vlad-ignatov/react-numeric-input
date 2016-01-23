@@ -32,10 +32,13 @@ module.exports = function (config) {
                 loaders: [
                     {
                         test: /\.jsx?$/,
-                        loaders: [
-                            'jsx-loader?stripTypes',
-                            'babel?stage=0&optional=runtime'
-                        ],
+                        loader: "babel",
+                        query: {
+                            // https://github.com/babel/babel-loader#options
+                            cacheDirectory: true,
+                            presets: ['es2015', 'stage-0', 'react'],
+                            plugins: ["transform-runtime"]
+                        },
                         exclude: /node_modules/
                     }
                 ]
