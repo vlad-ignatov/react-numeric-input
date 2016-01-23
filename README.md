@@ -109,10 +109,10 @@ rules. Example:
 ```
 
 ## Keyboard navigation
-* You can use <kbd>Up</kbd> and <kbd>Down</kbd> arrow keys to increment/decrement the input value.
-* <kbd>Ctrl/Command + Up</kbd> and <kbd>Ctrl/Command + Down</kbd> to use smaller step (`step / 10`).
+* You can use <kbd>⬆</kbd> and <kbd>⬇</kbd> arrow keys to increment/decrement the input value.
+* <kbd>Ctrl/Command + ⬆</kbd> and <kbd>Ctrl/Command + ⬇</kbd> to use smaller step (`step / 10`).
   Note that this will only work if you have specified a `precision` option that supports it.
-* <kbd>Shift + Up</kbd> and <kbd>Shift + Down</kbd> to use bigger step (`step * 10`).
+* <kbd>Shift + ⬆</kbd> and <kbd>Shift + ⬇</kbd> to use bigger step (`step * 10`).
 
 ## Integration with external scripts
 This component aims to provide good integration not only with React but with any third party script
