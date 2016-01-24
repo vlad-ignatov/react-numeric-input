@@ -1,3 +1,96 @@
+// ============================================================================
+// IMPORTANT!
+// This file is not currently used for anything and will not work if you
+// try to include it on the page
+// ============================================================================
+
+.numeric-input-wrap {
+    position: relative;
+    display : inline-block;
+
+    // input ------------------------------------------------------------------
+    .numeric-input-input {
+        padding-right: 3ex;
+        box-sizing   : border-box;
+
+        &:not(.form-control) {
+            border             : 1px solid #ccc;
+            border-radius      : 2px;
+            padding-left       : 4px;
+            display            : block;
+            -webkit-appearance : none;
+            line-height        : normal;
+        }
+    }
+
+    // arrows -----------------------------------------------------------------
+    .numeric-input-arrow-up, .numeric-input-arrow-down {
+        position    : absolute;
+        top         : 50%;
+        left        : 50%;
+        width       : 0;
+        height      : 0;
+        border-style: solid;
+        margin      : -0.3ex 0 0 -0.56ex;
+    }
+
+    .numeric-input-arrow-up {
+        border-width: 0 0.6ex 0.6ex 0.6ex;
+        border-color: transparent transparent rgba(0, 0, 0, 0.7);
+    }
+
+    .numeric-input-arrow-down {
+        border-width: 0.6ex 0.6ex 0 0.6ex;
+        border-color: rgba(0, 0, 0, 0.7) transparent transparent;
+    }
+
+    // buttons ----------------------------------------------------------------
+    .numeric-input-btn-up, .numeric-input-btn-down {
+        position    : absolute;
+        right       : 2;
+        width       : 2.26ex;
+        border-color: rgba(0,0,0,.1);
+        border-style: solid;
+        text-align  : center;
+        cursor      : default;
+        transition  : all 0.1s;
+        background  : rgba(0,0,0,.1);
+        box-shadow  : -1px -1px 3px rgba(0,0,0,.1) inset,
+                       1px 1px 3px rgba(255,255,255,.7) inset;
+
+       &:hover {
+           background: rgba(0,0,0,.2);
+       }
+
+       &:active {
+           background: rgba(0,0,0,.3);
+           box-shadow: 0 1px 3px rgba(0,0,0,.2) inset,
+                      -1px -1px 4px rgba(255,255,255,.5) inset;
+       }
+
+       &:disabled {
+           opacity   : 0.5;
+           box-shadow: none;
+           cursor    : not-allowed;
+       }
+    }
+
+    .numeric-input-btn-up {
+        top          : 2px;
+        bottom       : 50%;
+        border-radius: 2px 2px 0 0;
+        border-width : 1px 1px 0 1px;
+    }
+
+    .numeric-input-btn-down {
+        top          : 50%;
+        bottom       : 2px;
+        border-radius: 0 0 2px 2px;
+        border-width : 0 1px 1px 1px;
+    }
+}
+
+// OLD ========================================================================
 .unselectable() {
     -webkit-user-select: none;
        -moz-user-select: none;

@@ -1,20 +1,19 @@
-/* global ReactDOM, $, hljs */
-import NumericInput from '../src/NumericInput.jsx';
+/* global $, hljs, NumericInput */
+import React from "react"
+import ReactDOM from "react-dom"
+// import NumericInput from '../index.js';
 
-// require('../src/style/NumericInput.less');// webpack magic
 
 $(function() {
     $('script.jsx').each(function(i, s) {
         var div   = $('<div/>'),
             props = Function('return (' + $(s).text() + ')')();
-
         $(s).replaceWith(div);
-        ReactDOM.render(<NumericInput {...props}/>, div[0]);
-
-        // Touch
-        // div.append('<br/><br/>Touch:<br/>');
-        // div = $('<div class="mobile"/>').appendTo(div);
-        // ReactDOM.render(<NumericInput {...props}/>, div[0]);
+        var widget = ReactDOM.render(
+            React.createElement(NumericInput, props),
+            div[0]
+        );
+        div.data("widget", widget)
     });
 
     hljs.configure({ useBR : false });
