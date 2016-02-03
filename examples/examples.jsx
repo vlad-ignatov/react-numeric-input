@@ -1,6 +1,7 @@
 /* global $, hljs, NumericInput */
-import React from "react"
+import React    from "react"
 import ReactDOM from "react-dom"
+import Demo     from "./Demo"
 // import NumericInput from '../index.js';
 
 
@@ -15,6 +16,8 @@ $(function() {
         );
         div.data("widget", widget)
     });
+    
+    ReactDOM.render(<Demo/>, $('.demo')[0]);
 
     hljs.configure({ useBR : false });
 

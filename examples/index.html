@@ -10,7 +10,7 @@
             .code {
                 background : transparent;
                 font-family: Menlo, monospace;
-                font-size  : 1.3rem !important;
+                font-size  : 1.4rem !important;
                 white-space: pre-wrap;
             }
             fieldset {
@@ -21,6 +21,10 @@
                 clear:both;
                 display: block;
                 height: 0;
+            }
+            .demo .table > tbody > tr > th,
+            .demo .table > tbody > tr > td {
+                vertical-align: middle;
             }
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -320,6 +324,12 @@
                     </div>
                 </blockquote>
             </fieldset>
+
+            <div class="row">
+                <div class="col-xs-12 demo"></div>
+            </div>
+            <br/>
+            <br/>
         </div>
         <script src="examples.js"></script>
     </body>
