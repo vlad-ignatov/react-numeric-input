@@ -18,6 +18,10 @@ export class NumericInput extends React.Component
         readOnly  : PropTypes.bool,
         style     : PropTypes.object,
         type      : PropTypes.string,
+        onFocus   : PropTypes.func,
+        onBlur    : PropTypes.func,
+        onKeyDown : PropTypes.func,
+        onChange  : PropTypes.func,
         size      : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
         value     : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
         mobile(props, propName) {
@@ -223,17 +227,18 @@ export class NumericInput extends React.Component
 
         this.stop = this.stop.bind(this);
     }
-    
-    propsToState(props) {
+
+    propsToState(props)
+    {
         let _value = String(
             props.value || props.value === 0 ? props.value : ''
         ).replace(/^\s*|\s*$/, "");
-        
+
         let state = {
             style: {},
             value: 'value' in props && _value !== '' ? this._parse(_value) : null
-        };
-        
+        }
+
         for (let x in NumericInput.style) {
             state.style[x] = Object.assign(
                 {},
@@ -241,23 +246,25 @@ export class NumericInput extends React.Component
                 props.style[x] || {}
             );
         }
-        
+
         return state
     }
 
-    componentWillReceiveProps(props) {
+    componentWillReceiveProps(props)
+    {
         this.setState(this.propsToState(props));
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps, prevState)
+    {
         if (this.props.onFocus && this.state.inputFocus && !prevState.inputFocus) {
             this.props.onFocus();
         }
-        
+
         if (this.props.onBlur && !this.state.inputFocus && prevState.inputFocus) {
             this.props.onBlur();
         }
-        
+
         if (this.props.onChange && prevState.value != this.state.value) {
             this.props.onChange(this.state.value);
         }

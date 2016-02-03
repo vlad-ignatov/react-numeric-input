@@ -453,6 +453,10 @@ module.exports =
 	    readOnly: PropTypes.bool,
 	    style: PropTypes.object,
 	    type: PropTypes.string,
+	    onFocus: PropTypes.func,
+	    onBlur: PropTypes.func,
+	    onKeyDown: PropTypes.func,
+	    onChange: PropTypes.func,
 	    size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	    mobile: function mobile(props, propName) {
