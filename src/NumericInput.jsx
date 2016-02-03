@@ -219,24 +219,48 @@ export class NumericInput extends React.Component
 
         this._timer = null;
 
+        this.state = this.propsToState(props)
+
+        this.stop = this.stop.bind(this);
+    }
+    
+    propsToState(props) {
         let _value = String(
             props.value || props.value === 0 ? props.value : ''
         ).replace(/^\s*|\s*$/, "");
-
-        this.state = {
+        
+        let state = {
             style: {},
             value: 'value' in props && _value !== '' ? this._parse(_value) : null
         };
-
+        
         for (let x in NumericInput.style) {
-            this.state.style[x] = Object.assign(
+            state.style[x] = Object.assign(
                 {},
                 NumericInput.style[x],
                 props.style[x] || {}
             );
         }
+        
+        return state
+    }
 
-        this.stop = this.stop.bind(this);
+    componentWillReceiveProps(props) {
+        this.setState(this.propsToState(props));
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.onFocus && this.state.inputFocus && !prevState.inputFocus) {
+            this.props.onFocus();
+        }
+        
+        if (this.props.onBlur && !this.state.inputFocus && prevState.inputFocus) {
+            this.props.onBlur();
+        }
+        
+        if (this.props.onChange && prevState.value != this.state.value) {
+            this.props.onChange(this.state.value);
+        }
     }
 
     /**
@@ -334,9 +358,7 @@ export class NumericInput extends React.Component
      */
     _onChange(e: Event): void
     {
-        this.setState({
-            value: this._parse(e.target.value)
-        });
+        this.setState({ value: this._parse(e.target.value) })
     }
 
     /**
@@ -344,13 +366,18 @@ export class NumericInput extends React.Component
      */
     _onKeyDown(e: KeyboardEvent): void
     {
-        if (e.keyCode === KEYCODE_UP) {
-            e.preventDefault();
-            this._step(e.ctrlKey || e.metaKey ? 0.1 : e.shiftKey ? 10 : 1);
+        if (this.props.onKeyDown) {
+            this.props.onKeyDown(e)
         }
-        else if (e.keyCode === KEYCODE_DOWN) {
-            e.preventDefault();
-            this._step(e.ctrlKey || e.metaKey ? -0.1 : e.shiftKey ? -10 : -1);
+        if (!e.isDefaultPrevented()) {
+            if (e.keyCode === KEYCODE_UP) {
+                e.preventDefault();
+                this._step(e.ctrlKey || e.metaKey ? 0.1 : e.shiftKey ? 10 : 1);
+            }
+            else if (e.keyCode === KEYCODE_DOWN) {
+                e.preventDefault();
+                this._step(e.ctrlKey || e.metaKey ? -0.1 : e.shiftKey ? -10 : -1);
+            }
         }
     }
 

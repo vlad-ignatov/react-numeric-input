@@ -354,5 +354,74 @@ describe('NumericInput', function() {
 
         expect(btnUpNode.style.bottom).toEqual('50%');
         expect(btnDownNode.style.top).toEqual('50%');
-    })
+    });
+    
+    it("calls it's onChange callback properly", () => {
+        var value = null;
+        function onChange(val) {
+            value = val;
+        }
+        function format(val) {
+            return val * 100 + 'x';
+        }
+        var widget = TestUtils.renderIntoDocument(
+                <NumericInput value={0} onChange={onChange} format={format} />
+            ),
+            widgetNode = ReactDOM.findDOMNode(widget),
+            btnUpNode  = widgetNode.firstChild.nextElementSibling,
+            inputNode  = widget.refs.input;
+
+        expect(inputNode.value).toEqual('0x');
+        expect(value).toEqual(null);
+        TestUtils.Simulate.mouseDown(btnUpNode);
+        expect(inputNode.value).toEqual('100x');
+        expect(value).toEqual(1);
+    });
+    
+    it("calls it's onFocus and onBlur callbacks", () => {
+        var hasFocus = null;
+        function onFocus() {
+            hasFocus = true;
+        }
+        function onBlur() {
+            hasFocus = false;
+        }
+        var widget = TestUtils.renderIntoDocument(
+                <NumericInput onFocus={onFocus} onBlur={onBlur} />
+            ),
+            inputNode = widget.refs.input;
+            
+        expect(hasFocus).toEqual(null);
+        TestUtils.Simulate.focus(inputNode);
+        expect(hasFocus).toEqual(true);
+        TestUtils.Simulate.blur(inputNode);
+        expect(hasFocus).toEqual(false);
+    });
+    
+    it("calls it's onKeyDown callbacks and makest the event cancelable", () => {
+        var hits = 0;
+        function onKeyDown(e) {
+            if (hits > 0) {
+                e.preventDefault()
+            }
+            hits++;
+        }
+        var widget = TestUtils.renderIntoDocument(
+                <NumericInput value={0} onKeyDown={onKeyDown} />
+            ),
+            inputNode = widget.refs.input;
+            
+        expect(hits).toEqual(0);
+        expect(inputNode.value).toEqual('0');
+        
+        TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
+        
+        expect(hits).toEqual(1);
+        expect(inputNode.value).toEqual('1');
+        
+        TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
+        
+        expect(hits).toEqual(2);
+        expect(inputNode.value).toEqual('1');
+    });
 });

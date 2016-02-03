@@ -108,24 +108,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        _this._timer = null;
 
-	        var _value = String(props.value || props.value === 0 ? props.value : '').replace(/^\s*|\s*$/, "");
-
-	        _this.state = {
-	            style: {},
-	            value: 'value' in props && _value !== '' ? _this._parse(_value) : null
-	        };
-
-	        for (var x in NumericInput.style) {
-	            _this.state.style[x] = Object.assign({}, NumericInput.style[x], props.style[x] || {});
-	        }
+	        _this.state = _this.propsToState(props);
 
 	        _this.stop = _this.stop.bind(_this);
 	        return _this;
 	    }
-
-	    /**
-	     * This is used to clear the timer if any
-	     */
 
 	    /**
 	     * When click and hold on a button - the delay before auto changin the value.
@@ -139,6 +126,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	    _createClass(NumericInput, [{
+	        key: 'propsToState',
+	        value: function propsToState(props) {
+	            var _value = String(props.value || props.value === 0 ? props.value : '').replace(/^\s*|\s*$/, "");
+
+	            var state = {
+	                style: {},
+	                value: 'value' in props && _value !== '' ? this._parse(_value) : null
+	            };
+
+	            for (var x in NumericInput.style) {
+	                state.style[x] = Object.assign({}, NumericInput.style[x], props.style[x] || {});
+	            }
+
+	            return state;
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(props) {
+	            this.setState(this.propsToState(props));
+	        }
+	    }, {
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate(prevProps, prevState) {
+	            if (this.props.onFocus && this.state.inputFocus && !prevState.inputFocus) {
+	                this.props.onFocus();
+	            }
+
+	            if (this.props.onBlur && !this.state.inputFocus && prevState.inputFocus) {
+	                this.props.onBlur();
+	            }
+
+	            if (this.props.onChange && prevState.value != this.state.value) {
+	                this.props.onChange(this.state.value);
+	            }
+	        }
+
+	        /**
+	         * This is used to clear the timer if any
+	         */
+
+	    }, {
 	        key: 'componentWillUnmount',
 	        value: function componentWillUnmount() {
 	            this.stop();
@@ -245,9 +273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: '_onChange',
 	        value: function _onChange(e) {
-	            this.setState({
-	                value: this._parse(e.target.value)
-	            });
+	            this.setState({ value: this._parse(e.target.value) });
 	        }
 
 	        /**
@@ -257,12 +283,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: '_onKeyDown',
 	        value: function _onKeyDown(e) {
-	            if (e.keyCode === KEYCODE_UP) {
-	                e.preventDefault();
-	                this._step(e.ctrlKey || e.metaKey ? 0.1 : e.shiftKey ? 10 : 1);
-	            } else if (e.keyCode === KEYCODE_DOWN) {
-	                e.preventDefault();
-	                this._step(e.ctrlKey || e.metaKey ? -0.1 : e.shiftKey ? -10 : -1);
+	            if (this.props.onKeyDown) {
+	                this.props.onKeyDown(e);
+	            }
+	            if (!e.isDefaultPrevented()) {
+	                if (e.keyCode === KEYCODE_UP) {
+	                    e.preventDefault();
+	                    this._step(e.ctrlKey || e.metaKey ? 0.1 : e.shiftKey ? 10 : 1);
+	                } else if (e.keyCode === KEYCODE_DOWN) {
+	                    e.preventDefault();
+	                    this._step(e.ctrlKey || e.metaKey ? -0.1 : e.shiftKey ? -10 : -1);
+	                }
 	            }
 	        }
 
