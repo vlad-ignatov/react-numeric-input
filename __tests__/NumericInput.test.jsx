@@ -34,19 +34,37 @@ describe('NumericInput', function() {
         expect(inputNode.value).toEqual('5.00');
         expect(inputNode.className).toEqual('form-control');
 
-		// Test the step
+        // Test the step
         TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
         expect(inputNode.value).toEqual('5.20');
 
-		// Test the max
+        // Test the max
         TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
         expect(inputNode.value).toEqual('5.30');
 
-		// Test the min
+        // Test the min
         TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_DOWN });
         expect(inputNode.value).toEqual('5.10');
         TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_DOWN });
         expect(inputNode.value).toEqual('4.90');
+    });
+
+    it('accepts value of 0', () => {
+        var widget = TestUtils.renderIntoDocument(<NumericInput value={0}/>),
+            inputNode = widget.refs.input;
+        expect(inputNode.value).toEqual('0');
+    });
+
+    it('accepts value of "0"', () => {
+        var widget = TestUtils.renderIntoDocument(<NumericInput value="0"/>),
+            inputNode = widget.refs.input;
+        expect(inputNode.value).toEqual('0');
+    });
+
+    it('accepts value of ""', () => {
+        var widget = TestUtils.renderIntoDocument(<NumericInput value=""/>),
+            inputNode = widget.refs.input;
+        expect(inputNode.value).toEqual('');
     });
 
     it('can auto-increase', (done) => {

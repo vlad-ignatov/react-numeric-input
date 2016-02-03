@@ -108,12 +108,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        _this._timer = null;
 
+	        var _value = String(props.value || props.value === 0 ? props.value : '').replace(/^\s*|\s*$/, "");
+
 	        _this.state = {
 	            step: props.step,
 	            min: props.min,
 	            max: props.max,
 	            style: {},
-	            value: 'value' in props ? _this._parse(String(props.value || '')) : null
+	            value: 'value' in props && _value !== '' ? _this._parse(_value) : null
 	        };
 
 	        for (var x in NumericInput.style) {
@@ -570,7 +572,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	NumericInput.defaultProps = {
-	    value: 0,
+	    value: '',
 	    step: 1,
 	    min: Number.MIN_SAFE_INTEGER || -9007199254740991,
 	    max: Number.MAX_SAFE_INTEGER || 9007199254740991,

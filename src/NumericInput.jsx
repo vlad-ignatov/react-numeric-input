@@ -33,7 +33,7 @@ export class NumericInput extends React.Component
      * integers
      */
     static defaultProps = {
-        value     : 0,
+        value     : '',
         step      : 1,
         min       : Number.MIN_SAFE_INTEGER || -9007199254740991,
         max       : Number.MAX_SAFE_INTEGER ||  9007199254740991,
@@ -219,14 +219,16 @@ export class NumericInput extends React.Component
 
         this._timer = null;
 
+        let _value = String(
+            props.value || props.value === 0 ? props.value : ''
+        ).replace(/^\s*|\s*$/, "");
+
         this.state = {
             step : props.step,
             min  : props.min,
             max  : props.max,
             style: {},
-            value: 'value' in props ?
-                    this._parse(String(props.value || '')) :
-                    null
+            value: 'value' in props && _value !== '' ? this._parse(_value) : null
         };
 
         for (let x in NumericInput.style) {
