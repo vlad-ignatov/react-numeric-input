@@ -224,9 +224,6 @@ export class NumericInput extends React.Component
         ).replace(/^\s*|\s*$/, "");
 
         this.state = {
-            step : props.step,
-            min  : props.min,
-            max  : props.max,
             style: {},
             value: 'value' in props && _value !== '' ? this._parse(_value) : null
         };
@@ -322,7 +319,7 @@ export class NumericInput extends React.Component
     _step(n: number): boolean
     {
         let _n = this._toNumber(
-            (this.state.value || 0) + this.state.step * n
+            (this.state.value || 0) + this.props.step * n
         );
 
         if (_n !== this.state.value) {

@@ -87,9 +87,6 @@ module.exports =
 	        var _value = String(props.value || props.value === 0 ? props.value : '').replace(/^\s*|\s*$/, "");
 
 	        _this.state = {
-	            step: props.step,
-	            min: props.min,
-	            max: props.max,
 	            style: {},
 	            value: 'value' in props && _value !== '' ? _this._parse(_value) : null
 	        };
@@ -158,7 +155,7 @@ module.exports =
 	    }, {
 	        key: '_step',
 	        value: function _step(n) {
-	            var _n = this._toNumber((this.state.value || 0) + this.state.step * n);
+	            var _n = this._toNumber((this.state.value || 0) + this.props.step * n);
 
 	            if (_n !== this.state.value) {
 	                this.setState({ value: _n });
