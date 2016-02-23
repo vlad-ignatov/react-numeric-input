@@ -106,7 +106,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 3 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -114,13 +116,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Demo = function (_React$Component) {
+	var /* global $, hljs, NumericInput, React */
+	Demo = function (_React$Component) {
 	    _inherits(Demo, _React$Component);
 
 	    function Demo() {
@@ -132,54 +137,80 @@ return /******/ (function(modules) { // webpackBootstrap
 	            args[_key] = arguments[_key];
 	        }
 
+	        // var that = this;
+
 	        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Demo)).call.apply(_Object$getPrototypeO, [this].concat(args)));
 
 	        _this.state = {
 	            inputProps: {
+	                name: { value: "whatever", on: false },
 	                className: { value: "form-control", on: true },
-	                value: { value: 50, on: true },
+	                value: { value: 50, on: false },
 	                min: { value: 0, on: true },
 	                max: { value: 100, on: true },
 	                precision: { value: 0, on: true },
 	                size: { value: 5, on: true },
+	                maxLength: { value: 2, on: false },
 	                disabled: { value: true, on: false },
 	                readOnly: { value: true, on: false },
-	                mobile: { value: true, on: false }
+	                mobile: { value: true, on: false },
+	                required: { value: true, on: false },
+	                noValidate: { value: true, on: false },
+	                pattern: { value: "[0-9].[0-9][0-9]", on: false },
+	                title: { value: "The title attr", on: false }
 	            }
 	        };
 	        return _this;
 	    }
 
 	    _createClass(Demo, [{
-	        key: 'componentDidUpdate',
+	        key: "componentDidUpdate",
 	        value: function componentDidUpdate() {
 	            hljs.highlightBlock(this.refs.code);
 	        }
 	    }, {
-	        key: 'toggleProp',
+	        key: "toggleProp",
 	        value: function toggleProp(propName) {
 	            this.state.inputProps[propName].on = !this.state.inputProps[propName].on;
 	            this.setState(this.state);
 	        }
 	    }, {
-	        key: 'setProp',
+	        key: "setProp",
 	        value: function setProp(propName, event) {
 	            var val = event.target ? event.target.value : event;
 	            this.state.inputProps[propName].value = val;
 	            this.setState(this.state);
 	        }
 	    }, {
-	        key: 'renderCode',
+	        key: "onChange",
+	        value: function onChange(x) {
+	            this.state.inputProps.value.value = x;
+	            this.setState(this.state);
+	        }
+	    }, {
+	        key: "onInvalid",
+	        value: function onInvalid(message) {
+	            console.log("Invalid", message);
+	            $(this.refs.errorMessage).text(message || "Unknown error");
+	        }
+	    }, {
+	        key: "onValid",
+	        value: function onValid() {
+	            console.log("Valid");
+	            $(this.refs.errorMessage).empty();
+	        }
+	    }, {
+	        key: "renderCode",
 	        value: function renderCode() {
 	            var out = '<NumericInput ';
 	            var hasProps = false;
 
 	            for (var propName in this.state.inputProps) {
-	                if (this.state.inputProps[propName].on) {
+	                if (this.state.inputProps[propName].on && !this.state.inputProps[propName].hidden) {
 	                    var val = this.state.inputProps[propName].value;
-	                    out += '\n\t' + propName;
+	                    out += "\n\t" + propName;
 	                    if (val !== true) {
-	                        out += '=' + (typeof val == 'string' ? '"' + val + '" ' : '{ ' + val + ' } ');
+	                        out += '=' + (typeof val == 'string' ? "\"" + val + "\" " : "{ " + val + " } ");
 	                    }
 	                    hasProps = true;
 	                }
@@ -192,307 +223,172 @@ return /******/ (function(modules) { // webpackBootstrap
 	            out += '/>';
 
 	            return React.createElement(
-	                'div',
-	                { className: 'code js', ref: 'code' },
+	                "div",
+	                { className: "code js", ref: "code" },
 	                out
 	            );
 	        }
 	    }, {
-	        key: 'render',
+	        key: "renderPropEditors",
+	        value: function renderPropEditors(config) {
+	            var _this2 = this;
+
+	            return config.map(function (props) {
+	                var editor = null;
+	                var type = props.type;
+	                var name = props.name;
+
+	                var rest = _objectWithoutProperties(props, ["type", "name"]);
+
+	                if (type == 'text') {
+	                    editor = React.createElement("input", {
+	                        type: "text",
+	                        className: "form-control input-sm",
+	                        value: _this2.state.inputProps[name].value,
+	                        onChange: _this2.setProp.bind(_this2, name)
+	                    });
+	                } else if (type == "number") {
+	                    editor = React.createElement(NumericInput, _extends({
+	                        className: "form-control input-sm",
+	                        value: _this2.state.inputProps[name].value,
+	                        onChange: _this2.setProp.bind(_this2, name)
+	                    }, rest));
+	                }
+
+	                return React.createElement(
+	                    "tr",
+	                    null,
+	                    React.createElement(
+	                        "td",
+	                        { className: "unselectable" },
+	                        React.createElement(
+	                            "label",
+	                            { style: { display: "block" } },
+	                            React.createElement("input", {
+	                                type: "checkbox",
+	                                checked: _this2.state.inputProps[name].on,
+	                                onChange: _this2.toggleProp.bind(_this2, name)
+	                            }),
+	                            " ",
+	                            name
+	                        )
+	                    ),
+	                    React.createElement(
+	                        "td",
+	                        null,
+	                        editor
+	                    )
+	                );
+	            });
+	        }
+	    }, {
+	        key: "render",
 	        value: function render() {
 	            var inputProps = {};
 	            for (var propName in this.state.inputProps) {
 	                if (this.state.inputProps[propName].on) {
 	                    inputProps[propName] = this.state.inputProps[propName].value;
 	                }
+	                // else {
+	                //     inputProps[propName] = null
+	                // }
 	            }
 
 	            return React.createElement(
-	                'div',
-	                { className: 'row' },
+	                "div",
+	                { className: "row" },
 	                React.createElement(
-	                    'div',
-	                    { className: 'col-xs-6' },
+	                    "div",
+	                    { className: "col-xs-6" },
 	                    React.createElement(
-	                        'div',
-	                        { className: 'panel panel-default' },
+	                        "div",
+	                        { className: "panel panel-default" },
 	                        React.createElement(
-	                            'div',
-	                            { className: 'panel-heading' },
-	                            'Props'
+	                            "div",
+	                            { className: "panel-heading" },
+	                            "Props"
 	                        ),
 	                        React.createElement(
-	                            'table',
-	                            { className: 'table table-striped table-condensed' },
+	                            "table",
+	                            { className: "table table-striped table-condensed" },
 	                            React.createElement(
-	                                'thead',
+	                                "colgroup",
 	                                null,
-	                                React.createElement(
-	                                    'tr',
-	                                    null,
-	                                    React.createElement(
-	                                        'th',
-	                                        null,
-	                                        'prop name'
-	                                    ),
-	                                    React.createElement(
-	                                        'th',
-	                                        null,
-	                                        'enable'
-	                                    ),
-	                                    React.createElement(
-	                                        'th',
-	                                        null,
-	                                        'prop value'
-	                                    )
-	                                )
+	                                React.createElement("col", { width: 169 }),
+	                                React.createElement("col", null)
 	                            ),
 	                            React.createElement(
-	                                'tbody',
+	                                "thead",
 	                                null,
 	                                React.createElement(
-	                                    'tr',
+	                                    "tr",
 	                                    null,
 	                                    React.createElement(
-	                                        'th',
+	                                        "th",
 	                                        null,
-	                                        'className'
+	                                        "prop"
 	                                    ),
 	                                    React.createElement(
-	                                        'td',
+	                                        "th",
 	                                        null,
-	                                        React.createElement('input', {
-	                                            type: 'checkbox',
-	                                            checked: this.state.inputProps.className.on,
-	                                            onChange: this.toggleProp.bind(this, 'className')
-	                                        })
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement('input', {
-	                                            type: 'text',
-	                                            className: 'form-control',
-	                                            value: this.state.inputProps.className.value,
-	                                            onChange: this.setProp.bind(this, 'className')
-	                                        })
+	                                        "value"
 	                                    )
+	                                )
+	                            )
+	                        ),
+	                        React.createElement(
+	                            "div",
+	                            { style: {
+	                                    overflow: 'auto',
+	                                    maxHeight: 400
+	                                } },
+	                            React.createElement(
+	                                "table",
+	                                { className: "table table-striped table-condensed" },
+	                                React.createElement(
+	                                    "colgroup",
+	                                    null,
+	                                    React.createElement("col", { width: 169 }),
+	                                    React.createElement("col", null)
 	                                ),
 	                                React.createElement(
-	                                    'tr',
+	                                    "tbody",
 	                                    null,
-	                                    React.createElement(
-	                                        'th',
-	                                        null,
-	                                        'value'
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement('input', {
-	                                            type: 'checkbox',
-	                                            checked: this.state.inputProps.value.on,
-	                                            onChange: this.toggleProp.bind(this, 'value')
-	                                        })
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement('input', {
-	                                            type: 'text',
-	                                            className: 'form-control',
-	                                            value: this.state.inputProps.value.value,
-	                                            onChange: this.setProp.bind(this, 'value')
-	                                        })
-	                                    )
-	                                ),
-	                                React.createElement(
-	                                    'tr',
-	                                    null,
-	                                    React.createElement(
-	                                        'th',
-	                                        null,
-	                                        'min'
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement('input', {
-	                                            type: 'checkbox',
-	                                            checked: this.state.inputProps.min.on,
-	                                            onChange: this.toggleProp.bind(this, 'min')
-	                                        })
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement(NumericInput, {
-	                                            className: 'form-control',
-	                                            value: this.state.inputProps.min.value,
-	                                            onChange: this.setProp.bind(this, 'min')
-	                                        })
-	                                    )
-	                                ),
-	                                React.createElement(
-	                                    'tr',
-	                                    null,
-	                                    React.createElement(
-	                                        'th',
-	                                        null,
-	                                        'max'
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement('input', {
-	                                            type: 'checkbox',
-	                                            checked: this.state.inputProps.max.on,
-	                                            onChange: this.toggleProp.bind(this, 'max')
-	                                        })
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement(NumericInput, {
-	                                            className: 'form-control',
-	                                            value: this.state.inputProps.max.value,
-	                                            onChange: this.setProp.bind(this, 'max')
-	                                        })
-	                                    )
-	                                ),
-	                                React.createElement(
-	                                    'tr',
-	                                    null,
-	                                    React.createElement(
-	                                        'th',
-	                                        null,
-	                                        'precision'
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement('input', {
-	                                            type: 'checkbox',
-	                                            checked: this.state.inputProps.precision.on,
-	                                            onChange: this.toggleProp.bind(this, 'precision')
-	                                        })
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement(NumericInput, {
-	                                            className: 'form-control',
-	                                            value: this.state.inputProps.precision.value,
-	                                            onChange: this.setProp.bind(this, 'precision'),
-	                                            max: 20,
-	                                            min: 0
-	                                        })
-	                                    )
-	                                ),
-	                                React.createElement(
-	                                    'tr',
-	                                    null,
-	                                    React.createElement(
-	                                        'th',
-	                                        null,
-	                                        'size'
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement('input', {
-	                                            type: 'checkbox',
-	                                            checked: this.state.inputProps.size.on,
-	                                            onChange: this.toggleProp.bind(this, 'size')
-	                                        })
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement(NumericInput, {
-	                                            className: 'form-control',
-	                                            value: this.state.inputProps.size.value,
-	                                            onChange: this.setProp.bind(this, 'size')
-	                                        })
-	                                    )
-	                                ),
-	                                React.createElement(
-	                                    'tr',
-	                                    null,
-	                                    React.createElement(
-	                                        'th',
-	                                        null,
-	                                        'disabled'
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement('input', {
-	                                            type: 'checkbox',
-	                                            checked: this.state.inputProps.disabled.on,
-	                                            onChange: this.toggleProp.bind(this, 'disabled')
-	                                        })
-	                                    ),
-	                                    React.createElement('td', null)
-	                                ),
-	                                React.createElement(
-	                                    'tr',
-	                                    null,
-	                                    React.createElement(
-	                                        'th',
-	                                        null,
-	                                        'readOnly'
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement('input', {
-	                                            type: 'checkbox',
-	                                            checked: this.state.inputProps.readOnly.on,
-	                                            onChange: this.toggleProp.bind(this, 'readOnly')
-	                                        })
-	                                    ),
-	                                    React.createElement('td', null)
-	                                ),
-	                                React.createElement(
-	                                    'tr',
-	                                    null,
-	                                    React.createElement(
-	                                        'th',
-	                                        null,
-	                                        'mobile'
-	                                    ),
-	                                    React.createElement(
-	                                        'td',
-	                                        null,
-	                                        React.createElement('input', {
-	                                            type: 'checkbox',
-	                                            checked: this.state.inputProps.mobile.on,
-	                                            onChange: this.toggleProp.bind(this, 'mobile')
-	                                        })
-	                                    ),
-	                                    React.createElement('td', null)
+	                                    this.renderPropEditors([{ name: "name", type: "text" }, { name: "className", type: "text" }, { name: "value", type: "text" }, { name: "min", type: "number" }, { name: "max", type: "number" }, { name: "precision", type: "number", min: 0, max: 20 }, { name: "size", type: "number", min: 0, max: 60 }, { name: "maxLength", type: "number", min: 0, max: 20 }, { name: "disabled", type: "bool" }, { name: "readOnly", type: "bool" }, { name: "mobile", type: "bool" }, { name: "pattern", type: "text" }, { name: "title", type: "text" }, { name: "required", type: "bool" }, { name: "noValidate", type: "bool" }])
 	                                )
 	                            )
 	                        )
 	                    )
 	                ),
 	                React.createElement(
-	                    'div',
-	                    { className: 'col-xs-6' },
+	                    "div",
+	                    { className: "col-xs-6" },
 	                    React.createElement(
-	                        'div',
-	                        { className: 'panel panel-primary' },
+	                        "div",
+	                        { className: "panel panel-primary" },
 	                        React.createElement(
-	                            'div',
-	                            { className: 'panel-heading' },
-	                            'Result'
+	                            "div",
+	                            { className: "panel-heading" },
+	                            "Result"
 	                        ),
 	                        React.createElement(
-	                            'div',
-	                            { className: 'panel-body' },
-	                            React.createElement(NumericInput, inputProps),
-	                            React.createElement('hr', null),
+	                            "div",
+	                            { className: "panel-body" },
+	                            React.createElement(
+	                                "div",
+	                                { ref: "example" },
+	                                React.createElement(NumericInput, _extends({}, inputProps, {
+	                                    onChange: this.onChange.bind(this),
+	                                    onInvalid: this.onInvalid.bind(this),
+	                                    onValid: this.onValid.bind(this)
+	                                })),
+	                                React.createElement(
+	                                    "div",
+	                                    { className: "help-block" },
+	                                    React.createElement("span", { ref: "errorMessage", className: "text-danger" })
+	                                )
+	                            ),
+	                            React.createElement("hr", null),
 	                            this.renderCode()
 	                        )
 	                    )

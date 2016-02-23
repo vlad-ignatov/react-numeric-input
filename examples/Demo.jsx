@@ -1,43 +1,66 @@
+/* global $, hljs, NumericInput, React */
 export default class Demo extends React.Component
 {
     constructor(...args) {
         super(...args)
+        // var that = this;
         this.state = {
             inputProps : {
-                className: { value: "form-control", on: true  },
-                value    : { value: 50,             on: true  },
-                min      : { value: 0,              on: true  },
-                max      : { value: 100,            on: true  },
-                precision: { value: 0,              on: true  },
-                size     : { value: 5,              on: true  },
-                disabled : { value: true,           on: false },
-                readOnly : { value: true,           on: false },
-                mobile   : { value: true,           on: false }
+                name      : { value: "whatever"    ,     on: false },
+                className : { value: "form-control",     on: true  },
+                value     : { value: 50,                 on: false },
+                min       : { value: 0,                  on: true  },
+                max       : { value: 100,                on: true  },
+                precision : { value: 0,                  on: true  },
+                size      : { value: 5,                  on: true  },
+                maxLength : { value: 2,                  on: false },
+                disabled  : { value: true,               on: false },
+                readOnly  : { value: true,               on: false },
+                mobile    : { value: true,               on: false },
+                required  : { value: true,               on: false },
+                noValidate: { value: true,               on: false },
+                pattern   : { value: "[0-9].[0-9][0-9]", on: false },
+                title     : { value: "The title attr",   on: false }
             }
         }
     }
-    
+
     componentDidUpdate() {
         hljs.highlightBlock(this.refs.code)
     }
-    
+
     toggleProp(propName) {
         this.state.inputProps[propName].on = !this.state.inputProps[propName].on
         this.setState(this.state)
     }
-    
+
     setProp(propName, event) {
         let val = event.target ? event.target.value : event
         this.state.inputProps[propName].value = val
         this.setState(this.state)
     }
-    
+
+    onChange(x) {
+        this.state.inputProps.value.value = x
+        this.setState(this.state);
+    }
+
+    onInvalid(message) {
+        console.log("Invalid", message)
+        $(this.refs.errorMessage).text(message || "Unknown error")
+    }
+
+    onValid() {
+        console.log("Valid")
+        $(this.refs.errorMessage).empty()
+    }
+
     renderCode() {
         let out = '<NumericInput '
         let hasProps = false
-        
+
         for (let propName in this.state.inputProps) {
-            if (this.state.inputProps[propName].on) {
+            if (this.state.inputProps[propName].on && !this.state.inputProps[propName].hidden) {
                 let val = this.state.inputProps[propName].value
                 out += `\n\t${propName}`
                 if (val !== true) {
@@ -58,12 +81,61 @@ export default class Demo extends React.Component
         return <div className="code js" ref="code">{ out }</div>
     }
 
+    renderPropEditors(config) {
+        return config.map(props => {
+            let editor = null
+            let { type, name, ...rest } = props
+
+            if (type == 'text') {
+                editor = (
+                    <input
+                        type="text"
+                        className="form-control input-sm"
+                        value={ this.state.inputProps[name].value }
+                        onChange={ this.setProp.bind(this, name) }
+                    />
+                )
+            }
+            else if (type == "number") {
+                editor = (
+                    <NumericInput
+                        className="form-control input-sm"
+                        value={ this.state.inputProps[name].value }
+                        onChange={ this.setProp.bind(this, name) }
+                        { ...rest }
+                    />
+                )
+            }
+
+            return (
+                <tr>
+                    <td className="unselectable">
+                        <label style={{ display: "block" }}>
+                            <input
+                                type="checkbox"
+                                checked={ this.state.inputProps[name].on }
+                                onChange={ this.toggleProp.bind(this, name) }
+                            />
+                        &nbsp;{ name }
+                        </label>
+                    </td>
+                    <td>
+                        { editor }
+                    </td>
+                </tr>
+            )
+        })
+    }
+
     render() {
         let inputProps = {}
         for (let propName in this.state.inputProps) {
             if (this.state.inputProps[propName].on) {
                 inputProps[propName] = this.state.inputProps[propName].value
             }
+            // else {
+            //     inputProps[propName] = null
+            // }
         }
 
         return (
@@ -72,168 +144,68 @@ export default class Demo extends React.Component
                     <div className="panel panel-default">
                         <div className="panel-heading">Props</div>
                         <table className="table table-striped table-condensed">
+                            <colgroup>
+                                <col width={169}/>
+                                <col/>
+                            </colgroup>
                             <thead>
                                 <tr>
-                                    <th>prop name</th>
-                                    <th>enable</th>
-                                    <th>prop value</th>
+                                    <th>prop</th>
+                                    <th>value</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th>className</th>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={ this.state.inputProps.className.on }
-                                            onChange={ this.toggleProp.bind(this, 'className') }
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            value={ this.state.inputProps.className.value }
-                                            onChange={ this.setProp.bind(this, 'className') }
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>value</th>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={ this.state.inputProps.value.on }
-                                            onChange={ this.toggleProp.bind(this, 'value') }
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            value={ this.state.inputProps.value.value }
-                                            onChange={ this.setProp.bind(this, 'value') }
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>min</th>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={ this.state.inputProps.min.on }
-                                            onChange={ this.toggleProp.bind(this, 'min') }
-                                        />
-                                    </td>
-                                    <td>
-                                        <NumericInput
-                                            className="form-control"
-                                            value={ this.state.inputProps.min.value }
-                                            onChange={ this.setProp.bind(this, 'min') }
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>max</th>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={ this.state.inputProps.max.on }
-                                            onChange={ this.toggleProp.bind(this, 'max') }
-                                        />
-                                    </td>
-                                    <td>
-                                        <NumericInput
-                                            className="form-control"
-                                            value={ this.state.inputProps.max.value }
-                                            onChange={ this.setProp.bind(this, 'max') }
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>precision</th>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={ this.state.inputProps.precision.on }
-                                            onChange={ this.toggleProp.bind(this, 'precision') }
-                                        />
-                                    </td>
-                                    <td>
-                                        <NumericInput
-                                            className="form-control"
-                                            value={ this.state.inputProps.precision.value }
-                                            onChange={ this.setProp.bind(this, 'precision') }
-                                            max={ 20 }
-                                            min={ 0 }
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>size</th>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={ this.state.inputProps.size.on }
-                                            onChange={ this.toggleProp.bind(this, 'size') }
-                                        />
-                                    </td>
-                                    <td>
-                                        <NumericInput
-                                            className="form-control"
-                                            value={ this.state.inputProps.size.value }
-                                            onChange={ this.setProp.bind(this, 'size') }
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>disabled</th>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={ this.state.inputProps.disabled.on }
-                                            onChange={ this.toggleProp.bind(this, 'disabled') }
-                                        />
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th>readOnly</th>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={ this.state.inputProps.readOnly.on }
-                                            onChange={ this.toggleProp.bind(this, 'readOnly') }
-                                        />
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th>mobile</th>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={ this.state.inputProps.mobile.on }
-                                            onChange={ this.toggleProp.bind(this, 'mobile') }
-                                        />
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                {/*
-                                parse	function	parseFloat
-                                format	function	none
-                                style	object	none
-                                size	number or string	none
-                                */}
-                            </tbody>
                         </table>
+                        <div style={{
+                            overflow : 'auto',
+                            maxHeight: 400
+                        }}>
+                            <table className="table table-striped table-condensed">
+                                <colgroup>
+                                    <col width={169}/>
+                                    <col/>
+                                </colgroup>
+                                <tbody>
+                                    {this.renderPropEditors([
+                                        { name: "name"      , type: "text"   },
+                                        { name: "className" , type: "text"   },
+                                        { name: "value"     , type: "text"   },
+                                        { name: "min"       , type: "number" },
+                                        { name: "max"       , type: "number" },
+                                        { name: "precision" , type: "number", min: 0, max: 20 },
+                                        { name: "size"      , type: "number", min: 0, max: 60 },
+                                        { name: "maxLength" , type: "number", min: 0, max: 20 },
+                                        { name: "disabled"  , type: "bool"   },
+                                        { name: "readOnly"  , type: "bool"   },
+                                        { name: "mobile"    , type: "bool"   },
+                                        { name: "pattern"   , type: "text"   },
+                                        { name: "title"     , type: "text"   },
+                                        { name: "required"  , type: "bool"   },
+                                        { name: "noValidate", type: "bool"   }
+                                    ])}
+                                    {/*
+                                    parse	function	parseFloat
+                                    format	function	none
+                                    style	object	none
+                                    */}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div className="col-xs-6">
                     <div className="panel panel-primary">
                         <div className="panel-heading">Result</div>
                         <div className="panel-body">
-                            <NumericInput { ...inputProps }/>
+                            <div ref="example">
+                                <NumericInput { ...inputProps }
+                                    onChange={ this.onChange.bind(this) }
+                                    onInvalid={ this.onInvalid.bind(this) }
+                                    onValid={ this.onValid.bind(this) }
+                                />
+                                <div className="help-block">
+                                    <span ref="errorMessage" className="text-danger"/>
+                                </div>
+                            </div>
                             <hr/>
                             { this.renderCode() }
                         </div>

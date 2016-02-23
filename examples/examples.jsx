@@ -16,7 +16,7 @@ $(function() {
         );
         div.data("widget", widget)
     });
-    
+
     ReactDOM.render(<Demo/>, $('.demo')[0]);
 
     hljs.configure({ useBR : false });
