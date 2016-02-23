@@ -45,7 +45,7 @@ module.exports =
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -74,6 +74,25 @@ module.exports =
 	var KEYCODE_UP = 38;
 	var KEYCODE_DOWN = 40;
 
+	function addClass(element, className) {
+	    if (element.classList) {
+	        return element.classList.add(className);
+	    }
+	    if (!element.className.search(new RegExp("\\b" + className + "\\b"))) {
+	        element.className = " " + className;
+	    }
+	}
+
+	function removeClass(element, className) {
+	    if (element.className) {
+	        if (element.classList) {
+	            return element.classList.remove(className);
+	        }
+
+	        element.className = element.className.replace(new RegExp("\\b" + className + "\\b", "g"), "");
+	    }
+	}
+
 	var NumericInput = exports.NumericInput = function (_React$Component) {
 	    _inherits(NumericInput, _React$Component);
 
@@ -83,56 +102,71 @@ module.exports =
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NumericInput).call(this, props));
 
 	        _this._timer = null;
+	        _this._valid = undefined;
 
-	        _this.state = _this.propsToState(props);
+	        _this.state = {
+	            selectionStart: null,
+	            selectionEnd: null,
+	            value: "value" in props ? props.value : props.defaultValue,
+	            btnDownHover: false,
+	            btnDownActive: false,
+	            btnUpHover: false,
+	            btnUpActive: false,
+	            inputFocus: false
+	        };
 
 	        _this.stop = _this.stop.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(NumericInput, [{
-	        key: 'propsToState',
-	        value: function propsToState(props) {
+	        key: "componentWillReceiveProps",
+	        value: function componentWillReceiveProps(props) {
 	            var _value = String(props.value || props.value === 0 ? props.value : '').replace(/^\s*|\s*$/, "");
 
-	            var state = {
-	                style: {},
-	                value: 'value' in props && _value !== '' ? this._parse(_value) : null
-	            };
-
-	            for (var x in NumericInput.style) {
-	                state.style[x] = Object.assign({}, NumericInput.style[x], props.style[x] || {});
-	            }
-
-	            return state;
+	            this.setState({
+	                value: "value" in props && _value !== '' ? this._parse(_value) : null
+	            });
 	        }
 	    }, {
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(props) {
-	            this.setState(this.propsToState(props));
-	        }
-	    }, {
-	        key: 'componentDidUpdate',
+	        key: "componentDidUpdate",
 	        value: function componentDidUpdate(prevProps, prevState) {
-	            if (this.props.onFocus && this.state.inputFocus && !prevState.inputFocus) {
-	                this.props.onFocus();
-	            }
-
-	            if (this.props.onBlur && !this.state.inputFocus && prevState.inputFocus) {
-	                this.props.onBlur();
-	            }
-
 	            if (this.props.onChange && prevState.value != this.state.value) {
 	                this.props.onChange(this.state.value);
 	            }
+
+	            if (this.state.inputFocus && !prevState.inputFocus) {
+	                this.refs.input.focus();
+
+	                if (this.state.selectionStart || this.state.selectionStart === 0) {
+	                    this.refs.input.selectionStart = this.state.selectionStart;
+	                }
+
+	                if (this.state.selectionEnd || this.state.selectionEnd === 0) {
+	                    this.refs.input.selectionEnd = this.state.selectionEnd;
+	                }
+
+	                if (this.props.onFocus) {
+	                    this.props.onFocus();
+	                }
+	            }
+
+	            if (!this.state.inputFocus && document.activeElement === this.refs.input) {
+	                this.state.inputFocus = true;
+	                if (this.props.onFocus) {
+	                    this.props.onFocus();
+	                }
+	            }
+
+	            this.checkValidity();
 	        }
 	    }, {
-	        key: 'componentWillUnmount',
+	        key: "componentWillUnmount",
 	        value: function componentWillUnmount() {
 	            this.stop();
 	        }
 	    }, {
-	        key: 'componentDidMount',
+	        key: "componentDidMount",
 	        value: function componentDidMount() {
 	            var _this2 = this;
 
@@ -145,9 +179,64 @@ module.exports =
 	                    value: _this2._parse(value)
 	                });
 	            };
+
+	            this.checkValidity();
 	        }
 	    }, {
-	        key: '_toNumber',
+	        key: "checkValidity",
+	        value: function checkValidity() {
+	            var valid = undefined,
+	                validationError = "";
+
+	            var supportsValidation = !!this.refs.input.checkValidity;
+
+	            var noValidate = !!(this.props.noValidate && this.props.noValidate != "false");
+
+	            this.refs.input.noValidate = noValidate;
+
+	            valid = noValidate || !supportsValidation;
+
+	            if (valid) {
+	                validationError = "";
+	            } else {
+	                if (this.refs.input.pattern === "") {
+	                    this.refs.input.pattern = this.props.required ? ".+" : ".*";
+	                }
+
+	                if (supportsValidation) {
+	                    this.refs.input.checkValidity();
+	                    valid = this.refs.input.validity.valid;
+
+	                    if (!valid) {
+	                        validationError = this.refs.input.validationMessage;
+	                    }
+	                }
+
+	                if (valid && supportsValidation && this.props.maxLength) {
+	                    if (this.refs.input.value.length > this.props.maxLength) {
+	                        validationError = "This value is too long";
+	                    }
+	                }
+	            }
+
+	            validationError = validationError || (valid ? "" : this.refs.input.validationMessage || "Unknown Error");
+
+	            var validStateChanged = this._valid !== validationError;
+	            this._valid = validationError;
+	            if (validationError) {
+	                addClass(this.refs.wrapper, "has-error");
+	                if (validStateChanged && this.props.onInvalid) {
+	                    this.props.onInvalid(validationError);
+	                }
+	            } else {
+	                removeClass(this.refs.wrapper, "has-error");
+	                if (validStateChanged && this.props.onValid) {
+	                    this.props.onValid();
+	                }
+	            }
+	        }
+	    }, {
+	        key: "_toNumber",
 	        value: function _toNumber(x) {
 	            var n = parseFloat(x);
 	            var q = Math.pow(10, this.props.precision);
@@ -161,7 +250,7 @@ module.exports =
 	            return n;
 	        }
 	    }, {
-	        key: '_parse',
+	        key: "_parse",
 	        value: function _parse(x) {
 	            if (typeof this.props.parse == 'function') {
 	                return parseFloat(this.props.parse(x));
@@ -169,7 +258,7 @@ module.exports =
 	            return parseFloat(x);
 	        }
 	    }, {
-	        key: '_format',
+	        key: "_format",
 	        value: function _format(n) {
 	            var _n = this._toNumber(n).toFixed(this.props.precision);
 
@@ -180,21 +269,23 @@ module.exports =
 	            return _n;
 	        }
 	    }, {
-	        key: '_step',
-	        value: function _step(n) {
+	        key: "_step",
+	        value: function _step(n, callback) {
 	            var _n = this._toNumber((this.state.value || 0) + this.props.step * n);
 
 	            if (_n !== this.state.value) {
-	                this.setState({ value: _n });
+	                this.setState({ value: _n }, callback);
 	            }
 	        }
 	    }, {
-	        key: '_onChange',
+	        key: "_onChange",
 	        value: function _onChange(e) {
-	            this.setState({ value: this._parse(e.target.value) });
+	            this.setState({
+	                value: this._parse(e.target.value)
+	            });
 	        }
 	    }, {
-	        key: '_onKeyDown',
+	        key: "_onKeyDown",
 	        value: function _onKeyDown(e) {
 	            if (this.props.onKeyDown) {
 	                this.props.onKeyDown(e);
@@ -210,55 +301,77 @@ module.exports =
 	            }
 	        }
 	    }, {
-	        key: 'stop',
+	        key: "_onSelectionChange",
+	        value: function _onSelectionChange(e) {
+	            var _this3 = this;
+
+	            this.setState({
+	                selectionStart: this.refs.input.selectionStart,
+	                selectionEnd: this.refs.input.selectionEnd
+	            }, function () {
+	                switch (e.type) {
+	                    case "input":
+	                        if (_this3.props.onInput) {
+	                            _this3.props.onInput.call(_this3.refs.input, e);
+	                        }
+	                        break;
+	                    case "select":
+	                        if (_this3.props.onSelect) {
+	                            _this3.props.onSelect.call(_this3.refs.input, e);
+	                        }
+	                        break;
+	                    case "selectstart":
+	                        if (_this3.props.onSelectStart) {
+	                            _this3.props.onSelectStart.call(_this3.refs.input, e);
+	                        }
+	                        break;
+	                }
+	            });
+	        }
+	    }, {
+	        key: "stop",
 	        value: function stop() {
 	            if (this._timer) {
 	                window.clearTimeout(this._timer);
 	            }
 	        }
 	    }, {
-	        key: 'increase',
-	        value: function increase(_recursive) {
-	            var _this3 = this;
-
-	            this.stop();
-	            this._step(1);
-	            if (isNaN(this.state.value) || this.state.value < this.props.max) {
-	                this._timer = setTimeout(function () {
-	                    _this3.increase(true);
-	                }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
-	            }
-	        }
-	    }, {
-	        key: 'decrease',
-	        value: function decrease(_recursive) {
+	        key: "increase",
+	        value: function increase(_recursive, callback) {
 	            var _this4 = this;
 
 	            this.stop();
-	            this._step(-1);
-	            if (isNaN(this.state.value) || this.state.value > this.props.min) {
+	            this._step(1, callback);
+	            if (isNaN(this.state.value) || this.state.value < this.props.max) {
 	                this._timer = setTimeout(function () {
-	                    _this4.decrease(true);
+	                    _this4.increase(true);
 	                }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
 	            }
 	        }
 	    }, {
-	        key: 'onMouseDown',
-	        value: function onMouseDown(dir, e) {
+	        key: "decrease",
+	        value: function decrease(_recursive, callback) {
 	            var _this5 = this;
 
-	            e.preventDefault();
-	            if (dir == 'down') {
-	                this.decrease();
-	            } else if (dir == 'up') {
-	                this.increase();
+	            this.stop();
+	            this._step(-1, callback);
+	            if (isNaN(this.state.value) || this.state.value > this.props.min) {
+	                this._timer = setTimeout(function () {
+	                    _this5.decrease(true);
+	                }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
 	            }
-	            setTimeout(function () {
-	                _this5.refs.input.focus();
-	            });
 	        }
 	    }, {
-	        key: 'onTouchStart',
+	        key: "onMouseDown",
+	        value: function onMouseDown(dir, callback) {
+	            if (dir == 'down') {
+	                this.decrease(false, callback);
+	            } else if (dir == 'up') {
+	                this.increase(false, callback);
+	            }
+	        }
+	    }, {
+	        key: "onTouchStart",
 	        value: function onTouchStart(dir, e) {
 	            e.preventDefault();
 	            if (dir == 'down') {
@@ -268,23 +381,31 @@ module.exports =
 	            }
 	        }
 	    }, {
-	        key: 'render',
+	        key: "render",
 	        value: function render() {
 	            var _this6 = this;
 
 	            var props = this.props;
 	            var state = this.state;
-	            var step = props.step;
-	            var min = props.min;
-	            var max = props.max;
-	            var precision = props.precision;
-	            var parse = props.parse;
-	            var format = props.format;
-	            var value = props.value;
-	            var type = props.type;
-	            var style = props.style;
+	            var css = {};
 
-	            var rest = _objectWithoutProperties(props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'value', 'type', 'style']);
+	            for (var x in NumericInput.style) {
+	                css[x] = Object.assign({}, NumericInput.style[x], props.style ? props.style[x] || {} : {});
+	            }
+
+	            var _props = this.props;
+	            var step = _props.step;
+	            var min = _props.min;
+	            var max = _props.max;
+	            var precision = _props.precision;
+	            var parse = _props.parse;
+	            var format = _props.format;
+	            var value = _props.value;
+	            var type = _props.type;
+	            var style = _props.style;
+	            var defaultValue = _props.defaultValue;
+
+	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "value", "type", "style", "defaultValue"]);
 
 	            var hasFormControl = props.className && /\bform-control\b/.test(props.className);
 
@@ -296,31 +417,35 @@ module.exports =
 
 	            var attrs = {
 	                wrap: {
-	                    style: Object.assign({}, NumericInput.style.wrap, props.style.wrap),
-	                    className: 'react-numeric-input'
+	                    style: css.wrap,
+	                    className: 'react-numeric-input',
+	                    ref: 'wrapper'
 	                },
 	                input: _extends({
 	                    ref: 'input',
 	                    type: 'text',
-	                    style: Object.assign({}, state.style.input, !hasFormControl ? state.style['input:not(.form-control)'] : {}, state.inputFocus ? state.style['input:focus'] : {}),
-	                    value: state.value || state.value === 0 ? this._format(state.value) : ''
+	                    style: Object.assign({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
 	                }, rest),
 	                btnUp: {
-	                    style: Object.assign({}, state.style.btn, state.style.btnUp, props.disabled ? state.style['btn:disabled'] : state.btnUpActive ? state.style['btn:active'] : state.btnUpHover ? state.style['btn:hover'] : {})
+	                    style: Object.assign({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
 	                },
 	                btnDown: {
-	                    style: Object.assign({}, state.style.btn, state.style.btnDown, props.disabled ? state.style['btn:disabled'] : state.btnDownActive ? state.style['btn:active'] : state.btnDownHover ? state.style['btn:hover'] : {})
+	                    style: Object.assign({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
 	                }
 	            };
 
+	            if (state.value || state.value === 0) {
+	                attrs.input.value = this._format(state.value);
+	            }
+
 	            if (hasFormControl) {
-	                Object.assign(attrs.wrap.style, state.style['wrap.hasFormControl']);
+	                Object.assign(attrs.wrap.style, css['wrap.hasFormControl']);
 	            }
 
 	            if (mobile) {
-	                Object.assign(attrs.input.style, state.style['input.mobile']);
-	                Object.assign(attrs.btnUp.style, state.style['btnUp.mobile']);
-	                Object.assign(attrs.btnDown.style, state.style['btnDown.mobile']);
+	                Object.assign(attrs.input.style, css['input.mobile']);
+	                Object.assign(attrs.btnUp.style, css['btnUp.mobile']);
+	                Object.assign(attrs.btnDown.style, css['btnDown.mobile']);
 	            }
 
 	            if (!props.disabled) {
@@ -351,11 +476,13 @@ module.exports =
 	                        });
 	                    },
 	                    onMouseDown: function onMouseDown(e) {
+	                        e.preventDefault();
 	                        _this6.setState({
 	                            btnUpHover: true,
-	                            btnUpActive: true
+	                            btnUpActive: true,
+	                            inputFocus: true
 	                        });
-	                        _this6.onMouseDown('up', e);
+	                        _this6.onMouseDown('up');
 	                    }
 	                });
 
@@ -381,58 +508,69 @@ module.exports =
 	                        });
 	                    },
 	                    onMouseDown: function onMouseDown(e) {
+	                        e.preventDefault();
 	                        _this6.setState({
 	                            btnDownHover: true,
-	                            btnDownActive: true
+	                            btnDownActive: true,
+	                            inputFocus: true
 	                        });
-	                        _this6.onMouseDown('down', e);
+	                        _this6.onMouseDown('down');
 	                    }
 	                });
 
 	                Object.assign(attrs.input, {
 	                    onChange: this._onChange.bind(this),
 	                    onKeyDown: this._onKeyDown.bind(this),
+	                    onInput: this._onSelectionChange.bind(this),
+	                    onSelect: this._onSelectionChange.bind(this),
+	                    onSelectStart: this._onSelectionChange.bind(this),
 	                    onFocus: function onFocus() {
 	                        _this6.setState({ inputFocus: true });
 	                    },
 	                    onBlur: function onBlur() {
-	                        _this6.setState({ inputFocus: false });
+	                        _this6.setState({ inputFocus: false }, function () {
+	                            if (_this6.props.onBlur) {
+	                                _this6.props.onBlur();
+	                            }
+	                        });
 	                    }
 	                });
+	            } else {
+	                Object.assign(attrs.input.style, css['input:disabled']);
 	            }
 
 	            if (mobile) {
 	                return _react2.default.createElement(
-	                    'span',
+	                    "span",
 	                    attrs.wrap,
-	                    _react2.default.createElement('input', attrs.input),
+	                    _react2.default.createElement("input", attrs.input),
 	                    _react2.default.createElement(
-	                        'b',
+	                        "b",
 	                        attrs.btnUp,
-	                        _react2.default.createElement('i', { style: state.style.minus }),
-	                        _react2.default.createElement('i', { style: state.style.plus })
+	                        _react2.default.createElement("i", { style: css.minus }),
+	                        _react2.default.createElement("i", { style: css.plus })
 	                    ),
 	                    _react2.default.createElement(
-	                        'b',
+	                        "b",
 	                        attrs.btnDown,
-	                        _react2.default.createElement('i', { style: state.style.minus })
+	                        _react2.default.createElement("i", { style: css.minus })
 	                    )
 	                );
 	            }
 
 	            return _react2.default.createElement(
-	                'span',
+	                "span",
 	                attrs.wrap,
-	                _react2.default.createElement('input', attrs.input),
+	                _react2.default.createElement("input", attrs.input),
 	                _react2.default.createElement(
-	                    'b',
+	                    "b",
 	                    attrs.btnUp,
-	                    _react2.default.createElement('i', { style: state.style.arrowUp })
+	                    _react2.default.createElement("i", { style: css.arrowUp })
 	                ),
 	                _react2.default.createElement(
-	                    'b',
+	                    "b",
 	                    attrs.btnDown,
-	                    _react2.default.createElement('i', { style: state.style.arrowDown })
+	                    _react2.default.createElement("i", { style: css.arrowDown })
 	                )
 	            );
 	        }
@@ -446,19 +584,29 @@ module.exports =
 	    min: PropTypes.number,
 	    max: PropTypes.number,
 	    precision: PropTypes.number,
+	    maxLength: PropTypes.number,
 	    parse: PropTypes.func,
 	    format: PropTypes.func,
 	    className: PropTypes.string,
 	    disabled: PropTypes.bool,
 	    readOnly: PropTypes.bool,
+	    required: PropTypes.bool,
+	    noValidate: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
 	    style: PropTypes.object,
 	    type: PropTypes.string,
+	    pattern: PropTypes.string,
 	    onFocus: PropTypes.func,
 	    onBlur: PropTypes.func,
 	    onKeyDown: PropTypes.func,
 	    onChange: PropTypes.func,
+	    onInvalid: PropTypes.func,
+	    onValid: PropTypes.func,
+	    onInput: PropTypes.func,
+	    onSelect: PropTypes.func,
+	    onSelectStart: PropTypes.func,
 	    size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	    defaultValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	    mobile: function mobile(props, propName) {
 	        var prop = props[propName];
 	        if (prop !== true && prop !== false && prop !== 'auto' && typeof prop != 'function') {
@@ -467,17 +615,15 @@ module.exports =
 	    }
 	};
 	NumericInput.defaultProps = {
-	    value: '',
 	    step: 1,
 	    min: Number.MIN_SAFE_INTEGER || -9007199254740991,
 	    max: Number.MAX_SAFE_INTEGER || 9007199254740991,
 	    precision: 0,
 	    parse: null,
 	    format: null,
-	    className: '',
+
 	    mobile: 'auto',
-	    style: {}
-	};
+	    style: {} };
 	NumericInput.style = {
 	    wrap: {
 	        position: 'relative',
@@ -542,7 +688,7 @@ module.exports =
 	        cursor: 'default',
 	        transition: 'all 0.1s',
 	        background: 'rgba(0,0,0,.1)',
-	        boxShadow: '-1px -1px 3px rgba(0,0,0,.1) inset, 1px 1px 3px rgba(255,255,255,.7) inset'
+	        boxShadow: "-1px -1px 3px rgba(0,0,0,.1) inset,\n                1px 1px 3px rgba(255,255,255,.7) inset"
 	    },
 
 	    btnUp: {
@@ -584,7 +730,7 @@ module.exports =
 
 	    'btn:active': {
 	        background: 'rgba(0,0,0,.3)',
-	        boxShadow: '0 1px 3px rgba(0,0,0,.2) inset, -1px -1px 4px rgba(255,255,255,.5) inset'
+	        boxShadow: "0 1px 3px rgba(0,0,0,.2) inset,\n                -1px -1px 4px rgba(255,255,255,.5) inset"
 	    },
 
 	    'btn:disabled': {
@@ -613,7 +759,12 @@ module.exports =
 	        textAlign: 'center'
 	    },
 
-	    'input:focus': {}
+	    'input:focus': {},
+
+	    'input:disabled': {
+	        color: 'rgba(0, 0, 0, 0.3)',
+	        textShadow: '0 1px 0 rgba(255, 255, 255, 0.8)'
+	    }
 	};
 	NumericInput.SPEED = 50;
 	NumericInput.DELAY = 500;
