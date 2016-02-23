@@ -282,13 +282,13 @@
                 <p>
                     The widget can be switched to mobile appearance using the
                     <code>mobile</code> prop. It can be <code>true</code>,
-                    <code>false</code> or <code>"auto"</code>. The default value
-                    is <code>auto</code> which evaluates to the result of
+                    <code>false</code>, <code>"auto"</code> or a <code>function</code>.
+                    The default value is <code>auto</code> which evaluates to the result of
                     <code>('ontouchstart' in document)</code>. You can use true
-                    or false to force it staing into one mode or to trovide your
-                    custom detection logic like <code>mobile={ myTestFuncton() }</code>
-                    but keep in mind that this will only be used once when the
-                    component is created.
+                    or false to force it staing into one mode or to provide your
+                    custom detection logic like <code>mobile={ myTestFuncton }</code>
+                    but keep in mind that this will be called on every render() with
+                    <code>this</code> pointing to the component instance.
                 </p>
                 <blockquote>
                     <div class="code xml">&lt;NumericInput mobile /></div>
