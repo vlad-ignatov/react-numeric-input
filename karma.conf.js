@@ -8,7 +8,7 @@ module.exports = function (config) {
                 'Chrome',
                 'ChromeCanary',
                 'Firefox',
-                // 'Opera',
+                'Opera',
                 'Safari'
             ],
         singleRun: true,
@@ -17,15 +17,12 @@ module.exports = function (config) {
 
             // This one is needed for testing in PhantomJS
             'https://raw.githubusercontent.com/es-shims/es5-shim/master/es5-shim.js',
-
-            'https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-with-addons.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js',
             './__tests__/tests.webpack.js'
         ],
         preprocessors: {
             './__tests__/tests.webpack.js': [ 'webpack', 'sourcemap' ]
         },
-        reporters: [ 'dots' ],
+        reporters: [ 'progress' ],
         webpack: {
             devtool: 'inline-source-map',
             module: {
@@ -42,10 +39,6 @@ module.exports = function (config) {
                         exclude: /node_modules/
                     }
                 ]
-            },
-            externals : {
-                'react'     : 'React',
-                'react-dom' : 'ReactDOM'
             }
         },
         webpackServer: {
