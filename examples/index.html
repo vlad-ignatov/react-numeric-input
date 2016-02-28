@@ -44,13 +44,13 @@
             <fieldset>
                 <legend class="text-success">Minimal Usage</legend>
                 <p>
-                    This will behave exactly like <code>&lt;input type="number"></code>.
+                    This will behave exactly like <code>&lt;input type="number"&gt;</code>.
                     It will create an empty numeric input that starts changing from zero.
                     The difference is that this works on any browser and does have the same
                     appearnce everywhere.
                 </p>
                 <blockquote>
-                    <div class="code jsx">&lt;NumericInput/></div>
+                    <div class="code jsx">&lt;NumericInput/&gt;</div>
                     <script class="jsx" type="text/plain">{}</script>
                 </blockquote>
             </fieldset>
@@ -63,7 +63,7 @@
                     here is an example with <code>.form-control</code> class.
                 </p>
                 <blockquote>
-                    <div class="code jsx">&lt;NumericInput className="form-control"/></div>
+                    <div class="code jsx">&lt;NumericInput className="form-control"/&gt;</div>
                     <div class="col-sm-5 col-md-4 col-lg-3">
                         <script class="jsx" type="text/plain">{"className": "form-control"}</script>
                     </div>
@@ -77,7 +77,7 @@
                     <code>max</code> and <code>value</code>:
                 </p>
                 <blockquote>
-                    <div class="code jsx">&lt;NumericInput min={0} max={100} value={50}/></div>
+                    <div class="code jsx">&lt;NumericInput min={0} max={100} value={50}/&gt;</div>
                     <div class="col-sm-5 col-md-4 col-lg-3">
                         <script class="jsx" type="text/plain">
                         {"className": "form-control","min":0,"max":100,"value":50}
@@ -93,7 +93,7 @@
                     props to make your input working with floating point numbers:
                 </p>
                 <blockquote>
-                    <div class="code jsx">&lt;NumericInput step={0.1} precision={2} value={50.3}/></div>
+                    <div class="code jsx">&lt;NumericInput step={0.1} precision={2} value={50.3}/&gt;</div>
                     <div class="col-sm-5 col-md-4 col-lg-3">
                         <script class="jsx" type="text/plain">
                         {"className":"form-control","step":0.1,"precision":2,"value":50.3}
@@ -114,7 +114,7 @@
 <div class="code js">function myFormat(num) {
     return num + '$';
 }</div>
-                    <div class="code jsx">&lt;NumericInput precision={2} value={50.3} step={0.1} format={myFormat}/></div>
+                    <div class="code jsx">&lt;NumericInput precision={2} value={50.3} step={0.1} format={myFormat}/&gt;</div>
                     <div class="col-sm-5 col-md-4 col-lg-3">
                         <script class="jsx" type="text/plain">
                         {
@@ -134,7 +134,7 @@
             <fieldset>
                 <legend class="text-success">Disabled &amp; Read only</legend>
                 <blockquote>
-                    <div class="code jsx">&lt;NumericInput disabled value={23.45}/></div>
+                    <div class="code jsx">&lt;NumericInput disabled value={23.45}/&gt;</div>
                     <div class="col-sm-5 col-md-4 col-lg-3">
                         <script class="jsx" type="text/plain">
                         {
@@ -146,7 +146,7 @@
                     </div>
                 </blockquote>
                 <blockquote>
-                    <div class="code jsx">&lt;NumericInput readOnly value={23.45}/></div>
+                    <div class="code jsx">&lt;NumericInput readOnly value={23.45}/&gt;</div>
                     <div class="col-sm-5 col-md-4 col-lg-3">
                         <script class="jsx" type="text/plain">
                         {
@@ -196,7 +196,7 @@
         arrowDown: {
             borderTopColor: 'rgba(66, 54, 0, 0.63)'
         }
-    }}/></div>
+    }}/&gt;</div>
                     <div class="col-sm-5 col-md-4 col-lg-3">
                         <script class="jsx" type="text/plain">
                         {
@@ -261,7 +261,7 @@
     required
     size="14"
     spellcheck="false"
-    tabindex="5"/></div>
+    tabindex="5"/&gt;</div>
                     <div class="col-sm-5 col-md-4 col-lg-3">
                         <script class="jsx" type="text/plain">
                             {
@@ -297,13 +297,13 @@
                     component is created.
                 </p>
                 <blockquote>
-                    <div class="code xml">&lt;NumericInput mobile /></div>
+                    <div class="code xml">&lt;NumericInput mobile /&gt;</div>
                     <div class="col-sm-5 col-md-4 col-lg-3">
                         <script class="jsx" type="text/plain">{ mobile: true }</script>
                     </div>
                     <br/>
                     <br/>
-                    <div class="code xml">&lt;NumericInput mobile className="form-control" /></div>
+                    <div class="code xml">&lt;NumericInput mobile className="form-control" /&gt;</div>
                     <div class="col-sm-5 col-md-4 col-lg-3">
                         <script class="jsx" type="text/plain">{ mobile: true, className: "form-control" }</script>
                     </div>
@@ -330,9 +330,12 @@
                 </blockquote>
             </fieldset>
 
-            <div class="row">
-                <div class="col-xs-12 demo"></div>
-            </div>
+            <fieldset>
+                <legend class="text-success">Interactive Demo</legend>
+                <div class="row">
+                    <div class="col-xs-12 demo"></div>
+                </div>
+            </fieldset>
             <br/>
             <br/>
         </div>

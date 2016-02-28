@@ -145,7 +145,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            inputProps: {
 	                name: { value: "whatever", on: false },
 	                className: { value: "form-control", on: true },
-	                value: { value: 50, on: false },
+	                value: { value: 50, on: true },
 	                min: { value: 0, on: true },
 	                max: { value: 100, on: true },
 	                precision: { value: 0, on: true },
@@ -185,18 +185,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "onChange",
 	        value: function onChange(x) {
 	            this.state.inputProps.value.value = x;
-	            this.setState(this.state);
+	            if (this.state.inputProps.value.on) {
+	                this.setState(this.state);
+	            }
 	        }
 	    }, {
 	        key: "onInvalid",
 	        value: function onInvalid(message) {
-	            console.log("Invalid", message);
+	            // console.log("Invalid", message)
 	            $(this.refs.errorMessage).text(message || "Unknown error");
 	        }
 	    }, {
 	        key: "onValid",
 	        value: function onValid() {
-	            console.log("Valid");
+	            // console.log("Valid")
 	            $(this.refs.errorMessage).empty();
 	        }
 	    }, {
@@ -224,7 +226,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            return React.createElement(
 	                "div",
-	                { className: "code js", ref: "code" },
+	                { className: "code js", ref: "code", style: { minHeight: 379 } },
 	                out
 	            );
 	        }
@@ -233,7 +235,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function renderPropEditors(config) {
 	            var _this2 = this;
 
-	            return config.map(function (props) {
+	            return config.map(function (props, propName) {
 	                var editor = null;
 	                var type = props.type;
 	                var name = props.name;
@@ -257,7 +259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                return React.createElement(
 	                    "tr",
-	                    null,
+	                    { key: propName },
 	                    React.createElement(
 	                        "td",
 	                        { className: "unselectable" },
@@ -326,7 +328,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    React.createElement(
 	                                        "th",
 	                                        null,
-	                                        "prop"
+	                                        "name"
 	                                    ),
 	                                    React.createElement(
 	                                        "th",
@@ -340,7 +342,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            "div",
 	                            { style: {
 	                                    overflow: 'auto',
-	                                    maxHeight: 400
+	                                    maxHeight: 452
 	                                } },
 	                            React.createElement(
 	                                "table",
@@ -369,7 +371,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        React.createElement(
 	                            "div",
 	                            { className: "panel-heading" },
-	                            "Result"
+	                            "Preview"
 	                        ),
 	                        React.createElement(
 	                            "div",

@@ -8,7 +8,7 @@ export default class Demo extends React.Component
             inputProps : {
                 name      : { value: "whatever"    ,     on: false },
                 className : { value: "form-control",     on: true  },
-                value     : { value: 50,                 on: false },
+                value     : { value: 50,                 on: true  },
                 min       : { value: 0,                  on: true  },
                 max       : { value: 100,                on: true  },
                 precision : { value: 0,                  on: true  },
@@ -42,16 +42,18 @@ export default class Demo extends React.Component
 
     onChange(x) {
         this.state.inputProps.value.value = x
-        this.setState(this.state);
+        if (this.state.inputProps.value.on) {
+            this.setState(this.state);
+        }
     }
 
     onInvalid(message) {
-        console.log("Invalid", message)
+        // console.log("Invalid", message)
         $(this.refs.errorMessage).text(message || "Unknown error")
     }
 
     onValid() {
-        console.log("Valid")
+        // console.log("Valid")
         $(this.refs.errorMessage).empty()
     }
 
@@ -78,11 +80,11 @@ export default class Demo extends React.Component
 
         out += '/>'
 
-        return <div className="code js" ref="code">{ out }</div>
+        return <div className="code js" ref="code" style={{ minHeight: 379 }}>{ out }</div>
     }
 
     renderPropEditors(config) {
-        return config.map(props => {
+        return config.map((props, propName) => {
             let editor = null
             let { type, name, ...rest } = props
 
@@ -108,7 +110,7 @@ export default class Demo extends React.Component
             }
 
             return (
-                <tr>
+                <tr key={ propName }>
                     <td className="unselectable">
                         <label style={{ display: "block" }}>
                             <input
@@ -150,14 +152,14 @@ export default class Demo extends React.Component
                             </colgroup>
                             <thead>
                                 <tr>
-                                    <th>prop</th>
+                                    <th>name</th>
                                     <th>value</th>
                                 </tr>
                             </thead>
                         </table>
                         <div style={{
                             overflow : 'auto',
-                            maxHeight: 400
+                            maxHeight: 452
                         }}>
                             <table className="table table-striped table-condensed">
                                 <colgroup>
@@ -194,7 +196,7 @@ export default class Demo extends React.Component
                 </div>
                 <div className="col-xs-6">
                     <div className="panel panel-primary">
-                        <div className="panel-heading">Result</div>
+                        <div className="panel-heading">Preview</div>
                         <div className="panel-body">
                             <div ref="example">
                                 <NumericInput { ...inputProps }
