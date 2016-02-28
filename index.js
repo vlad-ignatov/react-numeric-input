@@ -131,8 +131,8 @@ module.exports =
 	    }, {
 	        key: "componentDidUpdate",
 	        value: function componentDidUpdate(prevProps, prevState) {
-	            if (this.props.onChange && prevState.value != this.state.value) {
-	                this.props.onChange(this.state.value);
+	            if (prevState.value != this.state.value) {
+	                this._invokeEventCallback("onChange", this.state.value, this.refs.input.value);
 	            }
 
 	            if (this.state.inputFocus && !prevState.inputFocus) {
@@ -145,17 +145,10 @@ module.exports =
 	                if (this.state.selectionEnd || this.state.selectionEnd === 0) {
 	                    this.refs.input.selectionEnd = this.state.selectionEnd;
 	                }
-
-	                if (this.props.onFocus) {
-	                    this.props.onFocus();
-	                }
 	            }
 
 	            if (!this.state.inputFocus && document.activeElement === this.refs.input) {
 	                this.state.inputFocus = true;
-	                if (this.props.onFocus) {
-	                    this.props.onFocus();
-	                }
 	            }
 
 	            this.checkValidity();
@@ -225,13 +218,13 @@ module.exports =
 	            this._valid = validationError;
 	            if (validationError) {
 	                addClass(this.refs.wrapper, "has-error");
-	                if (validStateChanged && this.props.onInvalid) {
-	                    this.props.onInvalid(validationError);
+	                if (validStateChanged) {
+	                    this._invokeEventCallback("onInvalid", validationError, this.state.value, this.refs.input.value);
 	                }
 	            } else {
 	                removeClass(this.refs.wrapper, "has-error");
-	                if (validStateChanged && this.props.onValid) {
-	                    this.props.onValid();
+	                if (validStateChanged) {
+	                    this._invokeEventCallback("onValid", this.state.value, this.refs.input.value);
 	                }
 	            }
 	        }
@@ -286,10 +279,13 @@ module.exports =
 	        }
 	    }, {
 	        key: "_onKeyDown",
-	        value: function _onKeyDown(e) {
-	            if (this.props.onKeyDown) {
-	                this.props.onKeyDown(e);
+	        value: function _onKeyDown() {
+	            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	                args[_key] = arguments[_key];
 	            }
+
+	            this._invokeEventCallback.apply(this, ["onKeyDown"].concat(args));
+	            var e = args[0];
 	            if (!e.isDefaultPrevented()) {
 	                if (e.keyCode === KEYCODE_UP) {
 	                    e.preventDefault();
@@ -378,6 +374,19 @@ module.exports =
 	                this.decrease();
 	            } else if (dir == 'up') {
 	                this.increase();
+	            }
+	        }
+	    }, {
+	        key: "_invokeEventCallback",
+	        value: function _invokeEventCallback(callbackName) {
+	            if (typeof this.props[callbackName] == "function") {
+	                var _props$callbackName;
+
+	                for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	                    args[_key2 - 1] = arguments[_key2];
+	                }
+
+	                (_props$callbackName = this.props[callbackName]).call.apply(_props$callbackName, [null].concat(args));
 	            }
 	        }
 	    }, {
@@ -475,12 +484,18 @@ module.exports =
 	                            btnUpActive: false
 	                        });
 	                    },
-	                    onMouseDown: function onMouseDown(e) {
-	                        e.preventDefault();
+	                    onMouseDown: function onMouseDown() {
+	                        for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+	                            args[_key3] = arguments[_key3];
+	                        }
+
+	                        args[0].preventDefault();
 	                        _this6.setState({
 	                            btnUpHover: true,
 	                            btnUpActive: true,
 	                            inputFocus: true
+	                        }, function () {
+	                            _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
 	                        });
 	                        _this6.onMouseDown('up');
 	                    }
@@ -507,12 +522,18 @@ module.exports =
 	                            btnDownActive: false
 	                        });
 	                    },
-	                    onMouseDown: function onMouseDown(e) {
-	                        e.preventDefault();
+	                    onMouseDown: function onMouseDown() {
+	                        for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+	                            args[_key4] = arguments[_key4];
+	                        }
+
+	                        args[0].preventDefault();
 	                        _this6.setState({
 	                            btnDownHover: true,
 	                            btnDownActive: true,
 	                            inputFocus: true
+	                        }, function () {
+	                            _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
 	                        });
 	                        _this6.onMouseDown('down');
 	                    }
@@ -525,13 +546,21 @@ module.exports =
 	                    onSelect: this._onSelectionChange.bind(this),
 	                    onSelectStart: this._onSelectionChange.bind(this),
 	                    onFocus: function onFocus() {
-	                        _this6.setState({ inputFocus: true });
+	                        for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+	                            args[_key5] = arguments[_key5];
+	                        }
+
+	                        _this6.setState({ inputFocus: true }, function () {
+	                            _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
+	                        });
 	                    },
 	                    onBlur: function onBlur() {
+	                        for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+	                            args[_key6] = arguments[_key6];
+	                        }
+
 	                        _this6.setState({ inputFocus: false }, function () {
-	                            if (_this6.props.onBlur) {
-	                                _this6.props.onBlur();
-	                            }
+	                            _this6._invokeEventCallback.apply(_this6, ["onBlur"].concat(args));
 	                        });
 	                    }
 	                });

@@ -322,8 +322,8 @@ export class NumericInput extends React.Component
         // Call the onChange if needed. This is placed here because there are
         // many reasons for changing the value and this is the common place
         // that can capture them all
-        if (this.props.onChange && prevState.value != this.state.value) {
-            this.props.onChange(this.state.value);
+        if (prevState.value != this.state.value) {
+            this._invokeEventCallback("onChange", this.state.value, this.refs.input.value)
         }
 
         // Notify about the focus
@@ -339,19 +339,12 @@ export class NumericInput extends React.Component
             if (this.state.selectionEnd || this.state.selectionEnd === 0) {
                 this.refs.input.selectionEnd = this.state.selectionEnd
             }
-
-            if (this.props.onFocus) {
-                this.props.onFocus()
-            }
         }
 
         // This is a special case! If the component has the "autoFocus" prop
         // and the browser did focus it we have pass that to the onFocus
         if (!this.state.inputFocus && document.activeElement === this.refs.input) {
             this.state.inputFocus = true
-            if (this.props.onFocus) {
-                this.props.onFocus()
-            }
         }
 
         this.checkValidity()
@@ -441,14 +434,23 @@ export class NumericInput extends React.Component
         this._valid = validationError
         if (validationError) {
             addClass(this.refs.wrapper, "has-error")
-            if (validStateChanged && this.props.onInvalid) {
-                this.props.onInvalid(validationError)
+            if (validStateChanged) {
+                this._invokeEventCallback(
+                    "onInvalid",
+                    validationError,
+                    this.state.value,
+                    this.refs.input.value
+                )
             }
         }
         else {
             removeClass(this.refs.wrapper, "has-error")
-            if (validStateChanged && this.props.onValid) {
-                this.props.onValid()
+            if (validStateChanged) {
+                this._invokeEventCallback(
+                    "onValid",
+                    this.state.value,
+                    this.refs.input.value
+                )
             }
         }
     }
@@ -534,11 +536,10 @@ export class NumericInput extends React.Component
     /**
      * This binds the Up/Down arrow key listeners
      */
-    _onKeyDown(e: KeyboardEvent): void
+    _onKeyDown(...args): void
     {
-        if (this.props.onKeyDown) {
-            this.props.onKeyDown(e)
-        }
+        this._invokeEventCallback("onKeyDown", ...args)
+        let e = args[0]
         if (!e.isDefaultPrevented()) {
             if (e.keyCode === KEYCODE_UP) {
                 e.preventDefault();
@@ -654,6 +655,13 @@ export class NumericInput extends React.Component
         }
         else if (dir == 'up') {
             this.increase();
+        }
+    }
+
+    _invokeEventCallback(callbackName, ...args)
+    {
+        if (typeof this.props[callbackName] == "function") {
+            this.props[callbackName].call(null, ...args);
         }
     }
 
@@ -789,12 +797,14 @@ export class NumericInput extends React.Component
                         btnUpActive : false
                     });
                 },
-                onMouseDown: (e) => {
-                    e.preventDefault();
+                onMouseDown: (...args) => {
+                    args[0].preventDefault();
                     this.setState({
                         btnUpHover  : true,
                         btnUpActive : true,
                         inputFocus  : true
+                    }, () => {
+                        this._invokeEventCallback("onFocus", ...args)
                     });
                     this.onMouseDown('up');
                 }
@@ -821,12 +831,14 @@ export class NumericInput extends React.Component
                         btnDownActive : false
                     });
                 },
-                onMouseDown: (e) => {
-                    e.preventDefault();
+                onMouseDown: (...args) => {
+                    args[0].preventDefault();
                     this.setState({
                         btnDownHover  : true,
                         btnDownActive : true,
                         inputFocus    : true
+                    }, () => {
+                        this._invokeEventCallback("onFocus", ...args)
                     });
                     this.onMouseDown('down');
                 }
@@ -838,14 +850,14 @@ export class NumericInput extends React.Component
                 onInput: this._onSelectionChange.bind(this),
                 onSelect: this._onSelectionChange.bind(this),
                 onSelectStart: this._onSelectionChange.bind(this),
-                onFocus : () => {
-                    this.setState({ inputFocus: true });
+                onFocus: (...args) => {
+                    this.setState({ inputFocus: true }, () => {
+                        this._invokeEventCallback("onFocus", ...args)
+                    });
                 },
-                onBlur : () => {
+                onBlur: (...args) => {
                     this.setState({ inputFocus: false }, () => {
-                        if (this.props.onBlur) {
-                            this.props.onBlur();
-                        }
+                        this._invokeEventCallback("onBlur", ...args)
                     });
                 }
             });

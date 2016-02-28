@@ -359,9 +359,10 @@ describe('NumericInput', function() {
     });
 
     it("calls it's onChange callback properly", () => {
-        var value = null;
-        function onChange(val) {
-            value = val;
+        var value = null, stringValue = "";
+        function onChange(valueAsNumber, valueAsString) {
+            value = valueAsNumber
+            stringValue = valueAsString
         }
         function format(val) {
             return val * 100 + 'x';
@@ -377,6 +378,7 @@ describe('NumericInput', function() {
         expect(value).toEqual(null);
         TestUtils.Simulate.mouseDown(btnUpNode);
         expect(inputNode.value).toEqual('100x');
+        expect(stringValue).toEqual('100x');
         expect(value).toEqual(1);
     });
 
@@ -401,17 +403,18 @@ describe('NumericInput', function() {
     });
 
     it("calls it's onKeyDown callbacks and makest the event cancelable", () => {
-        var hits = 0;
+        var hits = 0, widget, inputNode;
         function onKeyDown(e) {
+            expect(e.target).toEqual(inputNode);
             if (hits > 0) {
                 e.preventDefault()
             }
             hits++;
         }
-        var widget = TestUtils.renderIntoDocument(
-                <NumericInput value={0} onKeyDown={onKeyDown} />
-            ),
-            inputNode = widget.refs.input;
+        widget = TestUtils.renderIntoDocument(
+            <NumericInput value={0} onKeyDown={onKeyDown} />
+        );
+        inputNode = widget.refs.input;
 
         expect(hits).toEqual(0);
         expect(inputNode.value).toEqual('0');

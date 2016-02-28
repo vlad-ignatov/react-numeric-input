@@ -9,8 +9,10 @@ describe('NumericInput', function() {
     it('passes focus events to "onFocus" prop', (done) => {
         let onFocusCalls = 0, widget
 
-        function onFocus() {
+        function onFocus(event) {
             onFocusCalls += 1
+            expect(this).toEqual(null)
+            expect(typeof event).toEqual("object")
         }
 
         widget = TestUtils.renderIntoDocument(
@@ -43,7 +45,11 @@ describe('NumericInput', function() {
     it('passes blur events to "onBlur" prop', (done) => {
         let onBlurCalls = 0
         let widget = TestUtils.renderIntoDocument(
-            <NumericInput onBlur={ () => onBlurCalls += 1 } />
+            <NumericInput onBlur={ function(event) {
+                onBlurCalls += 1
+                expect(this).toEqual(null)
+                expect(typeof event).toEqual("object")
+            }} />
         )
 
         // Rendering must not trigger any blur on the input
@@ -85,6 +91,9 @@ describe('NumericInput', function() {
         let widget = TestUtils.renderIntoDocument(
             <NumericInput autoFocus onFocus={ () => onFocusCalls += 1 } />
         )
+
+        // window.blur()
+        // window.focus()
 
         // Rendering must bring the focus to the input
         setTimeout(() => {
