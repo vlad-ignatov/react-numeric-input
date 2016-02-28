@@ -58,7 +58,7 @@ function myFormat(num) {
 ```
 
 ## Props
-Option       | Type                                | Default
+Name         | Type                                | Default
 -------------|-------------------------------------|:-------:
 **value**    |`number` or `string`                 | `""` which converts to 0
 **min**      |`number`                             | `Number.MIN_SAFE_INTEGER`
@@ -77,6 +77,14 @@ Option       | Type                                | Default
 Any other option is passed directly the input created by the component. Just
 don't forget to camelCase the attributes. For example `readonly` must be `readOnly`.
 See examples/index.html for examples.
+
+## Event Callbacks
+You can pass callback props like `onClick`, `onMouseOver` etc. and they will be
+attached to the input element and React will call them with `null` scope and the corresponding event. However, there are few special cases to be aware of:
+
+* `onChange`  - Called with `valueAsNumber` and `valueAsString`. The `valueAsNumber` represents the internal numeric value while `valueAsString` is the same as the input value and might be completely different from the numeric one if custom formatting is used.
+* `onInvalid` - Will be called with `errorMessage`, `valueAsNumber` and `valueAsString`.
+* `onValid`   - There is no corresponding event in browsers. It will be called when the component transitions from invalid to valid state with the same arguments as onChange: `valueAsNumber` and `valueAsString`.
 
 ## Styling
 The component uses inline styles which you can customize. The `style` prop is not added
