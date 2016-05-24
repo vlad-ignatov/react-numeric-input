@@ -554,6 +554,7 @@ export class NumericInput extends React.Component
 
     _onSelectionChange(e): void
     {
+        e.persist()
         this.setState({
             selectionStart: this.refs.input.selectionStart,
             selectionEnd: this.refs.input.selectionEnd
@@ -756,6 +757,8 @@ export class NumericInput extends React.Component
 
         if (state.value || state.value === 0) {
             attrs.input.value = this._format(state.value)
+        } else {
+            attrs.input.value = ""
         }
 
         if (hasFormControl) {
