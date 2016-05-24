@@ -12,7 +12,7 @@ function testProp(cfg) {
             let result = cfg.getValue(app)
             expect(result).toEqual(
                 entry.out,
-                `If the "${cfg.propName}" is set to ${entry.in} the result
+                `If the "${cfg.propName}" is set to "${String(entry.in)}" the result
                 should be "${entry.out}" but got "${result}"`
             )
             resolve()
