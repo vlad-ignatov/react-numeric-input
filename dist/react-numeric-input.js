@@ -3,10 +3,10 @@
 		module.exports = factory(require("React"));
 	else if(typeof define === 'function' && define.amd)
 		define(["React"], factory);
-	else {
-		var a = typeof exports === 'object' ? factory(require("React")) : factory(root["React"]);
-		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
-	}
+	else if(typeof exports === 'object')
+		exports["NumericInput"] = factory(require("React"));
+	else
+		root["NumericInput"] = factory(root["React"]);
 })(this, function(__WEBPACK_EXTERNAL_MODULE_1__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -60,11 +60,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.NumericInput = undefined;
-
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -112,7 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	}
 
-	var NumericInput = exports.NumericInput = function (_React$Component) {
+	var NumericInput = function (_React$Component) {
 	    _inherits(NumericInput, _React$Component);
 
 	    /**
@@ -426,6 +421,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                args[_key] = arguments[_key];
 	            }
 
+	            args[0].persist();
 	            this._invokeEventCallback.apply(this, ["onKeyDown"].concat(args));
 	            var e = args[0];
 	            if (!e.isDefaultPrevented()) {
@@ -443,6 +439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function _onSelectionChange(e) {
 	            var _this3 = this;
 
+	            e.persist();
 	            this.setState({
 	                selectionStart: this.refs.input.selectionStart,
 	                selectionEnd: this.refs.input.selectionEnd
@@ -636,6 +633,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            if (state.value || state.value === 0) {
 	                attrs.input.value = this._format(state.value);
+	            } else {
+	                attrs.input.value = "";
 	            }
 
 	            if (hasFormControl) {
@@ -683,6 +682,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 
 	                        args[0].preventDefault();
+	                        args[0].persist();
 	                        _this6.setState({
 	                            btnUpHover: true,
 	                            btnUpActive: true,
@@ -721,6 +721,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 
 	                        args[0].preventDefault();
+	                        args[0].persist();
 	                        _this6.setState({
 	                            btnDownHover: true,
 	                            btnDownActive: true,
@@ -743,6 +744,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            args[_key5] = arguments[_key5];
 	                        }
 
+	                        args[0].persist();
 	                        _this6.setState({ inputFocus: true }, function () {
 	                            _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
 	                        });
@@ -752,6 +754,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            args[_key6] = arguments[_key6];
 	                        }
 
+	                        args[0].persist();
 	                        _this6.setState({ inputFocus: false }, function () {
 	                            _this6._invokeEventCallback.apply(_this6, ["onBlur"].concat(args));
 	                        });
@@ -1000,7 +1003,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	NumericInput.SPEED = 50;
 	NumericInput.DELAY = 500;
-	exports.default = NumericInput;
+
+	module.exports = NumericInput;
 
 /***/ },
 /* 1 */

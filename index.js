@@ -51,11 +51,6 @@ module.exports =
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.NumericInput = undefined;
-
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -93,7 +88,7 @@ module.exports =
 	    }
 	}
 
-	var NumericInput = exports.NumericInput = function (_React$Component) {
+	var NumericInput = function (_React$Component) {
 	    _inherits(NumericInput, _React$Component);
 
 	    function NumericInput(props) {
@@ -284,6 +279,7 @@ module.exports =
 	                args[_key] = arguments[_key];
 	            }
 
+	            args[0].persist();
 	            this._invokeEventCallback.apply(this, ["onKeyDown"].concat(args));
 	            var e = args[0];
 	            if (!e.isDefaultPrevented()) {
@@ -301,6 +297,7 @@ module.exports =
 	        value: function _onSelectionChange(e) {
 	            var _this3 = this;
 
+	            e.persist();
 	            this.setState({
 	                selectionStart: this.refs.input.selectionStart,
 	                selectionEnd: this.refs.input.selectionEnd
@@ -445,6 +442,8 @@ module.exports =
 
 	            if (state.value || state.value === 0) {
 	                attrs.input.value = this._format(state.value);
+	            } else {
+	                attrs.input.value = "";
 	            }
 
 	            if (hasFormControl) {
@@ -490,6 +489,7 @@ module.exports =
 	                        }
 
 	                        args[0].preventDefault();
+	                        args[0].persist();
 	                        _this6.setState({
 	                            btnUpHover: true,
 	                            btnUpActive: true,
@@ -528,6 +528,7 @@ module.exports =
 	                        }
 
 	                        args[0].preventDefault();
+	                        args[0].persist();
 	                        _this6.setState({
 	                            btnDownHover: true,
 	                            btnDownActive: true,
@@ -550,6 +551,7 @@ module.exports =
 	                            args[_key5] = arguments[_key5];
 	                        }
 
+	                        args[0].persist();
 	                        _this6.setState({ inputFocus: true }, function () {
 	                            _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
 	                        });
@@ -559,6 +561,7 @@ module.exports =
 	                            args[_key6] = arguments[_key6];
 	                        }
 
+	                        args[0].persist();
 	                        _this6.setState({ inputFocus: false }, function () {
 	                            _this6._invokeEventCallback.apply(_this6, ["onBlur"].concat(args));
 	                        });
@@ -797,7 +800,8 @@ module.exports =
 	};
 	NumericInput.SPEED = 50;
 	NumericInput.DELAY = 500;
-	exports.default = NumericInput;
+
+	module.exports = NumericInput;
 
 /***/ },
 /* 1 */
