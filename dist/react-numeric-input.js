@@ -215,7 +215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // This is a special case! If the component has the "autoFocus" prop
 	            // and the browser did focus it we have pass that to the onFocus
-	            if (!this.state.inputFocus && document.activeElement === this.refs.input) {
+	            if (!this.state.inputFocus && document && document.activeElement === this.refs.input) {
 	                this.state.inputFocus = true;
 	            }
 
@@ -472,7 +472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "stop",
 	        value: function stop() {
 	            if (this._timer) {
-	                window.clearTimeout(this._timer);
+	                clearTimeout(this._timer);
 	            }
 	        }
 
@@ -606,7 +606,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var hasFormControl = props.className && /\bform-control\b/.test(props.className);
 
-	            var mobile = props.mobile == 'auto' ? 'ontouchstart' in document : props.mobile;
+	            var mobile = props.mobile == 'auto' ? document && 'ontouchstart' in document : props.mobile;
 	            if (typeof mobile == "function") {
 	                mobile = mobile.call(this);
 	            }

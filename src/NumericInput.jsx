@@ -343,7 +343,7 @@ class NumericInput extends React.Component
 
         // This is a special case! If the component has the "autoFocus" prop
         // and the browser did focus it we have pass that to the onFocus
-        if (!this.state.inputFocus && document.activeElement === this.refs.input) {
+        if (!this.state.inputFocus && document && document.activeElement === this.refs.input) {
             this.state.inputFocus = true
         }
 
@@ -586,7 +586,7 @@ class NumericInput extends React.Component
     stop(): void
     {
         if ( this._timer ) {
-            window.clearTimeout( this._timer );
+            clearTimeout( this._timer );
         }
     }
 
@@ -700,7 +700,7 @@ class NumericInput extends React.Component
         )
 
         let mobile = props.mobile == 'auto' ?
-            'ontouchstart' in document :
+            document && 'ontouchstart' in document :
             props.mobile
         if (typeof mobile == "function") {
             mobile = mobile.call(this)
