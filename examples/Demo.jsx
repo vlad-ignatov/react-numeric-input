@@ -41,7 +41,7 @@ export default class Demo extends React.Component
     }
 
     onChange(x) {
-        this.state.inputProps.value.value = x
+        this.state.inputProps.value.value = x === null ? "" : x
         if (this.state.inputProps.value.on) {
             this.setState(this.state);
         }
@@ -203,6 +203,7 @@ export default class Demo extends React.Component
                                     onChange={ this.onChange.bind(this) }
                                     onInvalid={ this.onInvalid.bind(this) }
                                     onValid={ this.onValid.bind(this) }
+                                    value={ inputProps.value === null ? undefined : inputProps.value || ""}
                                 />
                                 <div className="help-block">
                                     <span ref="errorMessage" className="text-danger"/>

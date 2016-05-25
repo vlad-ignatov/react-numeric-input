@@ -184,7 +184,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "onChange",
 	        value: function onChange(x) {
-	            this.state.inputProps.value.value = x;
+	            this.state.inputProps.value.value = x === null ? "" : x;
 	            if (this.state.inputProps.value.on) {
 	                this.setState(this.state);
 	            }
@@ -382,7 +382,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                React.createElement(NumericInput, _extends({}, inputProps, {
 	                                    onChange: this.onChange.bind(this),
 	                                    onInvalid: this.onInvalid.bind(this),
-	                                    onValid: this.onValid.bind(this)
+	                                    onValid: this.onValid.bind(this),
+	                                    value: inputProps.value === null ? undefined : inputProps.value || ""
 	                                })),
 	                                React.createElement(
 	                                    "div",
