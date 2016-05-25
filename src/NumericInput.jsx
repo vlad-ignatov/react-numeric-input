@@ -36,7 +36,7 @@ function removeClass(element, className) {
     }
 }
 
-export class NumericInput extends React.Component
+class NumericInput extends React.Component
 {
     static propTypes = {
         step         : PropTypes.number,
@@ -538,6 +538,7 @@ export class NumericInput extends React.Component
      */
     _onKeyDown(...args): void
     {
+        args[0].persist()
         this._invokeEventCallback("onKeyDown", ...args)
         let e = args[0]
         if (!e.isDefaultPrevented()) {
@@ -802,6 +803,7 @@ export class NumericInput extends React.Component
                 },
                 onMouseDown: (...args) => {
                     args[0].preventDefault();
+                    args[0].persist();
                     this.setState({
                         btnUpHover  : true,
                         btnUpActive : true,
@@ -836,6 +838,7 @@ export class NumericInput extends React.Component
                 },
                 onMouseDown: (...args) => {
                     args[0].preventDefault();
+                    args[0].persist();
                     this.setState({
                         btnDownHover  : true,
                         btnDownActive : true,
@@ -854,11 +857,13 @@ export class NumericInput extends React.Component
                 onSelect: this._onSelectionChange.bind(this),
                 onSelectStart: this._onSelectionChange.bind(this),
                 onFocus: (...args) => {
+                    args[0].persist();
                     this.setState({ inputFocus: true }, () => {
                         this._invokeEventCallback("onFocus", ...args)
                     });
                 },
                 onBlur: (...args) => {
+                    args[0].persist();
                     this.setState({ inputFocus: false }, () => {
                         this._invokeEventCallback("onBlur", ...args)
                     });
@@ -898,4 +903,4 @@ export class NumericInput extends React.Component
     }
 }
 
-export default NumericInput
+module.exports = NumericInput;
