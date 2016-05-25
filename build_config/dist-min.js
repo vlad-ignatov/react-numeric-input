@@ -5,7 +5,8 @@ module.exports = {
     output: {
         path         : "./dist",
         filename     : "react-numeric-input.min.js",
-        libraryTarget: "umd"
+        libraryTarget: "umd",
+        library      : "NumericInput"
     },
     module: {
         loaders: [
