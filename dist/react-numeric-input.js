@@ -77,6 +77,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var PropTypes = _react2.default.PropTypes;
 	var KEYCODE_UP = 38;
 	var KEYCODE_DOWN = 40;
+	var IS_BROWSER = typeof document != 'undefined';
 
 	/**
 	 * Just a simple helper to provide support for older IEs. This is not exactly a
@@ -215,7 +216,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // This is a special case! If the component has the "autoFocus" prop
 	            // and the browser did focus it we have pass that to the onFocus
-	            if (!this.state.inputFocus && document && document.activeElement === this.refs.input) {
+	            if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refs.input) {
 	                this.state.inputFocus = true;
 	            }
 
@@ -606,7 +607,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var hasFormControl = props.className && /\bform-control\b/.test(props.className);
 
-	            var mobile = props.mobile == 'auto' ? document && 'ontouchstart' in document : props.mobile;
+	            var mobile = props.mobile == 'auto' ? IS_BROWSER && 'ontouchstart' in document : props.mobile;
 	            if (typeof mobile == "function") {
 	                mobile = mobile.call(this);
 	            }

@@ -68,6 +68,7 @@ module.exports =
 	var PropTypes = _react2.default.PropTypes;
 	var KEYCODE_UP = 38;
 	var KEYCODE_DOWN = 40;
+	var IS_BROWSER = typeof document != 'undefined';
 
 	function addClass(element, className) {
 	    if (element.classList) {
@@ -142,7 +143,7 @@ module.exports =
 	                }
 	            }
 
-	            if (!this.state.inputFocus && document && document.activeElement === this.refs.input) {
+	            if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refs.input) {
 	                this.state.inputFocus = true;
 	            }
 
@@ -415,7 +416,7 @@ module.exports =
 
 	            var hasFormControl = props.className && /\bform-control\b/.test(props.className);
 
-	            var mobile = props.mobile == 'auto' ? document && 'ontouchstart' in document : props.mobile;
+	            var mobile = props.mobile == 'auto' ? IS_BROWSER && 'ontouchstart' in document : props.mobile;
 	            if (typeof mobile == "function") {
 	                mobile = mobile.call(this);
 	            }

@@ -1,8 +1,9 @@
 import React from "react";
 
-const PropTypes = React.PropTypes
+const PropTypes    = React.PropTypes
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
+const IS_BROWSER   = typeof document != 'undefined';
 
 /**
  * Just a simple helper to provide support for older IEs. This is not exactly a
@@ -343,7 +344,7 @@ class NumericInput extends React.Component
 
         // This is a special case! If the component has the "autoFocus" prop
         // and the browser did focus it we have pass that to the onFocus
-        if (!this.state.inputFocus && document && document.activeElement === this.refs.input) {
+        if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refs.input) {
             this.state.inputFocus = true
         }
 
@@ -700,7 +701,7 @@ class NumericInput extends React.Component
         )
 
         let mobile = props.mobile == 'auto' ?
-            document && 'ontouchstart' in document :
+            IS_BROWSER && 'ontouchstart' in document :
             props.mobile
         if (typeof mobile == "function") {
             mobile = mobile.call(this)
