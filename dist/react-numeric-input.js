@@ -584,11 +584,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var state = this.state;
 	            var css = {};
 
-	            // Build the styles
-	            for (var x in NumericInput.style) {
-	                css[x] = Object.assign({}, NumericInput.style[x], props.style ? props.style[x] || {} : {});
-	            }
-
 	            var _props = this.props;
 	            var
 	            // These are ignored in rendering
@@ -605,6 +600,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "value", "type", "style", "defaultValue"]);
 
+	            // Build the styles
+
+	            for (var x in NumericInput.style) {
+	                css[x] = Object.assign({}, NumericInput.style[x], style ? style[x] || {} : {});
+	            }
+
 	            var hasFormControl = props.className && /\bform-control\b/.test(props.className);
 
 	            var mobile = props.mobile == 'auto' ? IS_BROWSER && 'ontouchstart' in document : props.mobile;
@@ -615,20 +616,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var attrs = {
 	                wrap: {
-	                    style: css.wrap,
+	                    style: style === false ? null : css.wrap,
 	                    className: 'react-numeric-input',
 	                    ref: 'wrapper'
 	                },
 	                input: _extends({
 	                    ref: 'input',
 	                    type: 'text',
-	                    style: Object.assign({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
+	                    style: style === false ? null : Object.assign({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
 	                }, rest),
 	                btnUp: {
-	                    style: Object.assign({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
+	                    style: style === false ? null : Object.assign({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
 	                },
 	                btnDown: {
-	                    style: Object.assign({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
+	                    style: style === false ? null : Object.assign({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
 	                }
 	            };
 
@@ -638,12 +639,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                attrs.input.value = "";
 	            }
 
-	            if (hasFormControl) {
+	            if (hasFormControl && style !== false) {
 	                Object.assign(attrs.wrap.style, css['wrap.hasFormControl']);
 	            }
 
 	            // mobile
-	            if (mobile) {
+	            if (mobile && style !== false) {
 	                Object.assign(attrs.input.style, css['input.mobile']);
 	                Object.assign(attrs.btnUp.style, css['btnUp.mobile']);
 	                Object.assign(attrs.btnDown.style, css['btnDown.mobile']);
@@ -762,7 +763,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                });
 	            } else {
-	                Object.assign(attrs.input.style, css['input:disabled']);
+	                if (style !== false) {
+	                    Object.assign(attrs.input.style, css['input:disabled']);
+	                }
 	            }
 
 	            if (mobile) {
@@ -773,13 +776,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    _react2.default.createElement(
 	                        "b",
 	                        attrs.btnUp,
-	                        _react2.default.createElement("i", { style: css.minus }),
-	                        _react2.default.createElement("i", { style: css.plus })
+	                        _react2.default.createElement("i", { style: style === false ? null : css.minus }),
+	                        _react2.default.createElement("i", { style: style === false ? null : css.plus })
 	                    ),
 	                    _react2.default.createElement(
 	                        "b",
 	                        attrs.btnDown,
-	                        _react2.default.createElement("i", { style: css.minus })
+	                        _react2.default.createElement("i", { style: style === false ? null : css.minus })
 	                    )
 	                );
 	            }
@@ -791,12 +794,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _react2.default.createElement(
 	                    "b",
 	                    attrs.btnUp,
-	                    _react2.default.createElement("i", { style: css.arrowUp })
+	                    _react2.default.createElement("i", { style: style === false ? null : css.arrowUp })
 	                ),
 	                _react2.default.createElement(
 	                    "b",
 	                    attrs.btnDown,
-	                    _react2.default.createElement("i", { style: css.arrowDown })
+	                    _react2.default.createElement("i", { style: style === false ? null : css.arrowDown })
 	                )
 	            );
 	        }
@@ -818,7 +821,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    readOnly: PropTypes.bool,
 	    required: PropTypes.bool,
 	    noValidate: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-	    style: PropTypes.object,
+	    style: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
 	    type: PropTypes.string,
 	    pattern: PropTypes.string,
 	    onFocus: PropTypes.func,

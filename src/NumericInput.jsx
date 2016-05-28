@@ -52,7 +52,7 @@ class NumericInput extends React.Component
         readOnly     : PropTypes.bool,
         required     : PropTypes.bool,
         noValidate   : PropTypes.oneOfType([ PropTypes.bool, PropTypes.string ]),
-        style        : PropTypes.object,
+        style        : PropTypes.oneOfType([ PropTypes.object, PropTypes.bool ]),
         type         : PropTypes.string,
         pattern      : PropTypes.string,
         onFocus      : PropTypes.func,
@@ -678,15 +678,6 @@ class NumericInput extends React.Component
         let state = this.state
         let css   = {}
 
-        // Build the styles
-        for (let x in NumericInput.style) {
-            css[x] = Object.assign(
-                {},
-                NumericInput.style[x],
-                props.style ? props.style[x] || {} : {}
-            );
-        }
-
         let {
             // These are ignored in rendering
             step, min, max, precision, parse, format,
@@ -695,6 +686,15 @@ class NumericInput extends React.Component
             // The rest are passed to the input
             ...rest
         } = this.props;
+
+        // Build the styles
+        for (let x in NumericInput.style) {
+            css[x] = Object.assign(
+                {},
+                NumericInput.style[x],
+                style ? style[x] || {} : {}
+            );
+        }
 
         let hasFormControl = props.className && (/\bform-control\b/).test(
             props.className
@@ -710,14 +710,14 @@ class NumericInput extends React.Component
 
         let attrs = {
             wrap : {
-                style    : css.wrap,
+                style    : style === false ? null : css.wrap,
                 className: 'react-numeric-input',
                 ref      : 'wrapper'
             },
             input : {
                 ref: 'input',
                 type: 'text',
-                style: Object.assign(
+                style: style === false ? null : Object.assign(
                     {},
                     css.input,
                     !hasFormControl ?
@@ -728,7 +728,7 @@ class NumericInput extends React.Component
                 ...rest
             },
             btnUp: {
-                style: Object.assign(
+                style: style === false ? null : Object.assign(
                     {},
                     css.btn,
                     css.btnUp,
@@ -742,7 +742,7 @@ class NumericInput extends React.Component
                 )
             },
             btnDown: {
-                style: Object.assign(
+                style: style === false ? null : Object.assign(
                     {},
                     css.btn,
                     css.btnDown,
@@ -763,12 +763,12 @@ class NumericInput extends React.Component
             attrs.input.value = ""
         }
 
-        if (hasFormControl) {
+        if (hasFormControl && style !== false) {
             Object.assign(attrs.wrap.style, css['wrap.hasFormControl'])
         }
 
         // mobile
-        if (mobile) {
+        if (mobile && style !== false) {
             Object.assign(attrs.input  .style, css['input.mobile'  ])
             Object.assign(attrs.btnUp  .style, css['btnUp.mobile'  ])
             Object.assign(attrs.btnDown.style, css['btnDown.mobile'])
@@ -872,7 +872,9 @@ class NumericInput extends React.Component
             });
         }
         else {
-            Object.assign(attrs.input.style, css['input:disabled'])
+            if (style !== false) {
+                Object.assign(attrs.input.style, css['input:disabled'])
+            }
         }
 
         if (mobile) {
@@ -880,11 +882,11 @@ class NumericInput extends React.Component
                 <span {...attrs.wrap}>
                     <input {...attrs.input}/>
                     <b {...attrs.btnUp}>
-                        <i style={css.minus}/>
-                        <i style={css.plus}/>
+                        <i style={ style === false ? null : css.minus }/>
+                        <i style={ style === false ? null : css.plus }/>
                     </b>
                     <b {...attrs.btnDown}>
-                        <i style={css.minus}/>
+                        <i style={ style === false ? null : css.minus }/>
                     </b>
                 </span>
             )
@@ -894,10 +896,10 @@ class NumericInput extends React.Component
             <span {...attrs.wrap}>
                 <input {...attrs.input}/>
                 <b {...attrs.btnUp}>
-                    <i style={css.arrowUp}/>
+                    <i style={ style === false ? null : css.arrowUp }/>
                 </b>
                 <b {...attrs.btnDown}>
-                    <i style={css.arrowDown}/>
+                    <i style={ style === false ? null : css.arrowDown }/>
                 </b>
             </span>
         );

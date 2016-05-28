@@ -71,6 +71,20 @@
             </fieldset>
 
             <fieldset>
+                <legend class="text-success">With inline styles disabled</legend>
+                <p>
+                    You can use <code>style={ false }</code> to disable the
+                    inline styles. It's up to you to provide your own CSS in this case.
+                </p>
+                <blockquote>
+                    <div class="code jsx">&lt;NumericInput className="form-control" style={ false }/&gt;</div>
+                    <div class="col-sm-5 col-md-4 col-lg-3">
+                        <script class="jsx" type="text/plain">{"className": "form-control", "style": false }</script>
+                    </div>
+                </blockquote>
+            </fieldset>
+
+            <fieldset>
                 <legend class="text-success">Typical Usage</legend>
                 <p>
                     Most of the time you will need to specify <code>min</code>,
