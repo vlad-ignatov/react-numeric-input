@@ -681,7 +681,7 @@ class NumericInput extends React.Component
         let {
             // These are ignored in rendering
             step, min, max, precision, parse, format,
-            value, type, style, defaultValue,
+            value, type, style, defaultValue, onInvalid, onValid,
 
             // The rest are passed to the input
             ...rest
