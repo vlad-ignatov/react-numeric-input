@@ -597,8 +597,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var type = _props.type;
 	            var style = _props.style;
 	            var defaultValue = _props.defaultValue;
+	            var onInvalid = _props.onInvalid;
+	            var onValid = _props.onValid;
 
-	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "value", "type", "style", "defaultValue"]);
+	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "value", "type", "style", "defaultValue", "onInvalid", "onValid"]);
 
 	            // Build the styles
 
