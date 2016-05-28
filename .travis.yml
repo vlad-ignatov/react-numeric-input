@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - 4.1
+  - "node" #Specifying node will run using the latest stable Node.js release
   - 4.1
   - 4.0
   - 0.12
