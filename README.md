@@ -70,7 +70,7 @@ Name         | Type                                | Default
 **className**|`string`                             | none
 **disabled** |`boolean`                            | none
 **readOnly** |`boolean`                            | none
-**style**    |`object`                             | none
+**style**    |`object` or `false`                  | none
 **size**     |`number` or `string`                 | none
 **mobile**   |`true`, `false`, 'auto' or `function`|`auto`
 
@@ -109,7 +109,8 @@ NumericInput.style.input.color = 'red';
 Finally, you can still use CSS if you want. Each component's root element has the
 `react-numeric-input` class so that it is easy to find these widgets on the page. However,
 keep in mind that because of the inline styles you might need to use `!important` for some
-rules. Example:
+rules unless you pass `style={false}` which will disable the inline styles and you will
+have to provide your own CSS styles for everything. Example:
 ```css
 .react-numeric-input input {
 	color: red;
