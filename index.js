@@ -174,7 +174,7 @@ module.exports =
 	    }, {
 	        key: "checkValidity",
 	        value: function checkValidity() {
-	            var valid = undefined,
+	            var valid = void 0,
 	                validationError = "";
 
 	            var supportsValidation = !!this.refs.input.checkValidity;
@@ -413,7 +413,7 @@ module.exports =
 	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "value", "type", "style", "defaultValue", "onInvalid", "onValid"]);
 
 	            for (var x in NumericInput.style) {
-	                css[x] = Object.assign({}, NumericInput.style[x], style ? style[x] || {} : {});
+	                css[x] = _extends({}, NumericInput.style[x], style ? style[x] || {} : {});
 	            }
 
 	            var hasFormControl = props.className && /\bform-control\b/.test(props.className);
@@ -433,13 +433,13 @@ module.exports =
 	                input: _extends({
 	                    ref: 'input',
 	                    type: 'text',
-	                    style: style === false ? null : Object.assign({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
+	                    style: style === false ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
 	                }, rest),
 	                btnUp: {
-	                    style: style === false ? null : Object.assign({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
+	                    style: style === false ? null : _extends({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
 	                },
 	                btnDown: {
-	                    style: style === false ? null : Object.assign({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
+	                    style: style === false ? null : _extends({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
 	                }
 	            };
 
@@ -450,22 +450,22 @@ module.exports =
 	            }
 
 	            if (hasFormControl && style !== false) {
-	                Object.assign(attrs.wrap.style, css['wrap.hasFormControl']);
+	                _extends(attrs.wrap.style, css['wrap.hasFormControl']);
 	            }
 
 	            if (mobile && style !== false) {
-	                Object.assign(attrs.input.style, css['input.mobile']);
-	                Object.assign(attrs.btnUp.style, css['btnUp.mobile']);
-	                Object.assign(attrs.btnDown.style, css['btnDown.mobile']);
+	                _extends(attrs.input.style, css['input.mobile']);
+	                _extends(attrs.btnUp.style, css['btnUp.mobile']);
+	                _extends(attrs.btnDown.style, css['btnDown.mobile']);
 	            }
 
 	            if (!props.disabled) {
-	                Object.assign(attrs.wrap, {
+	                _extends(attrs.wrap, {
 	                    onMouseUp: this.stop,
 	                    onMouseLeave: this.stop
 	                });
 
-	                Object.assign(attrs.btnUp, {
+	                _extends(attrs.btnUp, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'up'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
@@ -504,7 +504,7 @@ module.exports =
 	                    }
 	                });
 
-	                Object.assign(attrs.btnDown, {
+	                _extends(attrs.btnDown, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'down'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
@@ -543,7 +543,7 @@ module.exports =
 	                    }
 	                });
 
-	                Object.assign(attrs.input, {
+	                _extends(attrs.input, {
 	                    onChange: this._onChange.bind(this),
 	                    onKeyDown: this._onKeyDown.bind(this),
 	                    onInput: this._onSelectionChange.bind(this),
@@ -572,7 +572,7 @@ module.exports =
 	                });
 	            } else {
 	                if (style !== false) {
-	                    Object.assign(attrs.input.style, css['input:disabled']);
+	                    _extends(attrs.input.style, css['input:disabled']);
 	                }
 	            }
 
@@ -805,6 +805,7 @@ module.exports =
 	};
 	NumericInput.SPEED = 50;
 	NumericInput.DELAY = 500;
+
 
 	module.exports = NumericInput;
 
