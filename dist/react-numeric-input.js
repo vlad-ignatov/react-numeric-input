@@ -116,10 +116,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * step timer. Then define all the private methods within the constructor.
 	     */
 
+
 	    /**
 	     * When click and hold on a button - the speed of auto changin the value.
 	     * This is a static property and can be modified if needed.
 	     */
+
 
 	    /**
 	     * The deault behaviour is to start from 0, use step of 1 and display
@@ -159,6 +161,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *     3. Then parse it to number (delegating to this.props.parse if any)
 	     */
 
+
 	    /**
 	     * When click and hold on a button - the delay before auto changin the value.
 	     * This is a static property and can be modified if needed.
@@ -166,11 +169,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //,
 	    // noValidate: false
 
+
 	    /**
 	     * This are the default styles that act as base for all the component
 	     * instances. One can modify this object to change the default styles
 	     * of all the widgets on the page.
 	     */
+
 
 	    _createClass(NumericInput, [{
 	        key: "componentWillReceiveProps",
@@ -264,7 +269,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "checkValidity",
 	        value: function checkValidity() {
-	            var valid = undefined,
+	            var valid = void 0,
 	                validationError = "";
 
 	            var supportsValidation = !!this.refs.input.checkValidity;
@@ -604,8 +609,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // Build the styles
 
+
 	            for (var x in NumericInput.style) {
-	                css[x] = Object.assign({}, NumericInput.style[x], style ? style[x] || {} : {});
+	                css[x] = _extends({}, NumericInput.style[x], style ? style[x] || {} : {});
 	            }
 
 	            var hasFormControl = props.className && /\bform-control\b/.test(props.className);
@@ -625,13 +631,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                input: _extends({
 	                    ref: 'input',
 	                    type: 'text',
-	                    style: style === false ? null : Object.assign({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
+	                    style: style === false ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
 	                }, rest),
 	                btnUp: {
-	                    style: style === false ? null : Object.assign({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
+	                    style: style === false ? null : _extends({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
 	                },
 	                btnDown: {
-	                    style: style === false ? null : Object.assign({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
+	                    style: style === false ? null : _extends({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
 	                }
 	            };
 
@@ -642,24 +648,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 
 	            if (hasFormControl && style !== false) {
-	                Object.assign(attrs.wrap.style, css['wrap.hasFormControl']);
+	                _extends(attrs.wrap.style, css['wrap.hasFormControl']);
 	            }
 
 	            // mobile
 	            if (mobile && style !== false) {
-	                Object.assign(attrs.input.style, css['input.mobile']);
-	                Object.assign(attrs.btnUp.style, css['btnUp.mobile']);
-	                Object.assign(attrs.btnDown.style, css['btnDown.mobile']);
+	                _extends(attrs.input.style, css['input.mobile']);
+	                _extends(attrs.btnUp.style, css['btnUp.mobile']);
+	                _extends(attrs.btnDown.style, css['btnDown.mobile']);
 	            }
 
 	            // Attach event listeners if the widget is not disabled
 	            if (!props.disabled) {
-	                Object.assign(attrs.wrap, {
+	                _extends(attrs.wrap, {
 	                    onMouseUp: this.stop,
 	                    onMouseLeave: this.stop
 	                });
 
-	                Object.assign(attrs.btnUp, {
+	                _extends(attrs.btnUp, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'up'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
@@ -698,7 +704,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                });
 
-	                Object.assign(attrs.btnDown, {
+	                _extends(attrs.btnDown, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'down'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
@@ -737,7 +743,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                });
 
-	                Object.assign(attrs.input, {
+	                _extends(attrs.input, {
 	                    onChange: this._onChange.bind(this),
 	                    onKeyDown: this._onKeyDown.bind(this),
 	                    onInput: this._onSelectionChange.bind(this),
@@ -766,7 +772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                });
 	            } else {
 	                if (style !== false) {
-	                    Object.assign(attrs.input.style, css['input:disabled']);
+	                    _extends(attrs.input.style, css['input:disabled']);
 	                }
 	            }
 
@@ -1009,6 +1015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	NumericInput.SPEED = 50;
 	NumericInput.DELAY = 500;
+
 
 	module.exports = NumericInput;
 

@@ -13,7 +13,7 @@ module.exports = {
             {
                 test: /\.jsx$/,
                 loaders: [
-                    "babel?presets[]=es2015&presets[]=stage-0&presets[]=react"
+                    "babel?presets[]=es2015&presets[]=stage-0&presets[]=react&plugins[]=transform-object-assign"
                 ],
                 exclude: /node_modules/
             }

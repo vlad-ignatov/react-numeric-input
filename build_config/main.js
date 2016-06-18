@@ -13,6 +13,7 @@ module.exports = {
                 query: {
                     // https://github.com/babel/babel-loader#options
                     presets: ['es2015', 'stage-0', 'react'],
+                    plugins: ['transform-object-assign'],
                     comments: false
                 },
                 exclude: /node_modules/
