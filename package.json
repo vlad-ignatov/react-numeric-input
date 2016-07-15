@@ -4,10 +4,10 @@
   "description": "Number input component that can replace the native number input which is not yet very well supported and where it is, it does not have the same appearance across the browsers. Additionally this component offers more flexible options and can be used for any values (differently formatted representations of the internal numeric value).",
   "main": "index.js",
   "scripts": {
-    "build-examples": "./node_modules/webpack/bin/webpack.js --config ./build_config/examples.js",
-    "build-dist": "./node_modules/webpack/bin/webpack.js --config ./build_config/dist.js",
-    "build-dist-min": "./node_modules/webpack/bin/webpack.js --config ./build_config/dist-min.js",
-    "build": "./node_modules/webpack/bin/webpack.js --config ./build_config/main.js",
+    "build-examples": "webpack --config ./build_config/examples.js",
+    "build-dist": "webpack --config ./build_config/dist.js",
+    "build-dist-min": "webpack --config ./build_config/dist-min.js",
+    "build": "webpack --config ./build_config/main.js",
     "build-all": "npm run build && npm run build-dist && npm run build-dist-min && npm run build-examples",
     "test": "karma start"
   },
@@ -54,9 +54,9 @@
     "karma-webpack": "^1.7.0",
     "mocha": "^2.3.3",
     "phantomjs": "^1.9.18",
-    "react": "^15.1.0",
-    "react-addons-test-utils": "^15.1.0",
-    "react-dom": "^15.1.0",
+    "react": "^15.2.1",
+    "react-addons-test-utils": "^15.2.1",
+    "react-dom": "^15.2.1",
     "webpack": "^1.12.2"
   }
 }

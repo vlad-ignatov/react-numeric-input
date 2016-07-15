@@ -63,7 +63,6 @@ class NumericInput extends React.Component
         onValid      : PropTypes.func,
         onInput      : PropTypes.func,
         onSelect     : PropTypes.func,
-        onSelectStart: PropTypes.func,
         size         : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
         value        : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
         defaultValue : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
@@ -572,11 +571,6 @@ class NumericInput extends React.Component
                     this.props.onSelect.call(this.refs.input, e)
                 }
                 break;
-            case "selectstart":
-                if (this.props.onSelectStart) {
-                    this.props.onSelectStart.call(this.refs.input, e)
-                }
-                break;
             }
         })
     }
@@ -683,6 +677,8 @@ class NumericInput extends React.Component
             step, min, max, precision, parse, format,
             value, type, style, defaultValue, onInvalid, onValid,
 
+            mobile,
+
             // The rest are passed to the input
             ...rest
         } = this.props;
@@ -700,13 +696,13 @@ class NumericInput extends React.Component
             props.className
         )
 
-        let mobile = props.mobile == 'auto' ?
+        let computedMobile = mobile == 'auto' ?
             IS_BROWSER && 'ontouchstart' in document :
-            props.mobile
-        if (typeof mobile == "function") {
-            mobile = mobile.call(this)
+            mobile
+        if (typeof computedMobile == "function") {
+            computedMobile = computedMobile.call(this)
         }
-        mobile = !!mobile
+        computedMobile = !!computedMobile
 
         let attrs = {
             wrap : {
@@ -768,7 +764,7 @@ class NumericInput extends React.Component
         }
 
         // mobile
-        if (mobile && style !== false) {
+        if (computedMobile && style !== false) {
             Object.assign(attrs.input  .style, css['input.mobile'  ])
             Object.assign(attrs.btnUp  .style, css['btnUp.mobile'  ])
             Object.assign(attrs.btnDown.style, css['btnDown.mobile'])
@@ -856,7 +852,6 @@ class NumericInput extends React.Component
                 onKeyDown: this._onKeyDown.bind(this),
                 onInput: this._onSelectionChange.bind(this),
                 onSelect: this._onSelectionChange.bind(this),
-                onSelectStart: this._onSelectionChange.bind(this),
                 onFocus: (...args) => {
                     args[0].persist();
                     this.setState({ inputFocus: true }, () => {
@@ -877,7 +872,7 @@ class NumericInput extends React.Component
             }
         }
 
-        if (mobile) {
+        if (computedMobile) {
             return (
                 <span {...attrs.wrap}>
                     <input {...attrs.input}/>
