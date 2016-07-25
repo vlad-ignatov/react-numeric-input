@@ -314,11 +314,6 @@ module.exports =
 	                            _this3.props.onSelect.call(_this3.refs.input, e);
 	                        }
 	                        break;
-	                    case "selectstart":
-	                        if (_this3.props.onSelectStart) {
-	                            _this3.props.onSelectStart.call(_this3.refs.input, e);
-	                        }
-	                        break;
 	                }
 	            });
 	        }
@@ -409,8 +404,9 @@ module.exports =
 	            var defaultValue = _props.defaultValue;
 	            var onInvalid = _props.onInvalid;
 	            var onValid = _props.onValid;
+	            var mobile = _props.mobile;
 
-	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "value", "type", "style", "defaultValue", "onInvalid", "onValid"]);
+	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "value", "type", "style", "defaultValue", "onInvalid", "onValid", "mobile"]);
 
 	            for (var x in NumericInput.style) {
 	                css[x] = _extends({}, NumericInput.style[x], style ? style[x] || {} : {});
@@ -418,11 +414,11 @@ module.exports =
 
 	            var hasFormControl = props.className && /\bform-control\b/.test(props.className);
 
-	            var mobile = props.mobile == 'auto' ? IS_BROWSER && 'ontouchstart' in document : props.mobile;
-	            if (typeof mobile == "function") {
-	                mobile = mobile.call(this);
+	            var computedMobile = mobile == 'auto' ? IS_BROWSER && 'ontouchstart' in document : mobile;
+	            if (typeof computedMobile == "function") {
+	                computedMobile = computedMobile.call(this);
 	            }
-	            mobile = !!mobile;
+	            computedMobile = !!computedMobile;
 
 	            var attrs = {
 	                wrap: {
@@ -453,7 +449,7 @@ module.exports =
 	                _extends(attrs.wrap.style, css['wrap.hasFormControl']);
 	            }
 
-	            if (mobile && style !== false) {
+	            if (computedMobile && style !== false) {
 	                _extends(attrs.input.style, css['input.mobile']);
 	                _extends(attrs.btnUp.style, css['btnUp.mobile']);
 	                _extends(attrs.btnDown.style, css['btnDown.mobile']);
@@ -548,7 +544,6 @@ module.exports =
 	                    onKeyDown: this._onKeyDown.bind(this),
 	                    onInput: this._onSelectionChange.bind(this),
 	                    onSelect: this._onSelectionChange.bind(this),
-	                    onSelectStart: this._onSelectionChange.bind(this),
 	                    onFocus: function onFocus() {
 	                        for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
 	                            args[_key5] = arguments[_key5];
@@ -576,7 +571,7 @@ module.exports =
 	                }
 	            }
 
-	            if (mobile) {
+	            if (computedMobile) {
 	                return _react2.default.createElement(
 	                    "span",
 	                    attrs.wrap,
@@ -640,7 +635,6 @@ module.exports =
 	    onValid: PropTypes.func,
 	    onInput: PropTypes.func,
 	    onSelect: PropTypes.func,
-	    onSelectStart: PropTypes.func,
 	    size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	    defaultValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
