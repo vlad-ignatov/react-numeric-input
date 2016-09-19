@@ -1,3 +1,4 @@
+// @flow
 import React from "react";
 
 const PropTypes    = React.PropTypes
@@ -35,6 +36,13 @@ function removeClass(element, className) {
             ""
         )
     }
+}
+
+
+interface InputEvent {
+    type: string;
+    target: { value: string };
+    persist: Function;
 }
 
 class NumericInput extends React.Component
@@ -268,20 +276,42 @@ class NumericInput extends React.Component
     static DELAY = 500;
 
     /**
+     * The step timer
+     * @type {Number}
+     */
+    _timer: number;
+
+    /**
+     * This holds the last known validation error. We need to compare that with
+     * new errors and detect validation changes...
+     * @type {[type]}
+     */
+    _valid: string;
+
+    /**
+     * The state of the component
+     * @type {Object}
+     */
+    state: Object;
+
+    /**
+     * The stop method (need to declare it here to use it in the constructor)
+     * @type {Function}
+     */
+    stop: Function;
+
+    /**
      * Set the initial state and create the "_timer" property to contain the
      * step timer. Then define all the private methods within the constructor.
      */
-    constructor(props)
+    constructor(...args: Array<any>)
     {
-        super(props);
-
-        this._timer = null;
-        this._valid = undefined;
+        super(...args);
 
         this.state = {
             selectionStart: null,
             selectionEnd  : null,
-            value         : "value" in props ? props.value : props.defaultValue,
+            value         : "value" in this.props ? this.props.value : this.props.defaultValue,
             btnDownHover  : false,
             btnDownActive : false,
             btnUpHover    : false,
@@ -301,7 +331,7 @@ class NumericInput extends React.Component
      *     2. Then trim it.
      *     3. Then parse it to number (delegating to this.props.parse if any)
      */
-    componentWillReceiveProps(props)
+    componentWillReceiveProps(props: Object): void
     {
         let _value = String(
             props.value || props.value === 0 ? props.value : ''
@@ -317,7 +347,7 @@ class NumericInput extends React.Component
      * needed to "reconnect" it to the outer world, i.e. restore selection,
      * call some of the callbacks, validate etc.
      */
-    componentDidUpdate(prevProps, prevState)
+    componentDidUpdate(prevProps: Object, prevState: Object): void
     {
 
         // Call the onChange if needed. This is placed here because there are
@@ -380,7 +410,8 @@ class NumericInput extends React.Component
      * existing validation state (if any) and will toggle the "has-error"
      * CSS class on the wrapper
      */
-    checkValidity() {
+    checkValidity(): void
+    {
         let valid, validationError = ""
 
         let supportsValidation = !!this.refs.input.checkValidity
@@ -511,7 +542,7 @@ class NumericInput extends React.Component
      * The internal method that actualy sets the new value on the input
      * @private
      */
-    _step(n: number, callback): boolean
+    _step(n: number, callback?: Function): boolean
     {
         let _n = this._toNumber(
             (this.state.value || 0) + this.props.step * n
@@ -519,7 +550,10 @@ class NumericInput extends React.Component
 
         if (_n !== this.state.value) {
             this.setState({ value: _n }, callback);
+            return true
         }
+
+        return false
     }
 
     /**
@@ -527,7 +561,7 @@ class NumericInput extends React.Component
      * be recreated using the current parse/format methods so the input will
      * appear as readonly if the user tries to type something invalid.
      */
-    _onChange(e: Event): void
+    _onChange(e: InputEvent): void
     {
         this.setState({
             value: this._parse(e.target.value)
@@ -537,7 +571,7 @@ class NumericInput extends React.Component
     /**
      * This binds the Up/Down arrow key listeners
      */
-    _onKeyDown(...args): void
+    _onKeyDown(...args: Array<any>): void
     {
         args[0].persist()
         this._invokeEventCallback("onKeyDown", ...args)
@@ -554,7 +588,7 @@ class NumericInput extends React.Component
         }
     }
 
-    _onSelectionChange(e): void
+    _onSelectionChange(e: InputEvent): void
     {
         e.persist()
         this.setState({
@@ -599,7 +633,7 @@ class NumericInput extends React.Component
      *  it is in recursive mode.
      * @return void
      */
-    increase(_recursive: boolean, callback): void
+    increase(_recursive: boolean = false, callback?: Function): void
     {
         this.stop();
         this._step(1, callback);
@@ -618,7 +652,7 @@ class NumericInput extends React.Component
      *  it is in recursive mode.
      * @return void
      */
-    decrease(_recursive: boolean, callback): void
+    decrease(_recursive: boolean = false, callback?: Function): void
     {
         this.stop();
         this._step(-1, callback);
@@ -634,7 +668,7 @@ class NumericInput extends React.Component
      * internal value and sets up a delay for auto increment/decrement
      * (until mouseup or mouseleave)
      */
-    onMouseDown(dir, callback)
+    onMouseDown(dir: "up"|"down", callback?: Function): void
     {
         if (dir == 'down') {
             this.decrease(false, callback);
@@ -650,7 +684,7 @@ class NumericInput extends React.Component
      * Note that this calls e.preventDefault() so the event is not used for
      * creating a virtual mousedown after it
      */
-    onTouchStart(dir, e)
+    onTouchStart(dir: "up"|"down", e: Event): void
     {
         e.preventDefault();
         if (dir == 'down') {
@@ -661,7 +695,7 @@ class NumericInput extends React.Component
         }
     }
 
-    _invokeEventCallback(callbackName, ...args)
+    _invokeEventCallback(callbackName: string, ...args: Array<any>): void
     {
         if (typeof this.props[callbackName] == "function") {
             this.props[callbackName].call(null, ...args);
@@ -710,9 +744,11 @@ class NumericInput extends React.Component
 
         let attrs = {
             wrap : {
-                style    : style === false ? null : css.wrap,
-                className: 'react-numeric-input',
-                ref      : 'wrapper'
+                style       : style === false ? null : css.wrap,
+                className   : 'react-numeric-input',
+                ref         : 'wrapper',
+                onMouseUp   : undefined,
+                onMouseLeave: undefined
             },
             input : {
                 ref: 'input',
@@ -728,6 +764,12 @@ class NumericInput extends React.Component
                 ...rest
             },
             btnUp: {
+                onMouseEnter: undefined,
+                onMouseDown : undefined,
+                onMouseUp   : undefined,
+                onMouseLeave: undefined,
+                onTouchStart: undefined,
+                onTouchEnd  : undefined,
                 style: style === false ? null : Object.assign(
                     {},
                     css.btn,
@@ -742,6 +784,12 @@ class NumericInput extends React.Component
                 )
             },
             btnDown: {
+                onMouseEnter: undefined,
+                onMouseDown : undefined,
+                onMouseUp   : undefined,
+                onMouseLeave: undefined,
+                onTouchStart: undefined,
+                onTouchEnd  : undefined,
                 style: style === false ? null : Object.assign(
                     {},
                     css.btn,
