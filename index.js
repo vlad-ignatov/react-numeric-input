@@ -92,18 +92,21 @@ module.exports =
 	var NumericInput = function (_React$Component) {
 	    _inherits(NumericInput, _React$Component);
 
-	    function NumericInput(props) {
+	    function NumericInput() {
+	        var _Object$getPrototypeO;
+
 	        _classCallCheck(this, NumericInput);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NumericInput).call(this, props));
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
 
-	        _this._timer = null;
-	        _this._valid = undefined;
+	        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(NumericInput)).call.apply(_Object$getPrototypeO, [this].concat(args)));
 
 	        _this.state = {
 	            selectionStart: null,
 	            selectionEnd: null,
-	            value: "value" in props ? props.value : props.defaultValue,
+	            value: "value" in _this.props ? _this.props.value : _this.props.defaultValue,
 	            btnDownHover: false,
 	            btnDownActive: false,
 	            btnUpHover: false,
@@ -174,7 +177,7 @@ module.exports =
 	    }, {
 	        key: "checkValidity",
 	        value: function checkValidity() {
-	            var valid = void 0,
+	            var valid = undefined,
 	                validationError = "";
 
 	            var supportsValidation = !!this.refs.input.checkValidity;
@@ -264,7 +267,10 @@ module.exports =
 
 	            if (_n !== this.state.value) {
 	                this.setState({ value: _n }, callback);
+	                return true;
 	            }
+
+	            return false;
 	        }
 	    }, {
 	        key: "_onChange",
@@ -276,8 +282,8 @@ module.exports =
 	    }, {
 	        key: "_onKeyDown",
 	        value: function _onKeyDown() {
-	            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	                args[_key] = arguments[_key];
+	            for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	                args[_key2] = arguments[_key2];
 	            }
 
 	            args[0].persist();
@@ -331,8 +337,12 @@ module.exports =
 	        }
 	    }, {
 	        key: "increase",
-	        value: function increase(_recursive, callback) {
+	        value: function increase() {
 	            var _this4 = this;
+
+	            var _recursive = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+
+	            var callback = arguments[1];
 
 	            this.stop();
 	            this._step(1, callback);
@@ -344,8 +354,12 @@ module.exports =
 	        }
 	    }, {
 	        key: "decrease",
-	        value: function decrease(_recursive, callback) {
+	        value: function decrease() {
 	            var _this5 = this;
+
+	            var _recursive = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+
+	            var callback = arguments[1];
 
 	            this.stop();
 	            this._step(-1, callback);
@@ -380,8 +394,8 @@ module.exports =
 	            if (typeof this.props[callbackName] == "function") {
 	                var _props$callbackName;
 
-	                for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-	                    args[_key2 - 1] = arguments[_key2];
+	                for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+	                    args[_key3 - 1] = arguments[_key3];
 	                }
 
 	                (_props$callbackName = this.props[callbackName]).call.apply(_props$callbackName, [null].concat(args));
@@ -403,6 +417,7 @@ module.exports =
 	            var precision = _props.precision;
 	            var parse = _props.parse;
 	            var format = _props.format;
+	            var mobile = _props.mobile;
 	            var value = _props.value;
 	            var type = _props.type;
 	            var style = _props.style;
@@ -410,7 +425,7 @@ module.exports =
 	            var onInvalid = _props.onInvalid;
 	            var onValid = _props.onValid;
 
-	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "value", "type", "style", "defaultValue", "onInvalid", "onValid"]);
+	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "mobile", "value", "type", "style", "defaultValue", "onInvalid", "onValid"]);
 
 	            for (var x in NumericInput.style) {
 	                css[x] = _extends({}, NumericInput.style[x], style ? style[x] || {} : {});
@@ -418,7 +433,10 @@ module.exports =
 
 	            var hasFormControl = props.className && /\bform-control\b/.test(props.className);
 
-	            var mobile = props.mobile == 'auto' ? IS_BROWSER && 'ontouchstart' in document : props.mobile;
+	            if (mobile == 'auto') {
+	                mobile = IS_BROWSER && 'ontouchstart' in document;
+	            }
+
 	            if (typeof mobile == "function") {
 	                mobile = mobile.call(this);
 	            }
@@ -428,7 +446,9 @@ module.exports =
 	                wrap: {
 	                    style: style === false ? null : css.wrap,
 	                    className: 'react-numeric-input',
-	                    ref: 'wrapper'
+	                    ref: 'wrapper',
+	                    onMouseUp: undefined,
+	                    onMouseLeave: undefined
 	                },
 	                input: _extends({
 	                    ref: 'input',
@@ -436,9 +456,21 @@ module.exports =
 	                    style: style === false ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
 	                }, rest),
 	                btnUp: {
+	                    onMouseEnter: undefined,
+	                    onMouseDown: undefined,
+	                    onMouseUp: undefined,
+	                    onMouseLeave: undefined,
+	                    onTouchStart: undefined,
+	                    onTouchEnd: undefined,
 	                    style: style === false ? null : _extends({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
 	                },
 	                btnDown: {
+	                    onMouseEnter: undefined,
+	                    onMouseDown: undefined,
+	                    onMouseUp: undefined,
+	                    onMouseLeave: undefined,
+	                    onTouchStart: undefined,
+	                    onTouchEnd: undefined,
 	                    style: style === false ? null : _extends({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
 	                }
 	            };
@@ -487,8 +519,8 @@ module.exports =
 	                        });
 	                    },
 	                    onMouseDown: function onMouseDown() {
-	                        for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-	                            args[_key3] = arguments[_key3];
+	                        for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+	                            args[_key4] = arguments[_key4];
 	                        }
 
 	                        args[0].preventDefault();
@@ -526,8 +558,8 @@ module.exports =
 	                        });
 	                    },
 	                    onMouseDown: function onMouseDown() {
-	                        for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-	                            args[_key4] = arguments[_key4];
+	                        for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+	                            args[_key5] = arguments[_key5];
 	                        }
 
 	                        args[0].preventDefault();
@@ -550,8 +582,8 @@ module.exports =
 	                    onSelect: this._onSelectionChange.bind(this),
 	                    onSelectStart: this._onSelectionChange.bind(this),
 	                    onFocus: function onFocus() {
-	                        for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-	                            args[_key5] = arguments[_key5];
+	                        for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+	                            args[_key6] = arguments[_key6];
 	                        }
 
 	                        args[0].persist();
@@ -560,8 +592,8 @@ module.exports =
 	                        });
 	                    },
 	                    onBlur: function onBlur() {
-	                        for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-	                            args[_key6] = arguments[_key6];
+	                        for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+	                            args[_key7] = arguments[_key7];
 	                        }
 
 	                        args[0].persist();
@@ -805,7 +837,6 @@ module.exports =
 	};
 	NumericInput.SPEED = 50;
 	NumericInput.DELAY = 500;
-
 
 	module.exports = NumericInput;
 

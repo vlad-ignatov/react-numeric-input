@@ -38,6 +38,19 @@ function testInputProp(cfg) {
                 resolve()
             })
         }
+        if (attrName == "value") {
+            return new Promise(resolve => {
+                expect(app.refs.input.outerHTML.search(
+                    new RegExp("\\bvalue=\"\"", "i")
+                )).toNotEqual(
+                    -1,
+                    `If the "value" is not set the corresponding
+                    attribute should be set as "". The outerHTML was
+                    ${app.refs.input.outerHTML}.`
+                )
+                resolve()
+            })
+        }
         return new Promise(resolve => {
             expect(app.refs.input.outerHTML.search(
                 new RegExp("\\b" + attrName + "=", "i")

@@ -71,7 +71,7 @@ class NumericInput extends React.Component
         onValid      : PropTypes.func,
         onInput      : PropTypes.func,
         onSelect     : PropTypes.func,
-        onSelectStart: PropTypes.func,
+        // onSelectStart: PropTypes.func,
         size         : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
         value        : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
         defaultValue : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
@@ -606,11 +606,11 @@ class NumericInput extends React.Component
                     this.props.onSelect.call(this.refs.input, e)
                 }
                 break;
-            case "selectstart":
-                if (this.props.onSelectStart) {
-                    this.props.onSelectStart.call(this.refs.input, e)
-                }
-                break;
+            // case "selectstart":
+            //     if (this.props.onSelectStart) {
+            //         this.props.onSelectStart.call(this.refs.input, e)
+            //     }
+            //     break;
             }
         })
     }
@@ -714,7 +714,7 @@ class NumericInput extends React.Component
 
         let {
             // These are ignored in rendering
-            step, min, max, precision, parse, format,
+            step, min, max, precision, parse, format, mobile,
             value, type, style, defaultValue, onInvalid, onValid,
 
             // The rest are passed to the input
@@ -734,9 +734,10 @@ class NumericInput extends React.Component
             props.className
         )
 
-        let mobile = props.mobile == 'auto' ?
-            IS_BROWSER && 'ontouchstart' in document :
-            props.mobile
+        if (mobile == 'auto') {
+            mobile = IS_BROWSER && 'ontouchstart' in document
+        }
+
         if (typeof mobile == "function") {
             mobile = mobile.call(this)
         }
@@ -904,7 +905,7 @@ class NumericInput extends React.Component
                 onKeyDown: this._onKeyDown.bind(this),
                 onInput: this._onSelectionChange.bind(this),
                 onSelect: this._onSelectionChange.bind(this),
-                onSelectStart: this._onSelectionChange.bind(this),
+                // onSelectStart: this._onSelectionChange.bind(this),
                 onFocus: (...args) => {
                     args[0].persist();
                     this.setState({ inputFocus: true }, () => {

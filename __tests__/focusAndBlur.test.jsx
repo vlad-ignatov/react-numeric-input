@@ -22,23 +22,26 @@ describe('NumericInput', function() {
         // Rendering must not bring the focus to the input
         expect(onFocusCalls).toEqual(0)
 
-        // Trigger a focus on the input and assert that
-        // the onFocus callback receives it
-        TestUtils.Simulate.focus(widget.refs.input)
-
         setTimeout(() => {
-            expect(onFocusCalls).toEqual(1)
+            window.focus()
+            // Trigger a focus on the input and assert that
+            // the onFocus callback receives it
+            TestUtils.Simulate.focus(widget.refs.input)
 
-            // Now blur and then click on the up button. That should return
-            // the focus back to the input and call the onFocus callback again
-            TestUtils.Simulate.blur(widget.refs.input)
             setTimeout(() => {
-                TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling)
+                expect(onFocusCalls).toEqual(1)
+
+                // Now blur and then click on the up button. That should return
+                // the focus back to the input and call the onFocus callback again
+                TestUtils.Simulate.blur(widget.refs.input)
                 setTimeout(() => {
-                    expect(onFocusCalls).toEqual(2)
-                    done()
-                }, 50)
-            }, 50)
+                    TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling)
+                    setTimeout(() => {
+                        expect(onFocusCalls).toEqual(2)
+                        done()
+                    }, 50)
+                }, 150)
+            }, 150)
         }, 50)
     });
 
@@ -54,6 +57,8 @@ describe('NumericInput', function() {
 
         // Rendering must not trigger any blur on the input
         expect(onBlurCalls).toEqual(0)
+
+        window.focus()
 
         // Start by focusing the input
         TestUtils.Simulate.focus(widget.refs.input)
@@ -78,10 +83,10 @@ describe('NumericInput', function() {
                     setTimeout(() => {
                         expect(onBlurCalls).toEqual(2)
                         done()
-                    }, 50)
-                }, 50)
-            }, 50)
-        }, 50)
+                    }, 150)
+                }, 150)
+            }, 150)
+        }, 150)
 
     });
 
