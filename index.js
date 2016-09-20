@@ -139,8 +139,12 @@ module.exports =
 	    }, {
 	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate(prevProps, prevState) {
-	            if (prevState.value != this.state.value) {
+	            if (prevState.value !== this.state.value && !isNaN(this.state.value)) {
 	                this._invokeEventCallback("onChange", this.state.value, this.refs.input.value);
+	            }
+
+	            if (this.state.inputFocus) {
+	                this.refs.input.focus();
 	            }
 
 	            if (this.state.selectionStart || this.state.selectionStart === 0) {
@@ -242,11 +246,16 @@ module.exports =
 	        }
 	    }, {
 	        key: '_toNumber',
-	        value: function _toNumber(x) {
+	        value: function _toNumber(x, loose) {
+	            loose = loose === undefined ? this.state.inputFocus && !(this.state.btnDownActive || this.state.btnUpActive) : !!loose;
 	            var n = parseFloat(x);
 	            var q = Math.pow(10, this.props.precision);
 	            if (isNaN(n) || !isFinite(n)) {
 	                n = 0;
+	            }
+
+	            if (loose) {
+	                return n;
 	            }
 
 	            n = Math.min(Math.max(n, this.props.min), this.props.max);
@@ -276,7 +285,7 @@ module.exports =
 	    }, {
 	        key: '_step',
 	        value: function _step(n, callback) {
-	            var _n = this._toNumber((this.state.value || 0) + this.props.step * n);
+	            var _n = this._toNumber((this.state.value || 0) + this.props.step * n, false);
 
 	            if (_n !== this.state.value) {
 	                this.setState({ value: _n }, callback);
@@ -310,23 +319,6 @@ module.exports =
 	                    e.preventDefault();
 	                    this._step(e.ctrlKey || e.metaKey ? -0.1 : e.shiftKey ? -10 : -1);
 	                }
-	            }
-	        }
-	    }, {
-	        key: '_onSelectionChange',
-	        value: function _onSelectionChange(e) {
-	            this.saveSelection();
-	            switch (e.type) {
-	                case "input":
-	                    if (this.props.onInput) {
-	                        this.props.onInput.call(this.refs.input, e);
-	                    }
-	                    break;
-	                case "select":
-	                    if (this.props.onSelect) {
-	                        this.props.onSelect.call(this.refs.input, e);
-	                    }
-	                    break;
 	            }
 	        }
 	    }, {
@@ -577,29 +569,52 @@ module.exports =
 	                });
 
 	                _extends(attrs.input, {
-	                    onChange: this._onChange.bind(this),
+	                    onChange: function onChange(e) {
+	                        _this5.setState({ value: _this5._parse(e.target.value) });
+	                    },
 	                    onKeyDown: this._onKeyDown.bind(this),
-	                    onInput: this._onSelectionChange.bind(this),
-	                    onSelect: this._onSelectionChange.bind(this),
-
-	                    onFocus: function onFocus() {
+	                    onInput: function onInput() {
 	                        for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
 	                            args[_key6] = arguments[_key6];
 	                        }
 
-	                        args[0].persist();
-	                        _this5.setState({ inputFocus: true }, function () {
-	                            _this5._invokeEventCallback.apply(_this5, ["onFocus"].concat(args));
-	                        });
+	                        _this5.saveSelection();
+	                        _this5._invokeEventCallback.apply(_this5, ["onInput"].concat(args));
 	                    },
-	                    onBlur: function onBlur() {
+	                    onSelect: function onSelect() {
 	                        for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
 	                            args[_key7] = arguments[_key7];
 	                        }
 
+	                        _this5.saveSelection();
+	                        _this5._invokeEventCallback.apply(_this5, ["onSelect"].concat(args));
+	                    },
+	                    onFocus: function onFocus() {
+	                        for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
+	                            args[_key8] = arguments[_key8];
+	                        }
+
+	                        args[0].persist();
+	                        _this5.setState({ inputFocus: true }, function () {
+	                            _this5.setState({
+	                                value: _this5._parse(args[0].target.value)
+	                            }, function () {
+	                                _this5._invokeEventCallback.apply(_this5, ["onFocus"].concat(args));
+	                            });
+	                        });
+	                    },
+	                    onBlur: function onBlur() {
+	                        for (var _len9 = arguments.length, args = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
+	                            args[_key9] = arguments[_key9];
+	                        }
+
 	                        args[0].persist();
 	                        _this5.setState({ inputFocus: false }, function () {
-	                            _this5._invokeEventCallback.apply(_this5, ["onBlur"].concat(args));
+	                            _this5.setState({
+	                                value: _this5._parse(args[0].target.value)
+	                            }, function () {
+	                                _this5._invokeEventCallback.apply(_this5, ["onBlur"].concat(args));
+	                            });
 	                        });
 	                    }
 	                });
@@ -673,7 +688,6 @@ module.exports =
 	    onValid: PropTypes.func,
 	    onInput: PropTypes.func,
 	    onSelect: PropTypes.func,
-
 	    size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	    defaultValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

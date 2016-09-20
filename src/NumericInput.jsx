@@ -362,8 +362,12 @@ class NumericInput extends React.Component
         // Call the onChange if needed. This is placed here because there are
         // many reasons for changing the value and this is the common place
         // that can capture them all
-        if (prevState.value != this.state.value) {
+        if (prevState.value !== this.state.value && !isNaN(this.state.value)) {
             this._invokeEventCallback("onChange", this.state.value, this.refs.input.value)
+        }
+
+        if (this.state.inputFocus) {
+            this.refs.input.focus()
         }
 
         // Restore selectionStart (if any)
@@ -510,12 +514,19 @@ class NumericInput extends React.Component
      * precision (no fixed precision here because the return value is float, not
      * string).
      */
-    _toNumber(x: any): number
+    _toNumber(x: any, loose?: boolean): number
     {
+        loose = loose === undefined ?
+            this.state.inputFocus && !(this.state.btnDownActive || this.state.btnUpActive) :
+            !!loose
         let n = parseFloat(x);
         let q = Math.pow(10, this.props.precision);
         if (isNaN(n) || !isFinite(n)) {
             n = 0;
+        }
+
+        if (loose) {
+            return n
         }
 
         n = Math.min( Math.max(n, this.props.min), this.props.max );
@@ -561,7 +572,8 @@ class NumericInput extends React.Component
     _step(n: number, callback?: Function): boolean
     {
         let _n = this._toNumber(
-            (this.state.value || 0) + this.props.step * n
+            (this.state.value || 0) + this.props.step * n,
+            false
         );
 
         if (_n !== this.state.value) {
@@ -896,7 +908,9 @@ class NumericInput extends React.Component
             });
 
             Object.assign(attrs.input, {
-                onChange : this._onChange.bind(this),
+                onChange : e => {
+                    this.setState({ value: this._parse(e.target.value) })
+                },
                 onKeyDown: this._onKeyDown.bind(this),
                 onInput: (...args) => {
                     this.saveSelection()
@@ -909,13 +923,21 @@ class NumericInput extends React.Component
                 onFocus: (...args) => {
                     args[0].persist();
                     this.setState({ inputFocus: true }, () => {
-                        this._invokeEventCallback("onFocus", ...args)
+                        this.setState({
+                            value: this._parse(args[0].target.value)
+                        }, () => {
+                            this._invokeEventCallback("onFocus", ...args)
+                        })
                     });
                 },
                 onBlur: (...args) => {
                     args[0].persist();
                     this.setState({ inputFocus: false }, () => {
-                        this._invokeEventCallback("onBlur", ...args)
+                        this.setState({
+                            value: this._parse(args[0].target.value)
+                        }, () => {
+                            this._invokeEventCallback("onBlur", ...args)
+                        })
                     });
                 }
             });
