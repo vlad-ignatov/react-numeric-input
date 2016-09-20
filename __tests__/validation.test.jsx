@@ -186,5 +186,5 @@ describe('NumericInput', function() {
         done()
     })
 
-    // it('does not call onInvalid multiple times in sequence')
+    it('does not call onInvalid multiple times in sequence')
 })
