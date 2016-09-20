@@ -107,7 +107,7 @@ describe('NumericInput', function() {
                 done()
             }
             else {
-                // console.log("Unable to test autoFocus")
+                console.log("Unable to test autoFocus")
                 done(/*new Error("Unable to autoFocus")*/)
             }
         }, 1000)

@@ -1,5 +1,6 @@
 // @flow
 import React from "react";
+import TestUtils    from 'react-addons-test-utils'
 
 const PropTypes    = React.PropTypes
 const KEYCODE_UP   = 38;
@@ -38,7 +39,10 @@ function removeClass(element, className) {
     }
 }
 
-
+/**
+ * The structure of the InputEvents that we use (not complete but only the used
+ * properties)
+ */
 interface InputEvent {
     type: string;
     target: { value: string };
@@ -71,7 +75,6 @@ class NumericInput extends React.Component
         onValid      : PropTypes.func,
         onInput      : PropTypes.func,
         onSelect     : PropTypes.func,
-        // onSelectStart: PropTypes.func,
         size         : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
         value        : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
         defaultValue : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
@@ -301,8 +304,7 @@ class NumericInput extends React.Component
     stop: Function;
 
     /**
-     * Set the initial state and create the "_timer" property to contain the
-     * step timer. Then define all the private methods within the constructor.
+     * Set the initial state and bind this.stop to the instance.
      */
     constructor(...args: Array<any>)
     {
@@ -343,13 +345,20 @@ class NumericInput extends React.Component
     }
 
     /**
+     * Save the input selection right before rendering
+     */
+    componentWillUpdate(): void
+    {
+        this.saveSelection()
+    }
+
+    /**
      * After the component has been rendered into the DOM, do whatever is
      * needed to "reconnect" it to the outer world, i.e. restore selection,
      * call some of the callbacks, validate etc.
      */
     componentDidUpdate(prevProps: Object, prevState: Object): void
     {
-
         // Call the onChange if needed. This is placed here because there are
         // many reasons for changing the value and this is the common place
         // that can capture them all
@@ -357,25 +366,14 @@ class NumericInput extends React.Component
             this._invokeEventCallback("onChange", this.state.value, this.refs.input.value)
         }
 
-        // Notify about the focus
-        if (this.state.inputFocus && !prevState.inputFocus) {
-            this.refs.input.focus()
-
-            // Restore selectionStart (if any)
-            if (this.state.selectionStart || this.state.selectionStart === 0) {
-                this.refs.input.selectionStart = this.state.selectionStart
-            }
-
-            // Restore selectionEnd (if any)
-            if (this.state.selectionEnd || this.state.selectionEnd === 0) {
-                this.refs.input.selectionEnd = this.state.selectionEnd
-            }
+        // Restore selectionStart (if any)
+        if (this.state.selectionStart || this.state.selectionStart === 0) {
+            this.refs.input.selectionStart = this.state.selectionStart
         }
 
-        // This is a special case! If the component has the "autoFocus" prop
-        // and the browser did focus it we have pass that to the onFocus
-        if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refs.input) {
-            this.state.inputFocus = true
+        // Restore selectionEnd (if any)
+        if (this.state.selectionEnd || this.state.selectionEnd === 0) {
+            this.refs.input.selectionEnd = this.state.selectionEnd
         }
 
         this.checkValidity()
@@ -402,7 +400,25 @@ class NumericInput extends React.Component
             })
         }
 
+        // This is a special case! If the component has the "autoFocus" prop
+        // and the browser did focus it we have to pass that to the onFocus
+        if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refs.input) {
+            this.state.inputFocus = true
+            // this.refs.input.focus()
+            TestUtils.Simulate.focus(this.refs.input)
+        }
+
         this.checkValidity()
+    }
+
+    /**
+     * Saves the input selection in the state so that it can be restored after
+     * updates
+     */
+    saveSelection(): void
+    {
+        this.state.selectionStart = this.refs.input.selectionStart
+        this.state.selectionEnd   = this.refs.input.selectionEnd
     }
 
     /**
@@ -588,33 +604,6 @@ class NumericInput extends React.Component
         }
     }
 
-    _onSelectionChange(e: InputEvent): void
-    {
-        e.persist()
-        this.setState({
-            selectionStart: this.refs.input.selectionStart,
-            selectionEnd: this.refs.input.selectionEnd
-        }, () => {
-            switch (e.type) {
-            case "input":
-                if (this.props.onInput) {
-                    this.props.onInput.call(this.refs.input, e)
-                }
-                break;
-            case "select":
-                if (this.props.onSelect) {
-                    this.props.onSelect.call(this.refs.input, e)
-                }
-                break;
-            // case "selectstart":
-            //     if (this.props.onSelectStart) {
-            //         this.props.onSelectStart.call(this.refs.input, e)
-            //     }
-            //     break;
-            }
-        })
-    }
-
     /**
      * Stops the widget from auto-changing by clearing the timer (if any)
      */
@@ -695,6 +684,12 @@ class NumericInput extends React.Component
         }
     }
 
+    /**
+     * Helper method to ivoke event callback functions if they are provided
+     * in the props.
+     * @param {String} callbackName The name of the function prop
+     * @param {*[]} args Any additional argument are passed thru
+     */
     _invokeEventCallback(callbackName: string, ...args: Array<any>): void
     {
         if (typeof this.props[callbackName] == "function") {
@@ -903,9 +898,14 @@ class NumericInput extends React.Component
             Object.assign(attrs.input, {
                 onChange : this._onChange.bind(this),
                 onKeyDown: this._onKeyDown.bind(this),
-                onInput: this._onSelectionChange.bind(this),
-                onSelect: this._onSelectionChange.bind(this),
-                // onSelectStart: this._onSelectionChange.bind(this),
+                onInput: (...args) => {
+                    this.saveSelection()
+                    this._invokeEventCallback("onInput", ...args)
+                },
+                onSelect: (...args) => {
+                    this.saveSelection()
+                    this._invokeEventCallback("onSelect", ...args)
+                },
                 onFocus: (...args) => {
                     args[0].persist();
                     this.setState({ inputFocus: true }, () => {
