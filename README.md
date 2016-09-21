@@ -139,7 +139,7 @@ is empty the result would be `0`.
 
 ### setValue()
 An external script that does not "understand" React can still work with this component by reading
-the `_valueAsNumber` or by calling the `setValue()` method exposed on the input element. Here is
+the `getValueAsNumber()` or by calling the `setValue()` method exposed on the input element. Here is
 an example with jQuery:
 ```js
 $('input[name="some-input"]')[0].setValue('123mph');
