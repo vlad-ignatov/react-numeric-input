@@ -1,0 +1,45 @@
+2.0.5
+--------------------------------------------------------------------------------
+* Compatible with React 15.2 and 15.3
+* Preserve the selection between re-rendering
+* Fix a bug in handling the step prop
+* Loose formatting while the user is typing and strict on blur
+* Various other fixes
+
+2.0.4
+--------------------------------------------------------------------------------
+* Make it compatible with React 15
+* Inline styles can be disabled by passing style={false}
+* Various small fixes and improvements
+
+
+2.0.3
+--------------------------------------------------------------------------------
+* Provide more useful data to event callbacks like onChange, onInvalid etc.
+* Make sure that onBlur, onFocus and onKeyDown are called the same way React would
+call them.
+
+
+2.0.2
+--------------------------------------------------------------------------------
+* Add support for callback props onChange, onInvalid, onValid and more...
+* defaultValue can also be used instead of value
+* Make use of HTML5 input validation if available
+
+
+2.0.1
+--------------------------------------------------------------------------------
+* Move react and react-dom to devDependencies so that npm does not install them
+
+
+2.0.0
+--------------------------------------------------------------------------------
+* Switch to inline styles
+* Better integration with external scripts
+* Better integration with build tools
+* Support for touch devices
+
+
+1.0.0
+--------------------------------------------------------------------------------
+* Initial release
