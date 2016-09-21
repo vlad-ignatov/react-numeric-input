@@ -1,8 +1,6 @@
 // @flow
-import React from "react";
-import TestUtils    from 'react-addons-test-utils'
+import React, { PropTypes, Component } from "react"
 
-const PropTypes    = React.PropTypes
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
 const IS_BROWSER   = typeof document != 'undefined';
@@ -49,7 +47,7 @@ interface InputEvent {
     persist: Function;
 }
 
-class NumericInput extends React.Component
+class NumericInput extends Component
 {
     static propTypes = {
         step         : PropTypes.number,
@@ -63,8 +61,8 @@ class NumericInput extends React.Component
         disabled     : PropTypes.bool,
         readOnly     : PropTypes.bool,
         required     : PropTypes.bool,
-        noValidate   : PropTypes.oneOfType([ PropTypes.bool, PropTypes.string ]),
-        style        : PropTypes.oneOfType([ PropTypes.object, PropTypes.bool ]),
+        noValidate   : PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+        style        : PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
         type         : PropTypes.string,
         pattern      : PropTypes.string,
         onFocus      : PropTypes.func,
@@ -75,9 +73,9 @@ class NumericInput extends React.Component
         onValid      : PropTypes.func,
         onInput      : PropTypes.func,
         onSelect     : PropTypes.func,
-        size         : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
-        value        : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
-        defaultValue : PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
+        size         : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        value        : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        defaultValue : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         mobile(props, propName) {
             let prop = props[propName]
             if (prop !== true && prop !== false && prop !== 'auto' &&
@@ -94,17 +92,14 @@ class NumericInput extends React.Component
      * integers
      */
     static defaultProps = {
-        // value     : '',
         step      : 1,
         min       : Number.MIN_SAFE_INTEGER || -9007199254740991,
         max       : Number.MAX_SAFE_INTEGER ||  9007199254740991,
         precision : 0,
         parse     : null,
         format    : null,
-        // className : '',
         mobile    : 'auto',
-        style     : {}//,
-        // noValidate: false
+        style     : {}
     };
 
     /**
@@ -366,6 +361,8 @@ class NumericInput extends React.Component
             this._invokeEventCallback("onChange", this.state.value, this.refs.input.value)
         }
 
+        // focus the input is needed (for example up/down buttons set
+        // this.state.inputFocus to true)
         if (this.state.inputFocus) {
             this.refs.input.focus()
         }
@@ -408,8 +405,11 @@ class NumericInput extends React.Component
         // and the browser did focus it we have to pass that to the onFocus
         if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refs.input) {
             this.state.inputFocus = true
-            // this.refs.input.focus()
-            TestUtils.Simulate.focus(this.refs.input)
+            this.refs.input.focus()
+            this._invokeEventCallback("onFocus", {
+                target: this.refs.input,
+                type  : "focus"
+            })
         }
 
         this.checkValidity()
