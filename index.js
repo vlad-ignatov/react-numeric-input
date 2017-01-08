@@ -140,14 +140,14 @@ module.exports =
 
 	            if (this.state.inputFocus) {
 	                this.refs.input.focus();
-	            }
+					
+					if (this.state.selectionStart || this.state.selectionStart === 0) {
+						this.refs.input.selectionStart = this.state.selectionStart;
+					}
 
-	            if (this.state.selectionStart || this.state.selectionStart === 0) {
-	                this.refs.input.selectionStart = this.state.selectionStart;
-	            }
-
-	            if (this.state.selectionEnd || this.state.selectionEnd === 0) {
-	                this.refs.input.selectionEnd = this.state.selectionEnd;
+					if (this.state.selectionEnd || this.state.selectionEnd === 0) {
+						this.refs.input.selectionEnd = this.state.selectionEnd;
+					}
 	            }
 
 	            this.checkValidity();
