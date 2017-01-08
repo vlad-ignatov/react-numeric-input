@@ -88,6 +88,7 @@ describe ('NumericInput/misc', function() {
                 <NumericInput format={ n => `${n}%`} value={10}/>
             )
             expect(widget.refs.input.value).toEqual('10%')
+            TestUtils.Simulate.focus(widget.refs.input)
             widget.refs.input.selectionStart = 1
             widget.refs.input.selectionEnd = 1
             widget.saveSelection()

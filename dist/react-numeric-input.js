@@ -237,16 +237,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // this.state.inputFocus to true)
 	            if (this.state.inputFocus) {
 	                this.refs.input.focus();
-	            }
 
-	            // Restore selectionStart (if any)
-	            if (this.state.selectionStart || this.state.selectionStart === 0) {
-	                this.refs.input.selectionStart = this.state.selectionStart;
-	            }
+	                // Restore selectionStart (if any)
+	                if (this.state.selectionStart || this.state.selectionStart === 0) {
+	                    this.refs.input.selectionStart = this.state.selectionStart;
+	                }
 
-	            // Restore selectionEnd (if any)
-	            if (this.state.selectionEnd || this.state.selectionEnd === 0) {
-	                this.refs.input.selectionEnd = this.state.selectionEnd;
+	                // Restore selectionEnd (if any)
+	                if (this.state.selectionEnd || this.state.selectionEnd === 0) {
+	                    this.refs.input.selectionEnd = this.state.selectionEnd;
+	                }
 	            }
 
 	            this.checkValidity();

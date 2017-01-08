@@ -1,3 +1,7 @@
+2.0.7
+--------------------------------------------------------------------------------
+* Fixed the focus/blur issues. Thanks to https://github.com/vlad-ignatov/react-numeric-input/pull/25
+
 2.0.6
 --------------------------------------------------------------------------------
 * Use peerDependencies to specify the react versions
