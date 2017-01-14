@@ -1,6 +1,7 @@
 2.0.7
 --------------------------------------------------------------------------------
 * Fixed the focus/blur issues. Thanks to https://github.com/vlad-ignatov/react-numeric-input/pull/25
+* onChange gets called when input content is deleted #27
 
 2.0.6
 --------------------------------------------------------------------------------
