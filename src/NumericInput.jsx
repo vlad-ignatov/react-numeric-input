@@ -357,7 +357,7 @@ class NumericInput extends Component
         // Call the onChange if needed. This is placed here because there are
         // many reasons for changing the value and this is the common place
         // that can capture them all
-        if (prevState.value !== this.state.value && !isNaN(this.state.value)) {
+        if (prevState.value !== this.state.value && (!isNaN(this.state.value) || this.state.value === null)) {
             this._invokeEventCallback("onChange", this.state.value, this.refs.input.value)
         }
 
@@ -909,7 +909,11 @@ class NumericInput extends Component
 
             Object.assign(attrs.input, {
                 onChange : e => {
-                    this.setState({ value: this._parse(e.target.value) })
+                    let val = this._parse(e.target.value)
+                    if (isNaN(val)) {
+                        val = null
+                    }
+                    this.setState({ value: val })
                 },
                 onKeyDown: this._onKeyDown.bind(this),
                 onInput: (...args) => {

@@ -134,7 +134,7 @@ module.exports =
 	    }, {
 	        key: "componentDidUpdate",
 	        value: function componentDidUpdate(prevProps, prevState) {
-	            if (prevState.value !== this.state.value && !isNaN(this.state.value)) {
+	            if (prevState.value !== this.state.value && (!isNaN(this.state.value) || this.state.value === null)) {
 	                this._invokeEventCallback("onChange", this.state.value, this.refs.input.value);
 	            }
 
@@ -568,7 +568,11 @@ module.exports =
 
 	                _extends(attrs.input, {
 	                    onChange: function onChange(e) {
-	                        _this5.setState({ value: _this5._parse(e.target.value) });
+	                        var val = _this5._parse(e.target.value);
+	                        if (isNaN(val)) {
+	                            val = null;
+	                        }
+	                        _this5.setState({ value: val });
 	                    },
 	                    onKeyDown: this._onKeyDown.bind(this),
 	                    onInput: function onInput() {

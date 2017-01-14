@@ -44,7 +44,7 @@ describe ('NumericInput/misc', function() {
      *
      * @see https://github.com/vlad-ignatov/react-numeric-input/issues/19
      */
-    it ('onChange get called properly with `min`', done => {
+    it ('onChange gets called properly with `min`', done => {
         let log    = []
         let widget = TestUtils.renderIntoDocument(
             <NumericInput min={100} onChange={function(...args) { log.push(...args) }}/>
@@ -99,4 +99,25 @@ describe ('NumericInput/misc', function() {
             done()
         })
     }
+
+    /**
+     * onChange gets called when input content is deleted
+     * @see https://github.com/vlad-ignatov/react-numeric-input/issues/27
+     */
+    it ('onChange gets called when input content is deleted', done => {
+        let log    = []
+        let widget = TestUtils.renderIntoDocument(
+            <NumericInput min={100} value={1} onChange={(...args) => log.push(...args)}/>
+        )
+        let input = widget.refs.input
+
+        TestUtils.Simulate.focus(input)
+        input.value = 2
+        TestUtils.Simulate.change(input)
+        expect(log).toEqual([2,'2'])
+        input.value = ""
+        TestUtils.Simulate.change(input)
+        expect(log).toEqual([2,'2',null,""])
+        done()
+    })
 })
