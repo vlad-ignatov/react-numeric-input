@@ -543,6 +543,11 @@ class NumericInput extends Component
      */
     _parse(x: string): number
     {
+        // prevent backspace on dot in float value
+        if (this.props.precision > 0 && x.indexOf(".") < 0) {
+            x = this.state.value;
+        }
+
         if (typeof this.props.parse == 'function') {
             return parseFloat(this.props.parse(x));
         }
