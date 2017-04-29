@@ -1,6 +1,6 @@
 {
   "name": "react-numeric-input",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Number input component that can replace the native number input which is not yet very well supported and where it is, it does not have the same appearance across the browsers. Additionally this component offers more flexible options and can be used for any values (differently formatted representations of the internal numeric value).",
   "main": "index.js",
   "scripts": {
@@ -60,6 +60,7 @@
     "webpack": "^1.12.2"
   },
   "peerDependencies": {
-      "react": ">=0.14.0 || ^15.2.1"
+    "react": ">=0.14.0 || ^15.2.1",
+    "prop-types": "^15.5.8"
   }
 }
