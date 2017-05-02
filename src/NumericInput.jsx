@@ -7,7 +7,7 @@ const IS_BROWSER   = typeof document != 'undefined';
 
 /**
  * Just a simple helper to provide support for older IEs. This is not exactly a
- * polyfill for classList.add but it does what we need with minimal efford.
+ * polyfill for classList.add but it does what we need with minimal effort.
  * Works with single className only!
  */
 function addClass(element, className) {
@@ -21,7 +21,7 @@ function addClass(element, className) {
 
 /**
  * Just a simple helper to provide support for older IEs. This is not exactly a
- * polyfill for classList.remove but it does what we need with minimal efford.
+ * polyfill for classList.remove but it does what we need with minimal effort.
  * Works with single className only!
  */
 function removeClass(element, className) {
@@ -88,7 +88,7 @@ class NumericInput extends Component
     };
 
     /**
-     * The deault behaviour is to start from 0, use step of 1 and display
+     * The default behavior is to start from 0, use step of 1 and display
      * integers
      */
     static defaultProps = {
@@ -262,13 +262,13 @@ class NumericInput extends Component
     };
 
     /**
-     * When click and hold on a button - the speed of auto changin the value.
+     * When click and hold on a button - the speed of auto changing the value.
      * This is a static property and can be modified if needed.
      */
     static SPEED = 50;
 
     /**
-     * When click and hold on a button - the delay before auto changin the value.
+     * When click and hold on a button - the delay before auto changing the value.
      * This is a static property and can be modified if needed.
      */
     static DELAY = 500;
@@ -453,7 +453,7 @@ class NumericInput extends Component
         }
         else {
 
-            // In some browsers once a pattern is set it connot be removed. The
+            // In some browsers once a pattern is set it cannot be removed. The
             // browser sets it to "" instead which results in validation
             // failures...
             if (this.refs.input.pattern === "") {
@@ -470,7 +470,7 @@ class NumericInput extends Component
                 }
             }
 
-            // Some brousers might fail to validate maxLength
+            // Some browsers might fail to validate maxLength
             if (valid && supportsValidation && this.props.maxLength) {
                 if (this.refs.input.value.length > this.props.maxLength) {
                     validationError = "This value is too long"
@@ -550,7 +550,7 @@ class NumericInput extends Component
     }
 
     /**
-     * This is used internally to format a number to it's dislay representation.
+     * This is used internally to format a number to it's display representation.
      * It will invoke the this.props.format function if one is provided.
      * @private
      */
@@ -566,7 +566,7 @@ class NumericInput extends Component
     }
 
     /**
-     * The internal method that actualy sets the new value on the input
+     * The internal method that actually sets the new value on the input
      * @private
      */
     _step(n: number, callback?: Function): boolean
@@ -697,7 +697,7 @@ class NumericInput extends Component
     }
 
     /**
-     * Helper method to ivoke event callback functions if they are provided
+     * Helper method to invoke event callback functions if they are provided
      * in the props.
      * @param {String} callbackName The name of the function prop
      * @param {*[]} args Any additional argument are passed thru
