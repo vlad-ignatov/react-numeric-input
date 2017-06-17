@@ -52,7 +52,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -72,6 +72,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// import NumericInput from '../index.js';
 
+
 	$(function () {
 	    $('script.jsx').each(function (i, s) {
 	        var div = $('<div/>'),
@@ -90,31 +91,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	}); /* global $, hljs, NumericInput */
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
@@ -124,12 +125,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var /* global $, hljs, NumericInput, React */
-	Demo = function (_React$Component) {
+	/* global $, hljs, NumericInput, React */
+	var Demo = function (_React$Component) {
 	    _inherits(Demo, _React$Component);
 
 	    function Demo() {
-	        var _Object$getPrototypeO;
+	        var _ref;
 
 	        _classCallCheck(this, Demo);
 
@@ -138,8 +139,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        // var that = this;
-
-	        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Demo)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+	        var _this = _possibleConstructorReturn(this, (_ref = Demo.__proto__ || Object.getPrototypeOf(Demo)).call.apply(_ref, [this].concat(args)));
 
 	        _this.state = {
 	            inputProps: {
@@ -238,10 +238,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            return config.map(function (props, propName) {
 	                var editor = null;
-	                var type = props.type;
-	                var name = props.name;
 
-	                var rest = _objectWithoutProperties(props, ["type", "name"]);
+	                var type = props.type,
+	                    name = props.name,
+	                    rest = _objectWithoutProperties(props, ["type", "name"]);
 
 	                if (type == 'text') {
 	                    editor = React.createElement("input", {
@@ -272,7 +272,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                checked: _this2.state.inputProps[name].on,
 	                                onChange: _this2.toggleProp.bind(_this2, name)
 	                            }),
-	                            " ",
+	                            "\xA0",
 	                            name
 	                        )
 	                    ),
@@ -406,7 +406,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = Demo;
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;
