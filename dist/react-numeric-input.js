@@ -215,7 +215,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _value = String(props.value || props.value === 0 ? props.value : '').replace(/^\s*|\s*$/, "");
 
 	            this.setState({
-	                value: "value" in props && _value !== '' ? this._parse(_value) : null
+	                value: "value" in props && _value !== '' ? this._parse(_value) : null,
+	                stringValue: _value
 	            });
 	        }
 
@@ -248,10 +249,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // focus the input is needed (for example up/down buttons set
 	            // this.state.inputFocus to true)
 	            if (this.state.inputFocus) {
-	                this.refs.input.focus
+	                this.refs.input.focus();
 
 	                // Restore selectionStart (if any)
-	                ();if (this.state.selectionStart || this.state.selectionStart === 0) {
+	                if (this.state.selectionStart || this.state.selectionStart === 0) {
 	                    this.refs.input.selectionStart = this.state.selectionStart;
 	                }
 
@@ -289,7 +290,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            this.refs.input.setValue = function (value) {
 	                _this2.setState({
-	                    value: _this2._parse(value)
+	                    value: _this2._parse(value),
+	                    stringValue: value
 	                });
 	            };
 
@@ -462,25 +464,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _n = this._toNumber((this.state.value || 0) + this.props.step * n, false);
 
 	            if (_n !== this.state.value) {
-	                this.setState({ value: _n }, callback);
+	                this.setState({ value: _n, stringValue: _n }, callback);
 	                return true;
 	            }
 
 	            return false;
-	        }
-
-	        /**
-	         * This gets called whenever the user edits the input value. The value will
-	         * be recreated using the current parse/format methods so the input will
-	         * appear as readonly if the user tries to type something invalid.
-	         */
-
-	    }, {
-	        key: '_onChange',
-	        value: function _onChange(e) {
-	            this.setState({
-	                value: this._parse(e.target.value)
-	            });
 	        }
 
 	        /**
@@ -710,7 +698,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            };
 
-	            if (state.value || state.value === 0) {
+	            if (/^[+-.]{1,2}$/.test(state.stringValue)) {
+	                attrs.input.value = state.stringValue;
+	            } else if (state.value || state.value === 0) {
 	                attrs.input.value = this._format(state.value);
 	            } else {
 	                attrs.input.value = "";
@@ -814,11 +804,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                _extends(attrs.input, {
 	                    onChange: function onChange(e) {
-	                        var val = _this5._parse(e.target.value);
+	                        var original = e.target.value;
+	                        var val = _this5._parse(original);
 	                        if (isNaN(val)) {
 	                            val = null;
 	                        }
-	                        _this5.setState({ value: val });
+	                        _this5.setState({ value: val, stringValue: original });
 	                    },
 	                    onKeyDown: this._onKeyDown.bind(this),
 	                    onInput: function onInput() {
@@ -844,8 +835,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                        args[0].persist();
 	                        _this5.setState({ inputFocus: true }, function () {
+	                            var val = _this5._parse(args[0].target.value);
 	                            _this5.setState({
-	                                value: _this5._parse(args[0].target.value)
+	                                value: val,
+	                                stringValue: val
 	                            }, function () {
 	                                _this5._invokeEventCallback.apply(_this5, ["onFocus"].concat(args));
 	                            });
@@ -858,8 +851,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                        args[0].persist();
 	                        _this5.setState({ inputFocus: false }, function () {
+	                            var val = _this5._parse(args[0].target.value);
 	                            _this5.setState({
-	                                value: _this5._parse(args[0].target.value)
+	                                value: val
 	                            }, function () {
 	                                _this5._invokeEventCallback.apply(_this5, ["onBlur"].concat(args));
 	                            });
