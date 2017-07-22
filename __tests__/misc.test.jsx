@@ -120,4 +120,23 @@ describe ('NumericInput/misc', function() {
         expect(log).toEqual([2,'2',null,""])
         done()
     })
+
+    /**
+     * The field should accept "-.", "+.", ".", "-", and "+" at beginning of input value.
+     * @see https://github.com/vlad-ignatov/react-numeric-input/pull/48/commits/b01f1f9b61c86a9f3a72088f4f82279370e7155a
+     */
+    it ('The field should accept "-.", "+.", ".", "-", and "+" at beginning of input value', done => {
+        let widget = TestUtils.renderIntoDocument(<NumericInput min={-10} max={10}/>)
+        let input  = widget.refs.input
+
+        input.focus();
+
+        ["-.", "+.", ".", "-", "+"].forEach(value => {
+            input.value = value;
+            TestUtils.Simulate.input(input);
+            expect(input.value).toEqual(value);
+        })
+
+        done();
+    })
 })
