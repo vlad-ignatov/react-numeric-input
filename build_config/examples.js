@@ -19,8 +19,9 @@ module.exports = {
         ]
     },
     externals : {
-        "react"    : "React",
-        "react-dom": "ReactDOM"
+        "react"     : "React",
+        "react-dom" : "ReactDOM",
+        "prop-types": "PropTypes"
     },
     resolve : {
         extensions : [ "", ".js", ".jsx" ]

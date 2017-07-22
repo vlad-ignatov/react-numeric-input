@@ -179,8 +179,8 @@ class NumericInput extends Component
             cursor     : 'default',
             transition : 'all 0.1s',
             background : 'rgba(0,0,0,.1)',
-            boxShadow  : `-1px -1px 3px rgba(0,0,0,.1) inset,
-                1px 1px 3px rgba(255,255,255,.7) inset`
+            boxShadow  : '-1px -1px 3px rgba(0,0,0,.1) inset,' +
+                '1px 1px 3px rgba(255,255,255,.7) inset'
         },
 
         btnUp: {
@@ -222,8 +222,8 @@ class NumericInput extends Component
 
         'btn:active': {
             background: 'rgba(0,0,0,.3)',
-            boxShadow : `0 1px 3px rgba(0,0,0,.2) inset,
-                -1px -1px 4px rgba(255,255,255,.5) inset`
+            boxShadow : '0 1px 3px rgba(0,0,0,.2) inset,' +
+                '-1px -1px 4px rgba(255,255,255,.5) inset'
         },
 
         'btn:disabled': {
