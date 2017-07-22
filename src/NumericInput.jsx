@@ -336,7 +336,8 @@ class NumericInput extends Component
         ).replace(/^\s*|\s*$/, "")
 
         this.setState({
-            value: "value" in props && _value !== '' ? this._parse(_value) : null
+            value: "value" in props && _value !== '' ? this._parse(_value) : null,
+            stringValue: _value
         })
     }
 
@@ -398,7 +399,8 @@ class NumericInput extends Component
 
         this.refs.input.setValue = (value) => {
             this.setState({
-                value: this._parse(value)
+                value: this._parse(value),
+                stringValue: value
             })
         }
 
@@ -578,23 +580,11 @@ class NumericInput extends Component
         );
 
         if (_n !== this.state.value) {
-            this.setState({ value: _n }, callback);
+            this.setState({ value: _n, stringValue: _n }, callback);
             return true
         }
 
         return false
-    }
-
-    /**
-     * This gets called whenever the user edits the input value. The value will
-     * be recreated using the current parse/format methods so the input will
-     * appear as readonly if the user tries to type something invalid.
-     */
-    _onChange(e: InputEvent): void
-    {
-        this.setState({
-            value: this._parse(e.target.value)
-        })
     }
 
     /**
@@ -814,7 +804,9 @@ class NumericInput extends Component
             }
         };
 
-        if (state.value || state.value === 0) {
+        if (/^[+-.]{1,2}$/.test(state.stringValue)) {
+            attrs.input.value = state.stringValue;
+        } else if (state.value || state.value === 0) {
             attrs.input.value = this._format(state.value)
         } else {
             attrs.input.value = ""
@@ -910,11 +902,12 @@ class NumericInput extends Component
 
             Object.assign(attrs.input, {
                 onChange : e => {
-                    let val = this._parse(e.target.value)
+                    const original = e.target.value;
+                    let val = this._parse(original)
                     if (isNaN(val)) {
                         val = null
                     }
-                    this.setState({ value: val })
+                    this.setState({ value: val, stringValue: original })
                 },
                 onKeyDown: this._onKeyDown.bind(this),
                 onInput: (...args) => {
@@ -928,8 +921,10 @@ class NumericInput extends Component
                 onFocus: (...args) => {
                     args[0].persist();
                     this.setState({ inputFocus: true }, () => {
+                        const val = this._parse(args[0].target.value);
                         this.setState({
-                            value: this._parse(args[0].target.value)
+                            value: val,
+                            stringValue: val
                         }, () => {
                             this._invokeEventCallback("onFocus", ...args)
                         })
@@ -938,8 +933,9 @@ class NumericInput extends Component
                 onBlur: (...args) => {
                     args[0].persist();
                     this.setState({ inputFocus: false }, () => {
+                        const val = this._parse(args[0].target.value);
                         this.setState({
-                            value: this._parse(args[0].target.value)
+                            value: val
                         }, () => {
                             this._invokeEventCallback("onBlur", ...args)
                         })

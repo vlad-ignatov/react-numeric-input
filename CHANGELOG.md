@@ -1,3 +1,11 @@
+2.0.9
+--------------------------------------------------------------------------------
+Field now accepts `"-."`, `"+.`", `"."`, `"-"`, and `"+"` at beginning of input value.
+
+2.0.8
+--------------------------------------------------------------------------------
+Fixed `React.PropTypes` reference warnings
+
 2.0.7
 --------------------------------------------------------------------------------
 * Fixed the focus/blur issues. Thanks to https://github.com/vlad-ignatov/react-numeric-input/pull/25
