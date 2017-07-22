@@ -270,6 +270,10 @@ module.exports =
 	    }, {
 	        key: '_parse',
 	        value: function _parse(x) {
+	            if (this.props.precision > 0 && this.state.value !== null && !isNaN(this.state.value) && x.length > 0 && x.indexOf(".") < 0) {
+	                x = this.state.value;
+	            }
+
 	            if (typeof this.props.parse == 'function') {
 	                return parseFloat(this.props.parse(x));
 	            }
