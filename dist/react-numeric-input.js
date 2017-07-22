@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("React"));
+		module.exports = factory(require("React"), require("prop-types"));
 	else if(typeof define === 'function' && define.amd)
-		define(["React"], factory);
+		define(["React", "prop-types"], factory);
 	else if(typeof exports === 'object')
-		exports["NumericInput"] = factory(require("React"));
+		exports["NumericInput"] = factory(require("React"), require("prop-types"));
 	else
-		root["NumericInput"] = factory(root["React"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__) {
+		root["NumericInput"] = factory(root["React"], root["prop-types"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -54,7 +54,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -63,6 +63,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _propTypes = __webpack_require__(2);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -80,7 +84,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Just a simple helper to provide support for older IEs. This is not exactly a
-	 * polyfill for classList.add but it does what we need with minimal efford.
+	 * polyfill for classList.add but it does what we need with minimal effort.
 	 * Works with single className only!
 	 */
 	function addClass(element, className) {
@@ -94,7 +98,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Just a simple helper to provide support for older IEs. This is not exactly a
-	 * polyfill for classList.remove but it does what we need with minimal efford.
+	 * polyfill for classList.remove but it does what we need with minimal effort.
 	 * Works with single className only!
 	 */
 	function removeClass(element, className) {
@@ -130,12 +134,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	    /**
-	     * When click and hold on a button - the speed of auto changin the value.
+	     * When click and hold on a button - the speed of auto changing the value.
 	     * This is a static property and can be modified if needed.
 	     */
 
 	    /**
-	     * The deault behaviour is to start from 0, use step of 1 and display
+	     * The default behavior is to start from 0, use step of 1 and display
 	     * integers
 	     */
 
@@ -187,7 +191,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	    /**
-	     * When click and hold on a button - the delay before auto changin the value.
+	     * When click and hold on a button - the delay before auto changing the value.
 	     * This is a static property and can be modified if needed.
 	     */
 
@@ -198,7 +202,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	    _createClass(NumericInput, [{
-	        key: "componentWillReceiveProps",
+	        key: 'componentWillReceiveProps',
 	        value: function componentWillReceiveProps(props) {
 	            var _value = String(props.value || props.value === 0 ? props.value : '').replace(/^\s*|\s*$/, "");
 
@@ -212,7 +216,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "componentWillUpdate",
+	        key: 'componentWillUpdate',
 	        value: function componentWillUpdate() {
 	            this.saveSelection();
 	        }
@@ -224,7 +228,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "componentDidUpdate",
+	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate(prevProps, prevState) {
 	            // Call the onChange if needed. This is placed here because there are
 	            // many reasons for changing the value and this is the common place
@@ -257,7 +261,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "componentWillUnmount",
+	        key: 'componentWillUnmount',
 	        value: function componentWillUnmount() {
 	            this.stop();
 	        }
@@ -267,7 +271,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "componentDidMount",
+	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            var _this2 = this;
 
@@ -301,7 +305,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "saveSelection",
+	        key: 'saveSelection',
 	        value: function saveSelection() {
 	            this.state.selectionStart = this.refs.input.selectionStart;
 	            this.state.selectionEnd = this.refs.input.selectionEnd;
@@ -314,7 +318,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "checkValidity",
+	        key: 'checkValidity',
 	        value: function checkValidity() {
 	            var valid = undefined,
 	                validationError = "";
@@ -335,7 +339,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                validationError = "";
 	            } else {
 
-	                // In some browsers once a pattern is set it connot be removed. The
+	                // In some browsers once a pattern is set it cannot be removed. The
 	                // browser sets it to "" instead which results in validation
 	                // failures...
 	                if (this.refs.input.pattern === "") {
@@ -352,7 +356,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 
-	                // Some brousers might fail to validate maxLength
+	                // Some browsers might fail to validate maxLength
 	                if (valid && supportsValidation && this.props.maxLength) {
 	                    if (this.refs.input.value.length > this.props.maxLength) {
 	                        validationError = "This value is too long";
@@ -386,7 +390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "_toNumber",
+	        key: '_toNumber',
 	        value: function _toNumber(x, loose) {
 	            loose = loose === undefined ? this.state.inputFocus && !(this.state.btnDownActive || this.state.btnUpActive) : !!loose;
 	            var n = parseFloat(x);
@@ -413,7 +417,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "_parse",
+	        key: '_parse',
 	        value: function _parse(x) {
 	            if (typeof this.props.parse == 'function') {
 	                return parseFloat(this.props.parse(x));
@@ -422,13 +426,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        /**
-	         * This is used internally to format a number to it's dislay representation.
+	         * This is used internally to format a number to it's display representation.
 	         * It will invoke the this.props.format function if one is provided.
 	         * @private
 	         */
 
 	    }, {
-	        key: "_format",
+	        key: '_format',
 	        value: function _format(n) {
 	            var _n = this._toNumber(n).toFixed(this.props.precision);
 
@@ -440,12 +444,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        /**
-	         * The internal method that actualy sets the new value on the input
+	         * The internal method that actually sets the new value on the input
 	         * @private
 	         */
 
 	    }, {
-	        key: "_step",
+	        key: '_step',
 	        value: function _step(n, callback) {
 	            var _n = this._toNumber((this.state.value || 0) + this.props.step * n, false);
 
@@ -464,7 +468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "_onChange",
+	        key: '_onChange',
 	        value: function _onChange(e) {
 	            this.setState({
 	                value: this._parse(e.target.value)
@@ -476,7 +480,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "_onKeyDown",
+	        key: '_onKeyDown',
 	        value: function _onKeyDown() {
 	            for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
 	                args[_key2] = arguments[_key2];
@@ -501,7 +505,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "stop",
+	        key: 'stop',
 	        value: function stop() {
 	            if (this._timer) {
 	                clearTimeout(this._timer);
@@ -518,7 +522,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "increase",
+	        key: 'increase',
 	        value: function increase() {
 	            var _this3 = this;
 
@@ -545,7 +549,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "decrease",
+	        key: 'decrease',
 	        value: function decrease() {
 	            var _this4 = this;
 
@@ -569,7 +573,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "onMouseDown",
+	        key: 'onMouseDown',
 	        value: function onMouseDown(dir, callback) {
 	            if (dir == 'down') {
 	                this.decrease(false, callback);
@@ -586,7 +590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "onTouchStart",
+	        key: 'onTouchStart',
 	        value: function onTouchStart(dir, e) {
 	            e.preventDefault();
 	            if (dir == 'down') {
@@ -597,14 +601,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        /**
-	         * Helper method to ivoke event callback functions if they are provided
+	         * Helper method to invoke event callback functions if they are provided
 	         * in the props.
 	         * @param {String} callbackName The name of the function prop
 	         * @param {*[]} args Any additional argument are passed thru
 	         */
 
 	    }, {
-	        key: "_invokeEventCallback",
+	        key: '_invokeEventCallback',
 	        value: function _invokeEventCallback(callbackName) {
 	            if (typeof this.props[callbackName] == "function") {
 	                var _props$callbackName;
@@ -623,7 +627,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 
 	    }, {
-	        key: "render",
+	        key: 'render',
 	        value: function render() {
 	            var _this5 = this;
 
@@ -648,7 +652,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var onInvalid = _props.onInvalid;
 	            var onValid = _props.onValid;
 
-	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "mobile", "value", "type", "style", "defaultValue", "onInvalid", "onValid"]);
+	            var rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid']);
 
 	            // Build the styles
 
@@ -864,36 +868,36 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            if (mobile) {
 	                return _react2.default.createElement(
-	                    "span",
+	                    'span',
 	                    attrs.wrap,
-	                    _react2.default.createElement("input", attrs.input),
+	                    _react2.default.createElement('input', attrs.input),
 	                    _react2.default.createElement(
-	                        "b",
+	                        'b',
 	                        attrs.btnUp,
-	                        _react2.default.createElement("i", { style: style === false ? null : css.minus }),
-	                        _react2.default.createElement("i", { style: style === false ? null : css.plus })
+	                        _react2.default.createElement('i', { style: style === false ? null : css.minus }),
+	                        _react2.default.createElement('i', { style: style === false ? null : css.plus })
 	                    ),
 	                    _react2.default.createElement(
-	                        "b",
+	                        'b',
 	                        attrs.btnDown,
-	                        _react2.default.createElement("i", { style: style === false ? null : css.minus })
+	                        _react2.default.createElement('i', { style: style === false ? null : css.minus })
 	                    )
 	                );
 	            }
 
 	            return _react2.default.createElement(
-	                "span",
+	                'span',
 	                attrs.wrap,
-	                _react2.default.createElement("input", attrs.input),
+	                _react2.default.createElement('input', attrs.input),
 	                _react2.default.createElement(
-	                    "b",
+	                    'b',
 	                    attrs.btnUp,
-	                    _react2.default.createElement("i", { style: style === false ? null : css.arrowUp })
+	                    _react2.default.createElement('i', { style: style === false ? null : css.arrowUp })
 	                ),
 	                _react2.default.createElement(
-	                    "b",
+	                    'b',
 	                    attrs.btnDown,
-	                    _react2.default.createElement("i", { style: style === false ? null : css.arrowDown })
+	                    _react2.default.createElement('i', { style: style === false ? null : css.arrowDown })
 	                )
 	            );
 	        }
@@ -903,32 +907,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_react.Component);
 
 	NumericInput.propTypes = {
-	    step: _react.PropTypes.number,
-	    min: _react.PropTypes.number,
-	    max: _react.PropTypes.number,
-	    precision: _react.PropTypes.number,
-	    maxLength: _react.PropTypes.number,
-	    parse: _react.PropTypes.func,
-	    format: _react.PropTypes.func,
-	    className: _react.PropTypes.string,
-	    disabled: _react.PropTypes.bool,
-	    readOnly: _react.PropTypes.bool,
-	    required: _react.PropTypes.bool,
-	    noValidate: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.string]),
-	    style: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.bool]),
-	    type: _react.PropTypes.string,
-	    pattern: _react.PropTypes.string,
-	    onFocus: _react.PropTypes.func,
-	    onBlur: _react.PropTypes.func,
-	    onKeyDown: _react.PropTypes.func,
-	    onChange: _react.PropTypes.func,
-	    onInvalid: _react.PropTypes.func,
-	    onValid: _react.PropTypes.func,
-	    onInput: _react.PropTypes.func,
-	    onSelect: _react.PropTypes.func,
-	    size: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.string]),
-	    value: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.string]),
-	    defaultValue: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.string]),
+	    step: _propTypes2.default.number,
+	    min: _propTypes2.default.number,
+	    max: _propTypes2.default.number,
+	    precision: _propTypes2.default.number,
+	    maxLength: _propTypes2.default.number,
+	    parse: _propTypes2.default.func,
+	    format: _propTypes2.default.func,
+	    className: _propTypes2.default.string,
+	    disabled: _propTypes2.default.bool,
+	    readOnly: _propTypes2.default.bool,
+	    required: _propTypes2.default.bool,
+	    noValidate: _propTypes2.default.oneOfType([_propTypes2.default.bool, _propTypes2.default.string]),
+	    style: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.bool]),
+	    type: _propTypes2.default.string,
+	    pattern: _propTypes2.default.string,
+	    onFocus: _propTypes2.default.func,
+	    onBlur: _propTypes2.default.func,
+	    onKeyDown: _propTypes2.default.func,
+	    onChange: _propTypes2.default.func,
+	    onInvalid: _propTypes2.default.func,
+	    onValid: _propTypes2.default.func,
+	    onInput: _propTypes2.default.func,
+	    onSelect: _propTypes2.default.func,
+	    size: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
+	    value: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
+	    defaultValue: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
 	    mobile: function mobile(props, propName) {
 	        var prop = props[propName];
 	        if (prop !== true && prop !== false && prop !== 'auto' && typeof prop != 'function') {
@@ -1017,7 +1021,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        cursor: 'default',
 	        transition: 'all 0.1s',
 	        background: 'rgba(0,0,0,.1)',
-	        boxShadow: "-1px -1px 3px rgba(0,0,0,.1) inset,\n                1px 1px 3px rgba(255,255,255,.7) inset"
+	        boxShadow: '-1px -1px 3px rgba(0,0,0,.1) inset,' + '1px 1px 3px rgba(255,255,255,.7) inset'
 	    },
 
 	    btnUp: {
@@ -1059,7 +1063,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    'btn:active': {
 	        background: 'rgba(0,0,0,.3)',
-	        boxShadow: "0 1px 3px rgba(0,0,0,.2) inset,\n                -1px -1px 4px rgba(255,255,255,.5) inset"
+	        boxShadow: '0 1px 3px rgba(0,0,0,.2) inset,' + '-1px -1px 4px rgba(255,255,255,.5) inset'
 	    },
 
 	    'btn:disabled': {
@@ -1107,6 +1111,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
 /***/ }
 /******/ ])

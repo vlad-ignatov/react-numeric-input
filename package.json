@@ -54,13 +54,13 @@
     "karma-webpack": "^1.7.0",
     "mocha": "^2.3.3",
     "phantomjs": "^1.9.18",
+    "prop-types": "^15.5.8",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-addons-test-utils": "^15.3.2",
     "webpack": "^1.12.2"
   },
   "peerDependencies": {
-    "react": ">=0.14.0 || ^15.2.1",
-    "prop-types": "^15.5.8"
+    "react": ">=0.14.0 || ^15.2.1"
   }
 }

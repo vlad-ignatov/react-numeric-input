@@ -45,7 +45,7 @@ module.exports =
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -54,6 +54,10 @@ module.exports =
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _propTypes = __webpack_require__(2);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -118,7 +122,7 @@ module.exports =
 	    }
 
 	    _createClass(NumericInput, [{
-	        key: "componentWillReceiveProps",
+	        key: 'componentWillReceiveProps',
 	        value: function componentWillReceiveProps(props) {
 	            var _value = String(props.value || props.value === 0 ? props.value : '').replace(/^\s*|\s*$/, "");
 
@@ -127,12 +131,12 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: "componentWillUpdate",
+	        key: 'componentWillUpdate',
 	        value: function componentWillUpdate() {
 	            this.saveSelection();
 	        }
 	    }, {
-	        key: "componentDidUpdate",
+	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate(prevProps, prevState) {
 	            if (prevState.value !== this.state.value && (!isNaN(this.state.value) || this.state.value === null)) {
 	                this._invokeEventCallback("onChange", this.state.value, this.refs.input.value);
@@ -153,12 +157,12 @@ module.exports =
 	            this.checkValidity();
 	        }
 	    }, {
-	        key: "componentWillUnmount",
+	        key: 'componentWillUnmount',
 	        value: function componentWillUnmount() {
 	            this.stop();
 	        }
 	    }, {
-	        key: "componentDidMount",
+	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            var _this2 = this;
 
@@ -184,13 +188,13 @@ module.exports =
 	            this.checkValidity();
 	        }
 	    }, {
-	        key: "saveSelection",
+	        key: 'saveSelection',
 	        value: function saveSelection() {
 	            this.state.selectionStart = this.refs.input.selectionStart;
 	            this.state.selectionEnd = this.refs.input.selectionEnd;
 	        }
 	    }, {
-	        key: "checkValidity",
+	        key: 'checkValidity',
 	        value: function checkValidity() {
 	            var valid = undefined,
 	                validationError = "";
@@ -243,7 +247,7 @@ module.exports =
 	            }
 	        }
 	    }, {
-	        key: "_toNumber",
+	        key: '_toNumber',
 	        value: function _toNumber(x, loose) {
 	            loose = loose === undefined ? this.state.inputFocus && !(this.state.btnDownActive || this.state.btnUpActive) : !!loose;
 	            var n = parseFloat(x);
@@ -262,7 +266,7 @@ module.exports =
 	            return n;
 	        }
 	    }, {
-	        key: "_parse",
+	        key: '_parse',
 	        value: function _parse(x) {
 	            if (typeof this.props.parse == 'function') {
 	                return parseFloat(this.props.parse(x));
@@ -270,7 +274,7 @@ module.exports =
 	            return parseFloat(x);
 	        }
 	    }, {
-	        key: "_format",
+	        key: '_format',
 	        value: function _format(n) {
 	            var _n = this._toNumber(n).toFixed(this.props.precision);
 
@@ -281,7 +285,7 @@ module.exports =
 	            return _n;
 	        }
 	    }, {
-	        key: "_step",
+	        key: '_step',
 	        value: function _step(n, callback) {
 	            var _n = this._toNumber((this.state.value || 0) + this.props.step * n, false);
 
@@ -293,14 +297,14 @@ module.exports =
 	            return false;
 	        }
 	    }, {
-	        key: "_onChange",
+	        key: '_onChange',
 	        value: function _onChange(e) {
 	            this.setState({
 	                value: this._parse(e.target.value)
 	            });
 	        }
 	    }, {
-	        key: "_onKeyDown",
+	        key: '_onKeyDown',
 	        value: function _onKeyDown() {
 	            for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
 	                args[_key2] = arguments[_key2];
@@ -320,14 +324,14 @@ module.exports =
 	            }
 	        }
 	    }, {
-	        key: "stop",
+	        key: 'stop',
 	        value: function stop() {
 	            if (this._timer) {
 	                clearTimeout(this._timer);
 	            }
 	        }
 	    }, {
-	        key: "increase",
+	        key: 'increase',
 	        value: function increase() {
 	            var _this3 = this;
 
@@ -344,7 +348,7 @@ module.exports =
 	            }
 	        }
 	    }, {
-	        key: "decrease",
+	        key: 'decrease',
 	        value: function decrease() {
 	            var _this4 = this;
 
@@ -361,7 +365,7 @@ module.exports =
 	            }
 	        }
 	    }, {
-	        key: "onMouseDown",
+	        key: 'onMouseDown',
 	        value: function onMouseDown(dir, callback) {
 	            if (dir == 'down') {
 	                this.decrease(false, callback);
@@ -370,7 +374,7 @@ module.exports =
 	            }
 	        }
 	    }, {
-	        key: "onTouchStart",
+	        key: 'onTouchStart',
 	        value: function onTouchStart(dir, e) {
 	            e.preventDefault();
 	            if (dir == 'down') {
@@ -380,7 +384,7 @@ module.exports =
 	            }
 	        }
 	    }, {
-	        key: "_invokeEventCallback",
+	        key: '_invokeEventCallback',
 	        value: function _invokeEventCallback(callbackName) {
 	            if (typeof this.props[callbackName] == "function") {
 	                var _props$callbackName;
@@ -393,7 +397,7 @@ module.exports =
 	            }
 	        }
 	    }, {
-	        key: "render",
+	        key: 'render',
 	        value: function render() {
 	            var _this5 = this;
 
@@ -416,7 +420,7 @@ module.exports =
 	            var onInvalid = _props.onInvalid;
 	            var onValid = _props.onValid;
 
-	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "mobile", "value", "type", "style", "defaultValue", "onInvalid", "onValid"]);
+	            var rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid']);
 
 	            for (var x in NumericInput.style) {
 	                css[x] = _extends({}, NumericInput.style[x], style ? style[x] || {} : {});
@@ -628,36 +632,36 @@ module.exports =
 
 	            if (mobile) {
 	                return _react2.default.createElement(
-	                    "span",
+	                    'span',
 	                    attrs.wrap,
-	                    _react2.default.createElement("input", attrs.input),
+	                    _react2.default.createElement('input', attrs.input),
 	                    _react2.default.createElement(
-	                        "b",
+	                        'b',
 	                        attrs.btnUp,
-	                        _react2.default.createElement("i", { style: style === false ? null : css.minus }),
-	                        _react2.default.createElement("i", { style: style === false ? null : css.plus })
+	                        _react2.default.createElement('i', { style: style === false ? null : css.minus }),
+	                        _react2.default.createElement('i', { style: style === false ? null : css.plus })
 	                    ),
 	                    _react2.default.createElement(
-	                        "b",
+	                        'b',
 	                        attrs.btnDown,
-	                        _react2.default.createElement("i", { style: style === false ? null : css.minus })
+	                        _react2.default.createElement('i', { style: style === false ? null : css.minus })
 	                    )
 	                );
 	            }
 
 	            return _react2.default.createElement(
-	                "span",
+	                'span',
 	                attrs.wrap,
-	                _react2.default.createElement("input", attrs.input),
+	                _react2.default.createElement('input', attrs.input),
 	                _react2.default.createElement(
-	                    "b",
+	                    'b',
 	                    attrs.btnUp,
-	                    _react2.default.createElement("i", { style: style === false ? null : css.arrowUp })
+	                    _react2.default.createElement('i', { style: style === false ? null : css.arrowUp })
 	                ),
 	                _react2.default.createElement(
-	                    "b",
+	                    'b',
 	                    attrs.btnDown,
-	                    _react2.default.createElement("i", { style: style === false ? null : css.arrowDown })
+	                    _react2.default.createElement('i', { style: style === false ? null : css.arrowDown })
 	                )
 	            );
 	        }
@@ -667,32 +671,32 @@ module.exports =
 	}(_react.Component);
 
 	NumericInput.propTypes = {
-	    step: _react.PropTypes.number,
-	    min: _react.PropTypes.number,
-	    max: _react.PropTypes.number,
-	    precision: _react.PropTypes.number,
-	    maxLength: _react.PropTypes.number,
-	    parse: _react.PropTypes.func,
-	    format: _react.PropTypes.func,
-	    className: _react.PropTypes.string,
-	    disabled: _react.PropTypes.bool,
-	    readOnly: _react.PropTypes.bool,
-	    required: _react.PropTypes.bool,
-	    noValidate: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.string]),
-	    style: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.bool]),
-	    type: _react.PropTypes.string,
-	    pattern: _react.PropTypes.string,
-	    onFocus: _react.PropTypes.func,
-	    onBlur: _react.PropTypes.func,
-	    onKeyDown: _react.PropTypes.func,
-	    onChange: _react.PropTypes.func,
-	    onInvalid: _react.PropTypes.func,
-	    onValid: _react.PropTypes.func,
-	    onInput: _react.PropTypes.func,
-	    onSelect: _react.PropTypes.func,
-	    size: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.string]),
-	    value: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.string]),
-	    defaultValue: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.string]),
+	    step: _propTypes2.default.number,
+	    min: _propTypes2.default.number,
+	    max: _propTypes2.default.number,
+	    precision: _propTypes2.default.number,
+	    maxLength: _propTypes2.default.number,
+	    parse: _propTypes2.default.func,
+	    format: _propTypes2.default.func,
+	    className: _propTypes2.default.string,
+	    disabled: _propTypes2.default.bool,
+	    readOnly: _propTypes2.default.bool,
+	    required: _propTypes2.default.bool,
+	    noValidate: _propTypes2.default.oneOfType([_propTypes2.default.bool, _propTypes2.default.string]),
+	    style: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.bool]),
+	    type: _propTypes2.default.string,
+	    pattern: _propTypes2.default.string,
+	    onFocus: _propTypes2.default.func,
+	    onBlur: _propTypes2.default.func,
+	    onKeyDown: _propTypes2.default.func,
+	    onChange: _propTypes2.default.func,
+	    onInvalid: _propTypes2.default.func,
+	    onValid: _propTypes2.default.func,
+	    onInput: _propTypes2.default.func,
+	    onSelect: _propTypes2.default.func,
+	    size: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
+	    value: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
+	    defaultValue: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
 	    mobile: function mobile(props, propName) {
 	        var prop = props[propName];
 	        if (prop !== true && prop !== false && prop !== 'auto' && typeof prop != 'function') {
@@ -774,7 +778,7 @@ module.exports =
 	        cursor: 'default',
 	        transition: 'all 0.1s',
 	        background: 'rgba(0,0,0,.1)',
-	        boxShadow: "-1px -1px 3px rgba(0,0,0,.1) inset,\n                1px 1px 3px rgba(255,255,255,.7) inset"
+	        boxShadow: '-1px -1px 3px rgba(0,0,0,.1) inset,' + '1px 1px 3px rgba(255,255,255,.7) inset'
 	    },
 
 	    btnUp: {
@@ -816,7 +820,7 @@ module.exports =
 
 	    'btn:active': {
 	        background: 'rgba(0,0,0,.3)',
-	        boxShadow: "0 1px 3px rgba(0,0,0,.2) inset,\n                -1px -1px 4px rgba(255,255,255,.5) inset"
+	        boxShadow: '0 1px 3px rgba(0,0,0,.2) inset,' + '-1px -1px 4px rgba(255,255,255,.5) inset'
 	    },
 
 	    'btn:disabled': {
@@ -862,6 +866,12 @@ module.exports =
 /***/ function(module, exports) {
 
 	module.exports = require("react");
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	module.exports = require("prop-types");
 
 /***/ }
 /******/ ]);
