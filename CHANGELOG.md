@@ -1,6 +1,10 @@
 2.0.9
 --------------------------------------------------------------------------------
-Field now accepts `"-."`, `"+.`", `"."`, `"-"`, and `"+"` at beginning of input value.
+* Field now accepts `"-."`, `"+.`", `"."`, `"-"`, and `"+"` at beginning of input value.
+* Merge some pull requests
+* Fixed backspace on float values
+* Use external prop-types package
+* Use react and react-dom v15.6.1
 
 2.0.8
 --------------------------------------------------------------------------------
