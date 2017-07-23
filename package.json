@@ -55,7 +55,7 @@
     "mocha": "^2.3.3",
     "phantomjs": "^1.9.18",
     "prop-types": "^15.5.8",
-
+    "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "webpack": "^1.12.2"
   },
