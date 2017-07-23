@@ -99,12 +99,12 @@ describe('NumericInput', function() {
         expect(inputNode.value).toEqual('-1');
 
         setTimeout(() => {
-            expect(inputNode.value).toEqual('-2');
             TestUtils.Simulate.mouseUp(btnDown);
+            expect(inputNode.value).toEqual('-2');
             setTimeout(() => {
                 expect(inputNode.value).toEqual('-2');
                 done();
-            }, DELAY);
+            }, DELAY * 2);
         }, DELAY);
     });
 
