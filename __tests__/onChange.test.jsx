@@ -2,7 +2,7 @@
 import expect       from 'expect'
 import NumericInput from '../src/NumericInput.jsx'
 import React        from 'react'
-import TestUtils    from 'react-addons-test-utils'
+import TestUtils    from 'react-dom/test-utils'
 
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;

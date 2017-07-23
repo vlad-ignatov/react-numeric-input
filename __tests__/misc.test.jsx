@@ -6,7 +6,7 @@
 import expect       from 'expect'
 import NumericInput from '../src/NumericInput.jsx'
 import React        from 'react'
-import TestUtils    from 'react-addons-test-utils'
+import TestUtils    from 'react-dom/test-utils'
 
 describe ('NumericInput/misc', function() {
 
