@@ -331,14 +331,16 @@ class NumericInput extends Component
      */
     componentWillReceiveProps(props: Object): void
     {
-        let _value = String(
-            props.value || props.value === 0 ? props.value : ''
-        ).replace(/^\s*|\s*$/, "")
+        if (props.hasOwnProperty("value")) {
+            let _value = String(
+                props.value || props.value === 0 ? props.value : ''
+            ).replace(/^\s*|\s*$/, "")
 
-        this.setState({
-            value: "value" in props && _value !== '' ? this._parse(_value) : null,
-            stringValue: _value
-        })
+            this.setState({
+                value: "value" in props && _value !== '' ? this._parse(_value) : null,
+                stringValue: _value
+            })
+        }
     }
 
     /**
@@ -546,11 +548,6 @@ class NumericInput extends Component
      */
     _parse(x: string): number
     {
-        // prevent backspace on dot in float value
-        if (this.props.precision > 0 && this.state.value !== null && !isNaN(this.state.value) && x.length > 0 && x.indexOf(".") < 0) {
-            x = this.state.value;
-        }
-
         if (typeof this.props.parse == 'function') {
             return parseFloat(this.props.parse(x));
         }
@@ -608,6 +605,29 @@ class NumericInput extends Component
             else if (e.keyCode === KEYCODE_DOWN) {
                 e.preventDefault();
                 this._step(e.ctrlKey || e.metaKey ? -0.1 : e.shiftKey ? -10 : -1);
+            }
+            else {
+                let value = this.refs.input.value, length = value.length;
+                if (e.keyCode === 8) { // backspace
+                    if (this.refs.input.selectionStart == this.refs.input.selectionEnd &&
+                        this.refs.input.selectionEnd > 0 &&
+                        value.length &&
+                        value.charAt(this.refs.input.selectionEnd - 1) === ".")
+                    {
+                        e.preventDefault();
+                        this.refs.input.selectionStart = this.refs.input.selectionEnd = this.refs.input.selectionEnd - 1;
+                    }
+                }
+                else if (e.keyCode === 46) { // delete
+                    if (this.refs.input.selectionStart == this.refs.input.selectionEnd &&
+                        this.refs.input.selectionEnd < length + 1 &&
+                        value.length &&
+                        value.charAt(this.refs.input.selectionEnd) === ".")
+                    {
+                        e.preventDefault();
+                        this.refs.input.selectionStart = this.refs.input.selectionEnd = this.refs.input.selectionEnd + 1;
+                    }
+                }
             }
         }
     }

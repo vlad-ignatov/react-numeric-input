@@ -21,7 +21,8 @@ export default class Demo extends React.Component
                 required  : { value: true,               on: false },
                 noValidate: { value: true,               on: false },
                 pattern   : { value: "[0-9].[0-9][0-9]", on: false },
-                title     : { value: "The title attr",   on: false }
+                title     : { value: "The title attr",   on: false }//,
+                // library
             }
         }
     }
@@ -184,7 +185,8 @@ export default class Demo extends React.Component
                                         { name: "pattern"   , type: "text"   },
                                         { name: "title"     , type: "text"   },
                                         { name: "required"  , type: "bool"   },
-                                        { name: "noValidate", type: "bool"   }
+                                        { name: "noValidate", type: "bool"   },
+                                        { name: "inputmode" , type: "text"   }
                                     ])}
                                     {/*
                                     parse	function	parseFloat

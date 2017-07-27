@@ -124,12 +124,14 @@ module.exports =
 	    _createClass(NumericInput, [{
 	        key: 'componentWillReceiveProps',
 	        value: function componentWillReceiveProps(props) {
-	            var _value = String(props.value || props.value === 0 ? props.value : '').replace(/^\s*|\s*$/, "");
+	            if (props.hasOwnProperty("value")) {
+	                var _value = String(props.value || props.value === 0 ? props.value : '').replace(/^\s*|\s*$/, "");
 
-	            this.setState({
-	                value: "value" in props && _value !== '' ? this._parse(_value) : null,
-	                stringValue: _value
-	            });
+	                this.setState({
+	                    value: "value" in props && _value !== '' ? this._parse(_value) : null,
+	                    stringValue: _value
+	                });
+	            }
 	        }
 	    }, {
 	        key: 'componentWillUpdate',
@@ -270,10 +272,6 @@ module.exports =
 	    }, {
 	        key: '_parse',
 	        value: function _parse(x) {
-	            if (this.props.precision > 0 && this.state.value !== null && !isNaN(this.state.value) && x.length > 0 && x.indexOf(".") < 0) {
-	                x = this.state.value;
-	            }
-
 	            if (typeof this.props.parse == 'function') {
 	                return parseFloat(this.props.parse(x));
 	            }
@@ -319,6 +317,20 @@ module.exports =
 	                } else if (e.keyCode === KEYCODE_DOWN) {
 	                    e.preventDefault();
 	                    this._step(e.ctrlKey || e.metaKey ? -0.1 : e.shiftKey ? -10 : -1);
+	                } else {
+	                    var _value2 = this.refs.input.value,
+	                        length = _value2.length;
+	                    if (e.keyCode === 8) {
+	                        if (this.refs.input.selectionStart == this.refs.input.selectionEnd && this.refs.input.selectionEnd > 0 && _value2.length && _value2.charAt(this.refs.input.selectionEnd - 1) === ".") {
+	                            e.preventDefault();
+	                            this.refs.input.selectionStart = this.refs.input.selectionEnd = this.refs.input.selectionEnd - 1;
+	                        }
+	                    } else if (e.keyCode === 46) {
+	                        if (this.refs.input.selectionStart == this.refs.input.selectionEnd && this.refs.input.selectionEnd < length + 1 && _value2.length && _value2.charAt(this.refs.input.selectionEnd) === ".") {
+	                            e.preventDefault();
+	                            this.refs.input.selectionStart = this.refs.input.selectionEnd = this.refs.input.selectionEnd + 1;
+	                        }
+	                    }
 	                }
 	            }
 	        }
