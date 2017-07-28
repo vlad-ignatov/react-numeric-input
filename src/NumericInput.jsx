@@ -62,6 +62,7 @@ class NumericInput extends Component
         disabled     : PropTypes.bool,
         readOnly     : PropTypes.bool,
         required     : PropTypes.bool,
+        snap         : PropTypes.bool,
         noValidate   : PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
         style        : PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
         type         : PropTypes.string,
@@ -581,6 +582,10 @@ class NumericInput extends Component
             false
         );
 
+        if (this.props.snap) {
+            _n = Math.round(_n / this.props.step) * this.props.step
+        }
+
         if (_n !== this.state.value) {
             this.setState({ value: _n, stringValue: _n }, callback);
             return true
@@ -737,7 +742,7 @@ class NumericInput extends Component
 
         let {
             // These are ignored in rendering
-            step, min, max, precision, parse, format, mobile,
+            step, min, max, precision, parse, format, mobile, snap,
             value, type, style, defaultValue, onInvalid, onValid,
 
             // The rest are passed to the input

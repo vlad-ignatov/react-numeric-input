@@ -10,6 +10,8 @@ import TestUtils    from 'react-dom/test-utils'
 
 describe ('NumericInput/misc', function() {
 
+    this.timeout(10000);
+
     /**
      * Assert that the user can type a value lower than the current "min"
      * @see https://github.com/vlad-ignatov/react-numeric-input/issues/19
@@ -138,5 +140,41 @@ describe ('NumericInput/misc', function() {
         })
 
         done();
-    })
+    });
+
+    it ('Can snap to steps', done => {
+        const KEYCODE_UP = 38;
+        const KEYCODE_DOWN = 40;
+        const tests = [
+            [0.2  , KEYCODE_UP  , "0.5"  ], //  0.2  + 0.5 =  0.5
+            [0.3  , KEYCODE_UP  , "1.0"  ], //  0.3  + 0.5 =  1.0
+            [0.5  , KEYCODE_UP  , "1.0"  ], //  0.5  + 0.5 =  1.0
+            [0.6  , KEYCODE_UP  , "1.0"  ], //  0.6  + 0.5 =  1.0
+            [0.9  , KEYCODE_UP  , "1.5"  ], //  0.9  + 0.5 =  1.5
+            [1.1  , KEYCODE_UP  , "1.5"  ], //  1.1  + 0.5 =  1.5
+            [9.1  , KEYCODE_UP  , "9.5"  ], //  9.1  + 0.5 =  9.5
+            [9.3  , KEYCODE_UP  , "10.0" ], //  9.3  + 0.5 =  10.0
+            [11.1 , KEYCODE_UP  , "10.0" ], //  11.1 + 0.5 =  10.0 (<= max)
+            [11.1 , KEYCODE_DOWN, "10.0" ], //  11.1 - 0.5 =  10.0 (<= max)
+            [1.1  , KEYCODE_DOWN, "0.5"  ], //  1.1  - 0.5 =  0.5
+            [0.3  , KEYCODE_DOWN, "0.0"  ], //  0.3  - 0.5 =  0.0
+            [0.1  , KEYCODE_DOWN, "-0.5" ], //  0.1  - 0.5 = -0.5
+            [-1.1 , KEYCODE_DOWN, "-1.5" ], // -1.1  - 0.5 = -1.5
+            [-1.4 , KEYCODE_DOWN, "-2.0" ], // -1.4  - 0.5 = -2.0
+            [-10.4, KEYCODE_DOWN, "-10.0"], // -10.4 - 0.5 = -2.0 (>= min)
+            [-10.4, KEYCODE_UP  , "-10.0"], // -10.4 + 0.5 = -2.0 (>= min)
+            [-8.4 , KEYCODE_UP  , "-8.0" ]  // -8.4  + 0.5 = -8.0
+        ];
+
+        tests.forEach(([inputValue, key, result]) => {
+            let widget = TestUtils.renderIntoDocument(
+                <NumericInput min={-10} max={10} precision={1} step={0.5} value={inputValue} snap />
+            );
+            let input = widget.refs.input;
+            TestUtils.Simulate.keyDown(input, { keyCode: key });
+            expect(input.value).toEqual(result);
+        });
+
+        done();
+    });
 })

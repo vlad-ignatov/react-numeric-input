@@ -293,6 +293,10 @@ module.exports =
 	        value: function _step(n, callback) {
 	            var _n = this._toNumber((this.state.value || 0) + this.props.step * n, false);
 
+	            if (this.props.snap) {
+	                _n = Math.round(_n / this.props.step) * this.props.step;
+	            }
+
 	            if (_n !== this.state.value) {
 	                this.setState({ value: _n, stringValue: _n }, callback);
 	                return true;
@@ -424,6 +428,7 @@ module.exports =
 	            var parse = _props.parse;
 	            var format = _props.format;
 	            var mobile = _props.mobile;
+	            var snap = _props.snap;
 	            var value = _props.value;
 	            var type = _props.type;
 	            var style = _props.style;
@@ -431,7 +436,7 @@ module.exports =
 	            var onInvalid = _props.onInvalid;
 	            var onValid = _props.onValid;
 
-	            var rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid']);
+	            var rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'snap', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid']);
 
 	            for (var x in NumericInput.style) {
 	                css[x] = _extends({}, NumericInput.style[x], style ? style[x] || {} : {});
@@ -699,6 +704,7 @@ module.exports =
 	    disabled: _propTypes2.default.bool,
 	    readOnly: _propTypes2.default.bool,
 	    required: _propTypes2.default.bool,
+	    snap: _propTypes2.default.bool,
 	    noValidate: _propTypes2.default.oneOfType([_propTypes2.default.bool, _propTypes2.default.string]),
 	    style: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.bool]),
 	    type: _propTypes2.default.string,
