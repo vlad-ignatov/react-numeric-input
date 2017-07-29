@@ -237,7 +237,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // many reasons for changing the value and this is the common place
 	            // that can capture them all
 	            if (prevState.value !== this.state.value && (!isNaN(this.state.value) || this.state.value === null)) {
-	                this._invokeEventCallback("onChange", this.state.value, this.refs.input.value);
+	                this._invokeEventCallback("onChange", this.state.value, this.refs.input.value, this.refs.input);
 	            }
 
 	            // focus the input is needed (for example up/down buttons set

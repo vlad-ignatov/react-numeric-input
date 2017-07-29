@@ -158,7 +158,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                required: { value: true, on: false },
 	                noValidate: { value: true, on: false },
 	                pattern: { value: "[0-9].[0-9][0-9]", on: false },
-	                title: { value: "The title attr", on: false } //,
+	                title: { value: "The title attr", on: false },
+	                snap: { value: true, on: false },
+	                inputmode: { value: "numeric", on: false }
 	                // library
 	            }
 	        };
@@ -358,7 +360,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                React.createElement(
 	                                    "tbody",
 	                                    null,
-	                                    this.renderPropEditors([{ name: "name", type: "text" }, { name: "className", type: "text" }, { name: "value", type: "text" }, { name: "min", type: "number" }, { name: "max", type: "number" }, { name: "step", type: "number", min: 0.001, step: 0.1, precision: 3 }, { name: "precision", type: "number", min: 0, max: 20 }, { name: "size", type: "number", min: 0, max: 60 }, { name: "maxLength", type: "number", min: 0, max: 20 }, { name: "disabled", type: "bool" }, { name: "readOnly", type: "bool" }, { name: "mobile", type: "bool" }, { name: "pattern", type: "text" }, { name: "title", type: "text" }, { name: "required", type: "bool" }, { name: "noValidate", type: "bool" }, { name: "inputmode", type: "text" }])
+	                                    this.renderPropEditors([{ name: "name", type: "text" }, { name: "className", type: "text" }, { name: "value", type: "text" }, { name: "min", type: "number" }, { name: "max", type: "number" }, { name: "step", type: "number", min: 0.001, step: 0.1, precision: 3 }, { name: "precision", type: "number", min: 0, max: 20 }, { name: "size", type: "number", min: 0, max: 60 }, { name: "maxLength", type: "number", min: 0, max: 20 }, { name: "disabled", type: "bool" }, { name: "readOnly", type: "bool" }, { name: "mobile", type: "bool" }, { name: "pattern", type: "text" }, { name: "title", type: "text" }, { name: "required", type: "bool" }, { name: "noValidate", type: "bool" }, { name: "inputmode", type: "text" }, { name: "snap", type: "bool" }])
 	                                )
 	                            )
 	                        )

@@ -1,3 +1,11 @@
+2.1.0
+--------------------------------------------------------------------------------
+* Added `snap` prop to make the value snap to the closest step when using buttons or up/down keys to change it.
+* Pass a reference to the input element to the onChange callbacks
+* Fixed an issue preventing the input from being editable when it's entire value is selected
+* Fixed an issue that might cause the component to loose its value if re-rendered without value prop
+
+
 2.0.9
 --------------------------------------------------------------------------------
 * Field now accepts `"-."`, `"+.`", `"."`, `"-"`, and `"+"` at beginning of input value.

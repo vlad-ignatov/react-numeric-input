@@ -142,7 +142,7 @@ module.exports =
 	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate(prevProps, prevState) {
 	            if (prevState.value !== this.state.value && (!isNaN(this.state.value) || this.state.value === null)) {
-	                this._invokeEventCallback("onChange", this.state.value, this.refs.input.value);
+	                this._invokeEventCallback("onChange", this.state.value, this.refs.input.value, this.refs.input);
 	            }
 
 	            if (this.state.inputFocus) {

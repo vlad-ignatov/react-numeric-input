@@ -56,7 +56,10 @@ describe ('NumericInput/misc', function() {
         TestUtils.Simulate.focus(input)
         input.value = 1
         TestUtils.Simulate.change(input)
-        expect(log.toString()).toEqual('1,1')
+        expect(log.length).toEqual(3)
+        expect(log[0]).toEqual(1)
+        expect(log[1]).toEqual('1')
+        expect(log[2]).toEqual(input)
         done()
     })
 
@@ -116,10 +119,10 @@ describe ('NumericInput/misc', function() {
         TestUtils.Simulate.focus(input)
         input.value = 2
         TestUtils.Simulate.change(input)
-        expect(log).toEqual([2,'2'])
+        expect(log).toEqual([2, '2', input])
         input.value = ""
         TestUtils.Simulate.change(input)
-        expect(log).toEqual([2,'2',null,""])
+        expect(log).toEqual([2, '2', input, null, "", input])
         done()
     })
 
