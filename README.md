@@ -46,6 +46,13 @@ floating point numbers:
 <NumericInput step={0.1} precision={2} value={50.3}/>
 ```
 
+#### Snap to step
+If you want your component to "snap" to the closest step value while incrementing
+or decrementing (up/down buttons or arrow keys) you can use the `snap` prop:
+```jsx
+<NumericInput step={0.5} precision={2} value={50.3} snap/>
+```
+
 #### Custom format
 By default the component displays the value number as is. However, you can
 provide your own `format` function that will be called with the numeric value
@@ -73,6 +80,7 @@ Name         | Type                                | Default
 **style**    |`object` or `false`                  | none
 **size**     |`number` or `string`                 | none
 **mobile**   |`true`, `false`, 'auto' or `function`|`auto`
+**snap**     |`boolean`                            | none (false)
 
 Any other option is passed directly the input created by the component. Just
 don't forget to camelCase the attributes. For example `readonly` must be `readOnly`.
