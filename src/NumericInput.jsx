@@ -52,6 +52,7 @@ class NumericInput extends Component
 {
     static propTypes = {
         step         : PropTypes.number,
+        downStep     : PropTypes.number,
         min          : PropTypes.number,
         max          : PropTypes.number,
         precision    : PropTypes.number,
@@ -95,6 +96,7 @@ class NumericInput extends Component
      */
     static defaultProps = {
         step      : 1,
+        downStep  : 1,
         min       : Number.MIN_SAFE_INTEGER || -9007199254740991,
         max       : Number.MAX_SAFE_INTEGER ||  9007199254740991,
         precision : 0,
@@ -577,13 +579,14 @@ class NumericInput extends Component
      */
     _step(n: number, callback?: Function): boolean
     {
+        let _stepSize = n < 0 ? this.props.downStep : this.props.step;
         let _n = this._toNumber(
-            (this.state.value || 0) + this.props.step * n,
+            (this.state.value || 0) + _stepSize * n,
             false
         );
 
         if (this.props.snap) {
-            _n = Math.round(_n / this.props.step) * this.props.step
+            _n = Math.round(_n / _stepSize) * _stepSize
         }
 
         if (_n !== this.state.value) {
