@@ -579,7 +579,7 @@ class NumericInput extends Component
      */
     _step(n: number, callback?: Function): boolean
     {
-        let _stepSize = n < 0 ? this.props.downStep : this.props.step;
+        let _stepSize = (n < 0 && this.props.downStep > 0) ? this.props.downStep : this.props.step;
         let _n = this._toNumber(
             (this.state.value || 0) + _stepSize * n,
             false
