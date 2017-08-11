@@ -180,4 +180,47 @@ describe ('NumericInput/misc', function() {
 
         done();
     });
+
+    it ('Can decrement with a different step size when downStep property is specified', done => {
+      const KEYCODE_UP = 38;
+      const KEYCODE_DOWN = 40;
+      const tests = [
+          [0.2  , KEYCODE_UP  , "0.5"   , "0.7"   ], //  0.2  + 0.5 = 0.7   (0.5)
+          [0.3  , KEYCODE_UP  , "1.0"   , "0.8"   ], //  0.3  + 0.5 = 0.8   (1.0)
+          [0.5  , KEYCODE_UP  , "1.0"   , "1.0"   ], //  0.5  + 0.5 = 1.0   (1.0)
+          [0.6  , KEYCODE_UP  , "1.0"   , "1.1"   ], //  0.6  + 0.5 = 1.1   (1.0)
+          [0.9  , KEYCODE_UP  , "1.5"   , "1.4"   ], //  0.9  + 0.5 = 1.4   (1.5)
+          [1.1  , KEYCODE_UP  , "1.5"   , "1.6"   ], //  1.1  + 0.5 = 1.6   (1.5)
+          [9.1  , KEYCODE_UP  , "9.5"   , "9.6"   ], //  9.1  + 0.5 = 9.6   (9.5)
+          [9.3  , KEYCODE_UP  , "10.0"  , "9.8"   ], //  9.3  + 0.5 = 9.8   (10.0)
+          [11.1 , KEYCODE_UP  , "10.0"  , "10.0"  ], //  11.1 + 0.5 = 11.6  (10.0) (<= max)
+          [11.1 , KEYCODE_DOWN, "10.0"  , "10.0"  ], //  11.1 - 0.2 = 10.9  (10.0) (<= max)
+          [1.1  , KEYCODE_DOWN, "1.0"   , "0.9"   ], //  1.1  - 0.2 = 0.9   (1.0)
+          [0.3  , KEYCODE_DOWN, "0.2"   , "0.1"   ], //  0.3  - 0.2 = 0.1   (0.2)
+          [0.1  , KEYCODE_DOWN, "0.0"   , "-0.1"  ], //  0.1  - 0.2 = -0.1  (0.0)
+          [-1.1 , KEYCODE_DOWN, "-1.2"  , "-1.3"  ], // -1.1  - 0.2 = -1.3  (-1.2)
+          [-1.4 , KEYCODE_DOWN, "-1.6"  , "-1.6"  ], // -1.4  - 0.2 = -1.6  (-1.6)
+          [-10.4, KEYCODE_DOWN, "-10.0" , "-10.0" ], // -10.4 - 0.2 = -10.0 (-10.0) (>= min)
+          [-10.4, KEYCODE_UP  , "-10.0" , "-9.9"  ], // -10.4 + 0.5 = -9.9  (-10.0) (>= min)
+          [-8.4 , KEYCODE_UP  , "-8.0"  , "-7.9"  ]  // -8.4  + 0.5 = -7.9  (-8.0)
+      ];
+
+      tests.forEach(([inputValue, key, snapResult, noSnapResult]) => {
+          let widget = TestUtils.renderIntoDocument(
+              <NumericInput min={-10} max={10} precision={1} step={0.5} downStep={0.2} value={inputValue} snap/>
+          );
+          let input = widget.refs.input;
+          TestUtils.Simulate.keyDown(input, { keyCode: key });
+          expect(input.value).toEqual(snapResult);
+
+          widget = TestUtils.renderIntoDocument(
+              <NumericInput min={-10} max={10} precision={1} step={0.5} downStep={0.2} value={inputValue} />
+          );
+          input = widget.refs.input;
+          TestUtils.Simulate.keyDown(input, { keyCode: key });
+          expect(input.value).toEqual(noSnapResult);
+      });
+
+      done();
+    });
 })
