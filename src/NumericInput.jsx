@@ -96,7 +96,6 @@ class NumericInput extends Component
      */
     static defaultProps = {
         step      : 1,
-        downStep  : 1,
         min       : Number.MIN_SAFE_INTEGER || -9007199254740991,
         max       : Number.MAX_SAFE_INTEGER ||  9007199254740991,
         precision : 0,
