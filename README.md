@@ -54,6 +54,12 @@ or decrementing (up/down buttons or arrow keys) you can use the `snap` prop:
 ```jsx
 <NumericInput step={0.5} precision={2} value={50.3} snap/>
 ```
+#### Different step size when decrementing
+If you want your component to decrement the value with a different step size than
+the one specified in `step` then you can use the `downStep` property.
+```jsx
+<NumericInput step={0.5} downStep={0.2} precision={2} value={50.3} snap/>
+```
 
 #### Custom format
 By default the component displays the value number as is. However, you can
@@ -73,6 +79,7 @@ Name         | Type                                | Default
 **min**      |`number`                             | `Number.MIN_SAFE_INTEGER`
 **max**      |`number`                             | `Number.MAX_SAFE_INTEGER`
 **step**     |`number`                             | 1
+**downStep** |`number`                             | none
 **precision**|`number`                             | 0
 **parse**    |`function`                           | parseFloat
 **format**   |`function`                           | none
