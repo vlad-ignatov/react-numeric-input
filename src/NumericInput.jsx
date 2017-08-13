@@ -903,7 +903,7 @@ class NumericInput extends Component
 
             Object.assign(attrs.btnDown, {
                 onTouchStart: this.onTouchStart.bind(this, 'down'),
-                onTouchEnd: this.stop,
+                onTouchEnd: this.onTouchEnd.bind(this),
                 onMouseEnter: () => {
                     this.setState({
                         btnDownHover : true
