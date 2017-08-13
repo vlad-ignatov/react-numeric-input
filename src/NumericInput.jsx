@@ -717,6 +717,12 @@ class NumericInput extends Component
         }
     }
 
+    onTouchEnd(e: Event): void
+    {
+        e.preventDefault();
+        this.stop();
+    }
+
     /**
      * Helper method to invoke event callback functions if they are provided
      * in the props.
@@ -862,7 +868,7 @@ class NumericInput extends Component
 
             Object.assign(attrs.btnUp, {
                 onTouchStart: this.onTouchStart.bind(this, 'up'),
-                onTouchEnd: this.stop,
+                onTouchEnd: this.onTouchEnd.bind(this),
                 onMouseEnter: () => {
                     this.setState({
                         btnUpHover : true
