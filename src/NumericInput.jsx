@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
 const IS_BROWSER   = typeof document != 'undefined';
+const RE_NUMBER    = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 
 /**
  * Just a simple helper to provide support for older IEs. This is not exactly a
@@ -78,6 +79,7 @@ class NumericInput extends Component
         size         : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         value        : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         defaultValue : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        strict       : PropTypes.bool,
         mobile(props, propName) {
             let prop = props[propName]
             if (prop !== true && prop !== false && prop !== 'auto' &&
@@ -97,10 +99,11 @@ class NumericInput extends Component
         step      : 1,
         min       : Number.MIN_SAFE_INTEGER || -9007199254740991,
         max       : Number.MAX_SAFE_INTEGER ||  9007199254740991,
-        precision : 0,
+        precision : null,
         parse     : null,
         format    : null,
         mobile    : 'auto',
+        strict    : false,
         style     : {}
     };
 
@@ -307,18 +310,47 @@ class NumericInput extends Component
     {
         super(...args);
 
+        this._isStrict = !!this.props.strict;
+
         this.state = {
             selectionStart: null,
             selectionEnd  : null,
-            value         : "value" in this.props ? this.props.value : this.props.defaultValue,
             btnDownHover  : false,
             btnDownActive : false,
             btnUpHover    : false,
             btnUpActive   : false,
-            inputFocus    : false
-        }
+            inputFocus    : false,
+            value         : null,
+            ...this._propsToState(this.props)
+        };
 
         this.stop = this.stop.bind(this);
+    }
+
+    _propsToState(props) {
+        let out = {};
+
+        if (props.hasOwnProperty("value")) {
+            out.stringValue = String(
+                props.value || props.value === 0 ? props.value : ''
+            ).trim()
+
+            out.value = out.stringValue !== '' ?
+                this._parse(props.value) :
+                null
+        }
+
+        else if (!this._isMounted && props.hasOwnProperty("defaultValue")) {
+            out.stringValue = String(
+                props.defaultValue || props.defaultValue === 0 ? props.defaultValue : ''
+            ).trim()
+
+            out.value = props.defaultValue !== '' ?
+                this._parse(props.defaultValue) :
+                null
+        }
+
+        return out;
     }
 
     /**
@@ -520,23 +552,18 @@ class NumericInput extends Component
      * precision (no fixed precision here because the return value is float, not
      * string).
      */
-    _toNumber(x: any, loose?: boolean): number
+    _toNumber(x: any): number
     {
-        loose = loose === undefined ?
-            this.state.inputFocus && !(this.state.btnDownActive || this.state.btnUpActive) :
-            !!loose
         let n = parseFloat(x);
-        let q = Math.pow(10, this.props.precision);
         if (isNaN(n) || !isFinite(n)) {
             n = 0;
         }
 
-        if (loose) {
-            return n
+        if (this._isStrict) {
+            let q = Math.pow(10, this.props.precision === null ? 10 :this.props.precision);
+            n = Math.min( Math.max(n, this.props.min), this.props.max );
+            n = Math.round( n * q ) / q;
         }
-
-        n = Math.min( Math.max(n, this.props.min), this.props.max );
-        n = Math.round( n * q ) / q;
 
         return n;
     }
@@ -578,21 +605,21 @@ class NumericInput extends Component
      */
     _step(n: number, callback?: Function): boolean
     {
-        let _n = this._toNumber(
-            (this.state.value || 0) + this.props.step * n,
-            false
-        );
+        let _isStrict = this._isStrict;
+        this._isStrict = true;
+        let _n = this._toNumber((this.state.value || 0) + this.props.step * n);
 
         if (this.props.snap) {
             _n = Math.round(_n / this.props.step) * this.props.step
         }
 
+        this._isStrict = _isStrict;
         if (_n !== this.state.value) {
             this.setState({ value: _n, stringValue: _n }, callback);
-            return true
+            return true;
         }
 
-        return false
+        return false;
     }
 
     /**
@@ -744,7 +771,7 @@ class NumericInput extends Component
         let {
             // These are ignored in rendering
             step, min, max, precision, parse, format, mobile, snap,
-            value, type, style, defaultValue, onInvalid, onValid,
+            value, type, style, defaultValue, onInvalid, onValid, strict,
 
             // The rest are passed to the input
             ...rest
@@ -835,11 +862,23 @@ class NumericInput extends Component
             }
         };
 
+        // incomplete number
         if (/^[+-.]{1,2}$/.test(state.stringValue)) {
             attrs.input.value = state.stringValue;
-        } else if (state.value || state.value === 0) {
+        }
+
+        // Not a number and not empty (loose mode only)
+        else if (!this._isStrict && state.stringValue && !RE_NUMBER.test(state.stringValue)) {
+            attrs.input.value = state.stringValue;
+        }
+
+        // number
+        else if (state.value || state.value === 0) {
             attrs.input.value = this._format(state.value)
-        } else {
+        }
+
+        // empty
+        else {
             attrs.input.value = ""
         }
 
@@ -939,7 +978,10 @@ class NumericInput extends Component
                     if (isNaN(val)) {
                         val = null
                     }
-                    this.setState({ value: val, stringValue: original })
+                    this.setState({
+                        value: this._isStrict ? this._toNumber(val) : val,
+                        stringValue: original
+                    })
                 },
                 onKeyDown: this._onKeyDown.bind(this),
                 onInput: (...args) => {
@@ -963,6 +1005,8 @@ class NumericInput extends Component
                     });
                 },
                 onBlur: (...args) => {
+                    let _isStrict = this._isStrict
+                    this._isStrict = true
                     args[0].persist();
                     this.setState({ inputFocus: false }, () => {
                         const val = this._parse(args[0].target.value);
@@ -970,6 +1014,7 @@ class NumericInput extends Component
                             value: val
                         }, () => {
                             this._invokeEventCallback("onBlur", ...args)
+                            this._isStrict = _isStrict
                         })
                     });
                 }
