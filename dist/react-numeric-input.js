@@ -656,6 +656,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var _props = this.props,
 	                step = _props.step,
+	                downStep = _props.downStep,
 	                min = _props.min,
 	                max = _props.max,
 	                precision = _props.precision,
@@ -669,7 +670,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                defaultValue = _props.defaultValue,
 	                onInvalid = _props.onInvalid,
 	                onValid = _props.onValid,
-	                rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'snap', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid']);
+	                rest = _objectWithoutProperties(_props, ['step', 'downStep', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'snap', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid']);
 
 	            // Build the styles
 

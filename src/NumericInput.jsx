@@ -744,7 +744,7 @@ class NumericInput extends Component
 
         let {
             // These are ignored in rendering
-            step, min, max, precision, parse, format, mobile, snap,
+            step, downStep, min, max, precision, parse, format, mobile, snap,
             value, type, style, defaultValue, onInvalid, onValid,
 
             // The rest are passed to the input
