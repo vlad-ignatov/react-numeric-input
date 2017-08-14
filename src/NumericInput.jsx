@@ -891,8 +891,9 @@ class NumericInput extends Component
                         inputFocus  : true
                     }, () => {
                         this._invokeEventCallback("onFocus", ...args)
+                        this.onMouseDown('up');
                     });
-                    this.onMouseDown('up');
+
                 }
             });
 
@@ -926,8 +927,8 @@ class NumericInput extends Component
                         inputFocus    : true
                     }, () => {
                         this._invokeEventCallback("onFocus", ...args)
+                        this.onMouseDown('down');
                     });
-                    this.onMouseDown('down');
                 }
             });
 
