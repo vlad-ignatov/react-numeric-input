@@ -1,6 +1,6 @@
 const lib = require("../lib");
 
-const PAUSE = 1000;
+const PAUSE = 100;
 
 exports.before = (browser, done) => {
     lib.focusWindow(browser);
