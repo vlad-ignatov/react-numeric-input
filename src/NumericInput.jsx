@@ -549,6 +549,7 @@ class NumericInput extends Component
      */
     _parse(x: string): number
     {
+        x = String(x)
         if (typeof this.props.parse == 'function') {
             return parseFloat(this.props.parse(x));
         }
