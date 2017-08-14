@@ -8,7 +8,7 @@ the browsers. Additionally this component offers more flexible options and can
 be used for any values (differently formatted representations of the internal
 numeric value).
 
-[Live demo](http://vlad-ignatov.github.io/react-numeric-input/examples/v2.0.9/index.html)
+[Live demo](http://vlad-ignatov.github.io/react-numeric-input/examples/v2.1.0/index.html)
 
 ## Installation
 ```sh
@@ -20,6 +20,8 @@ Then in your scrips:
 import NumericInput from 'react-numeric-input';
 // or es5
 var NumericInput = require('react-numeric-input');
+// or TypeScript
+import * as NumericInput from "react-numeric-input";
 ```
 
 ## Usage
@@ -90,7 +92,7 @@ See examples/index.html for examples.
 You can pass callback props like `onClick`, `onMouseOver` etc. and they will be
 attached to the input element and React will call them with `null` scope and the corresponding event. However, there are few special cases to be aware of:
 
-* `onChange`  - Called with `valueAsNumber` and `valueAsString`. The `valueAsNumber` represents the internal numeric value while `valueAsString` is the same as the input value and might be completely different from the numeric one if custom formatting is used.
+* `onChange`  - Called with `valueAsNumber`, `valueAsString` and the `input` element. The `valueAsNumber` represents the internal numeric value while `valueAsString` is the same as the input value and might be completely different from the numeric one if custom formatting is used.
 * `onInvalid` - Will be called with `errorMessage`, `valueAsNumber` and `valueAsString`.
 * `onValid`   - There is no corresponding event in browsers. It will be called when the component transitions from invalid to valid state with the same arguments as onChange: `valueAsNumber` and `valueAsString`.
 
