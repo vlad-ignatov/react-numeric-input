@@ -364,14 +364,11 @@ class NumericInput extends Component
      */
     componentWillReceiveProps(props: Object): void
     {
-        if (props.hasOwnProperty("value")) {
-            let _value = String(
-                props.value || props.value === 0 ? props.value : ''
-            ).replace(/^\s*|\s*$/, "")
-
-            this.setState({
-                value: "value" in props && _value !== '' ? this._parse(_value) : null,
-                stringValue: _value
+        let nextState = this._propsToState(props)
+        if (Object.keys(nextState).length) {
+            this._ignoreValueChange = true
+            this.setState(nextState, () => {
+                this._ignoreValueChange = false
             })
         }
     }
@@ -394,7 +391,10 @@ class NumericInput extends Component
         // Call the onChange if needed. This is placed here because there are
         // many reasons for changing the value and this is the common place
         // that can capture them all
-        if (prevState.value !== this.state.value && (!isNaN(this.state.value) || this.state.value === null)) {
+        if (!this._ignoreValueChange // no onChange if re-rendered with different value prop
+            && prevState.value !== this.state.value // no onChange if the value remains the same
+            && (!isNaN(this.state.value) || this.state.value === null) // only if changing to number or null
+        ) {
             this._invokeEventCallback("onChange", this.state.value, this.refs.input.value, this.refs.input)
         }
 
@@ -422,6 +422,7 @@ class NumericInput extends Component
      */
     componentWillUnmount(): void
     {
+        this._isMounted = false
         this.stop();
     }
 
@@ -430,6 +431,7 @@ class NumericInput extends Component
      */
     componentDidMount(): void
     {
+        this._isMounted = true
         this.refs.input.getValueAsNumber = () => this.state.value || 0
 
         this.refs.input.setValue = (value) => {
@@ -590,7 +592,13 @@ class NumericInput extends Component
      */
     _format(n: number): string
     {
-        let _n = this._toNumber(n).toFixed(this.props.precision);
+        let _n = this._toNumber(n);
+
+        if (this.props.precision !== null) {
+            _n = n.toFixed(this.props.precision);
+        }
+
+        _n += "";
 
         if (this.props.format) {
             return this.props.format(_n);

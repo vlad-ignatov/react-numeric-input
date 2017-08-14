@@ -8,6 +8,9 @@ import NumericInput from '../src/NumericInput.jsx'
 import React        from 'react'
 import TestUtils    from 'react-dom/test-utils'
 
+const KEYCODE_UP = 38;
+const KEYCODE_DOWN = 40;
+
 describe ('NumericInput/misc', function() {
 
     this.timeout(10000);
@@ -146,8 +149,6 @@ describe ('NumericInput/misc', function() {
     });
 
     it ('Can snap to steps', done => {
-        const KEYCODE_UP = 38;
-        const KEYCODE_DOWN = 40;
         const tests = [
             [0.2  , KEYCODE_UP  , "0.5"  ], //  0.2  + 0.5 =  0.5
             [0.3  , KEYCODE_UP  , "1.0"  ], //  0.3  + 0.5 =  1.0
@@ -180,4 +181,57 @@ describe ('NumericInput/misc', function() {
 
         done();
     });
-})
+
+    it ("Should not fire onChange when re-rendered with different value", done => {
+        let log = 0;
+        function onChange() {
+            log += 1
+        }
+        class ParentComponent extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = { value: 1 };
+            }
+            render() {
+                return <NumericInput value={this.state.value} ref="numericInput" onChange={onChange}/>
+            }
+        }
+        let parentComponent = TestUtils.renderIntoDocument(<ParentComponent/>);
+        let input = parentComponent.refs.numericInput.refs.input;
+        expect(input.value).toEqual("1");
+        expect(log).toEqual(0);
+        parentComponent.setState({ value: 2 })
+        expect(input.value).toEqual("2");
+        expect(log).toEqual(0);
+        done();
+    });
+
+    it ("Should allow initial values out of range", done => {
+        let widget = TestUtils.renderIntoDocument(
+            <NumericInput min={-10} max={10} value={50} />
+        );
+        let input = widget.refs.input;
+        expect(input.value).toEqual("50");
+        done();
+    });
+
+    it ("If initialized with out of bounds value and changed to another one must trigger onChange only once", done => {
+        let log = 0;
+        function onChange() {
+            log += 1
+        }
+        let widget = TestUtils.renderIntoDocument(
+            <NumericInput min={-10} max={10} value={50} onChange={onChange}/>
+        );
+        let input = widget.refs.input;
+        expect(log).toEqual(0);
+        expect(input.value).toEqual("50");
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
+        expect(log).toEqual(1);
+        expect(input.value).toEqual("10");
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
+        expect(log).toEqual(2);
+        expect(input.value).toEqual("9");
+        done();
+    });
+});

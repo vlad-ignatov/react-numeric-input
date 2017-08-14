@@ -81,6 +81,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var KEYCODE_UP = 38;
 	var KEYCODE_DOWN = 40;
 	var IS_BROWSER = typeof document != 'undefined';
+	var RE_NUMBER = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 
 	/**
 	 * Just a simple helper to provide support for older IEs. This is not exactly a
@@ -154,30 +155,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(NumericInput)).call.apply(_Object$getPrototypeO, [this].concat(args)));
 
-	        _this.state = {
+	        _this._isStrict = !!_this.props.strict;
+
+	        _this.state = _extends({
 	            selectionStart: null,
 	            selectionEnd: null,
-	            value: "value" in _this.props ? _this.props.value : _this.props.defaultValue,
 	            btnDownHover: false,
 	            btnDownActive: false,
 	            btnUpHover: false,
 	            btnUpActive: false,
-	            inputFocus: false
-	        };
+	            inputFocus: false,
+	            value: null
+	        }, _this._propsToState(_this.props));
 
 	        _this.stop = _this.stop.bind(_this);
 	        return _this;
 	    }
-
-	    /**
-	     * Special care is taken for the "value" prop:
-	     * - If not provided - set it to null
-	     * - If the prop is a number - use it as is
-	     * - Otherwise:
-	     *     1. Convert it to string (falsy values become "")
-	     *     2. Then trim it.
-	     *     3. Then parse it to number (delegating to this.props.parse if any)
-	     */
 
 	    /**
 	     * The stop method (need to declare it here to use it in the constructor)
@@ -202,14 +195,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	    _createClass(NumericInput, [{
+	        key: '_propsToState',
+	        value: function _propsToState(props) {
+	            var out = {};
+
+	            if (props.hasOwnProperty("value")) {
+	                out.stringValue = String(props.value || props.value === 0 ? props.value : '').trim();
+
+	                out.value = out.stringValue !== '' ? this._parse(props.value) : null;
+	            } else if (!this._isMounted && props.hasOwnProperty("defaultValue")) {
+	                out.stringValue = String(props.defaultValue || props.defaultValue === 0 ? props.defaultValue : '').trim();
+
+	                out.value = props.defaultValue !== '' ? this._parse(props.defaultValue) : null;
+	            }
+
+	            return out;
+	        }
+
+	        /**
+	         * Special care is taken for the "value" prop:
+	         * - If not provided - set it to null
+	         * - If the prop is a number - use it as is
+	         * - Otherwise:
+	         *     1. Convert it to string (falsy values become "")
+	         *     2. Then trim it.
+	         *     3. Then parse it to number (delegating to this.props.parse if any)
+	         */
+
+	    }, {
 	        key: 'componentWillReceiveProps',
 	        value: function componentWillReceiveProps(props) {
-	            if (props.hasOwnProperty("value")) {
-	                var _value = String(props.value || props.value === 0 ? props.value : '').replace(/^\s*|\s*$/, "");
+	            var _this2 = this;
 
-	                this.setState({
-	                    value: "value" in props && _value !== '' ? this._parse(_value) : null,
-	                    stringValue: _value
+	            var nextState = this._propsToState(props);
+	            if (Object.keys(nextState).length) {
+	                this._ignoreValueChange = true;
+	                this.setState(nextState, function () {
+	                    _this2._ignoreValueChange = false;
 	                });
 	            }
 	        }
@@ -236,9 +258,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // Call the onChange if needed. This is placed here because there are
 	            // many reasons for changing the value and this is the common place
 	            // that can capture them all
-	            if (prevState.value !== this.state.value && (!isNaN(this.state.value) || this.state.value === null)) {
-	                this._invokeEventCallback("onChange", this.state.value, this.refs.input.value, this.refs.input);
-	            }
+	            if (!this._ignoreValueChange // no onChange if re-rendered with different value prop
+	             && prevState.value !== this.state.value // no onChange if the value remains the same
+	             && (!isNaN(this.state.value) || this.state.value === null) // only if changing to number or null
+	            ) {
+	                    this._invokeEventCallback("onChange", this.state.value, this.refs.input.value, this.refs.input);
+	                }
 
 	            // focus the input is needed (for example up/down buttons set
 	            // this.state.inputFocus to true)
@@ -266,6 +291,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'componentWillUnmount',
 	        value: function componentWillUnmount() {
+	            this._isMounted = false;
 	            this.stop();
 	        }
 
@@ -276,15 +302,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            var _this2 = this;
+	            var _this3 = this;
 
+	            this._isMounted = true;
 	            this.refs.input.getValueAsNumber = function () {
-	                return _this2.state.value || 0;
+	                return _this3.state.value || 0;
 	            };
 
 	            this.refs.input.setValue = function (value) {
-	                _this2.setState({
-	                    value: _this2._parse(value),
+	                _this3.setState({
+	                    value: _this3._parse(value),
 	                    stringValue: value
 	                });
 	            };
@@ -395,20 +422,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    }, {
 	        key: '_toNumber',
-	        value: function _toNumber(x, loose) {
-	            loose = loose === undefined ? this.state.inputFocus && !(this.state.btnDownActive || this.state.btnUpActive) : !!loose;
+	        value: function _toNumber(x) {
 	            var n = parseFloat(x);
-	            var q = Math.pow(10, this.props.precision);
 	            if (isNaN(n) || !isFinite(n)) {
 	                n = 0;
 	            }
 
-	            if (loose) {
-	                return n;
+	            if (this._isStrict) {
+	                var q = Math.pow(10, this.props.precision === null ? 10 : this.props.precision);
+	                n = Math.min(Math.max(n, this.props.min), this.props.max);
+	                n = Math.round(n * q) / q;
 	            }
-
-	            n = Math.min(Math.max(n, this.props.min), this.props.max);
-	            n = Math.round(n * q) / q;
 
 	            return n;
 	        }
@@ -423,6 +447,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: '_parse',
 	        value: function _parse(x) {
+	            x = String(x);
 	            if (typeof this.props.parse == 'function') {
 	                return parseFloat(this.props.parse(x));
 	            }
@@ -438,7 +463,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: '_format',
 	        value: function _format(n) {
-	            var _n = this._toNumber(n).toFixed(this.props.precision);
+	            var _n = this._toNumber(n);
+
+	            if (this.props.precision !== null) {
+	                _n = n.toFixed(this.props.precision);
+	            }
+
+	            _n += "";
 
 	            if (this.props.format) {
 	                return this.props.format(_n);
@@ -455,12 +486,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: '_step',
 	        value: function _step(n, callback) {
-	            var _n = this._toNumber((this.state.value || 0) + this.props.step * n, false);
+	            var _isStrict = this._isStrict;
+	            this._isStrict = true;
+	            var _n = this._toNumber((this.state.value || 0) + this.props.step * n);
 
 	            if (this.props.snap) {
 	                _n = Math.round(_n / this.props.step) * this.props.step;
 	            }
 
+	            this._isStrict = _isStrict;
 	            if (_n !== this.state.value) {
 	                this.setState({ value: _n, stringValue: _n }, callback);
 	                return true;
@@ -491,17 +525,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    e.preventDefault();
 	                    this._step(e.ctrlKey || e.metaKey ? -0.1 : e.shiftKey ? -10 : -1);
 	                } else {
-	                    var _value2 = this.refs.input.value,
-	                        length = _value2.length;
+	                    var _value = this.refs.input.value,
+	                        length = _value.length;
 	                    if (e.keyCode === 8) {
 	                        // backspace
-	                        if (this.refs.input.selectionStart == this.refs.input.selectionEnd && this.refs.input.selectionEnd > 0 && _value2.length && _value2.charAt(this.refs.input.selectionEnd - 1) === ".") {
+	                        if (this.refs.input.selectionStart == this.refs.input.selectionEnd && this.refs.input.selectionEnd > 0 && _value.length && _value.charAt(this.refs.input.selectionEnd - 1) === ".") {
 	                            e.preventDefault();
 	                            this.refs.input.selectionStart = this.refs.input.selectionEnd = this.refs.input.selectionEnd - 1;
 	                        }
 	                    } else if (e.keyCode === 46) {
 	                        // delete
-	                        if (this.refs.input.selectionStart == this.refs.input.selectionEnd && this.refs.input.selectionEnd < length + 1 && _value2.length && _value2.charAt(this.refs.input.selectionEnd) === ".") {
+	                        if (this.refs.input.selectionStart == this.refs.input.selectionEnd && this.refs.input.selectionEnd < length + 1 && _value.length && _value.charAt(this.refs.input.selectionEnd) === ".") {
 	                            e.preventDefault();
 	                            this.refs.input.selectionStart = this.refs.input.selectionEnd = this.refs.input.selectionEnd + 1;
 	                        }
@@ -534,7 +568,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'increase',
 	        value: function increase() {
-	            var _this3 = this;
+	            var _this4 = this;
 
 	            var _recursive = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
 
@@ -544,7 +578,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._step(1, callback);
 	            if (isNaN(this.state.value) || this.state.value < this.props.max) {
 	                this._timer = setTimeout(function () {
-	                    _this3.increase(true);
+	                    _this4.increase(true);
 	                }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
 	            }
 	        }
@@ -561,7 +595,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'decrease',
 	        value: function decrease() {
-	            var _this4 = this;
+	            var _this5 = this;
 
 	            var _recursive = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
 
@@ -571,7 +605,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._step(-1, callback);
 	            if (isNaN(this.state.value) || this.state.value > this.props.min) {
 	                this._timer = setTimeout(function () {
-	                    _this4.decrease(true);
+	                    _this5.decrease(true);
 	                }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
 	            }
 	        }
@@ -639,7 +673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this5 = this;
+	            var _this6 = this;
 
 	            var props = this.props;
 	            var state = this.state;
@@ -662,8 +696,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var defaultValue = _props.defaultValue;
 	            var onInvalid = _props.onInvalid;
 	            var onValid = _props.onValid;
+	            var strict = _props.strict;
 
-	            var rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'snap', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid']);
+	            var rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'snap', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid', 'strict']);
 
 	            // Build the styles
 
@@ -715,13 +750,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            };
 
+	            // incomplete number
 	            if (/^[+-.]{1,2}$/.test(state.stringValue)) {
 	                attrs.input.value = state.stringValue;
-	            } else if (state.value || state.value === 0) {
-	                attrs.input.value = this._format(state.value);
-	            } else {
-	                attrs.input.value = "";
 	            }
+
+	            // Not a number and not empty (loose mode only)
+	            else if (!this._isStrict && state.stringValue && !RE_NUMBER.test(state.stringValue)) {
+	                    attrs.input.value = state.stringValue;
+	                }
+
+	                // number
+	                else if (state.value || state.value === 0) {
+	                        attrs.input.value = this._format(state.value);
+	                    }
+
+	                    // empty
+	                    else {
+	                            attrs.input.value = "";
+	                        }
 
 	            if (hasFormControl && style !== false) {
 	                _extends(attrs.wrap.style, css['wrap.hasFormControl']);
@@ -745,19 +792,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    onTouchStart: this.onTouchStart.bind(this, 'up'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
-	                        _this5.setState({
+	                        _this6.setState({
 	                            btnUpHover: true
 	                        });
 	                    },
 	                    onMouseLeave: function onMouseLeave() {
-	                        _this5.stop();
-	                        _this5.setState({
+	                        _this6.stop();
+	                        _this6.setState({
 	                            btnUpHover: false,
 	                            btnUpActive: false
 	                        });
 	                    },
 	                    onMouseUp: function onMouseUp() {
-	                        _this5.setState({
+	                        _this6.setState({
 	                            btnUpHover: true,
 	                            btnUpActive: false
 	                        });
@@ -769,14 +816,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                        args[0].preventDefault();
 	                        args[0].persist();
-	                        _this5.setState({
+	                        _this6.setState({
 	                            btnUpHover: true,
 	                            btnUpActive: true,
 	                            inputFocus: true
 	                        }, function () {
-	                            _this5._invokeEventCallback.apply(_this5, ["onFocus"].concat(args));
+	                            _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
+	                            _this6.onMouseDown('up');
 	                        });
-	                        _this5.onMouseDown('up');
 	                    }
 	                });
 
@@ -784,19 +831,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    onTouchStart: this.onTouchStart.bind(this, 'down'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
-	                        _this5.setState({
+	                        _this6.setState({
 	                            btnDownHover: true
 	                        });
 	                    },
 	                    onMouseLeave: function onMouseLeave() {
-	                        _this5.stop();
-	                        _this5.setState({
+	                        _this6.stop();
+	                        _this6.setState({
 	                            btnDownHover: false,
 	                            btnDownActive: false
 	                        });
 	                    },
 	                    onMouseUp: function onMouseUp() {
-	                        _this5.setState({
+	                        _this6.setState({
 	                            btnDownHover: true,
 	                            btnDownActive: false
 	                        });
@@ -808,25 +855,28 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                        args[0].preventDefault();
 	                        args[0].persist();
-	                        _this5.setState({
+	                        _this6.setState({
 	                            btnDownHover: true,
 	                            btnDownActive: true,
 	                            inputFocus: true
 	                        }, function () {
-	                            _this5._invokeEventCallback.apply(_this5, ["onFocus"].concat(args));
+	                            _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
+	                            _this6.onMouseDown('down');
 	                        });
-	                        _this5.onMouseDown('down');
 	                    }
 	                });
 
 	                _extends(attrs.input, {
 	                    onChange: function onChange(e) {
 	                        var original = e.target.value;
-	                        var val = _this5._parse(original);
+	                        var val = _this6._parse(original);
 	                        if (isNaN(val)) {
 	                            val = null;
 	                        }
-	                        _this5.setState({ value: val, stringValue: original });
+	                        _this6.setState({
+	                            value: _this6._isStrict ? _this6._toNumber(val) : val,
+	                            stringValue: original
+	                        });
 	                    },
 	                    onKeyDown: this._onKeyDown.bind(this),
 	                    onInput: function onInput() {
@@ -834,16 +884,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            args[_key6] = arguments[_key6];
 	                        }
 
-	                        _this5.saveSelection();
-	                        _this5._invokeEventCallback.apply(_this5, ["onInput"].concat(args));
+	                        _this6.saveSelection();
+	                        _this6._invokeEventCallback.apply(_this6, ["onInput"].concat(args));
 	                    },
 	                    onSelect: function onSelect() {
 	                        for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
 	                            args[_key7] = arguments[_key7];
 	                        }
 
-	                        _this5.saveSelection();
-	                        _this5._invokeEventCallback.apply(_this5, ["onSelect"].concat(args));
+	                        _this6.saveSelection();
+	                        _this6._invokeEventCallback.apply(_this6, ["onSelect"].concat(args));
 	                    },
 	                    onFocus: function onFocus() {
 	                        for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
@@ -851,13 +901,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 
 	                        args[0].persist();
-	                        _this5.setState({ inputFocus: true }, function () {
-	                            var val = _this5._parse(args[0].target.value);
-	                            _this5.setState({
+	                        _this6.setState({ inputFocus: true }, function () {
+	                            var val = _this6._parse(args[0].target.value);
+	                            _this6.setState({
 	                                value: val,
 	                                stringValue: val
 	                            }, function () {
-	                                _this5._invokeEventCallback.apply(_this5, ["onFocus"].concat(args));
+	                                _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
 	                            });
 	                        });
 	                    },
@@ -866,13 +916,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            args[_key9] = arguments[_key9];
 	                        }
 
+	                        var _isStrict = _this6._isStrict;
+	                        _this6._isStrict = true;
 	                        args[0].persist();
-	                        _this5.setState({ inputFocus: false }, function () {
-	                            var val = _this5._parse(args[0].target.value);
-	                            _this5.setState({
+	                        _this6.setState({ inputFocus: false }, function () {
+	                            var val = _this6._parse(args[0].target.value);
+	                            _this6.setState({
 	                                value: val
 	                            }, function () {
-	                                _this5._invokeEventCallback.apply(_this5, ["onBlur"].concat(args));
+	                                _this6._invokeEventCallback.apply(_this6, ["onBlur"].concat(args));
+	                                _this6._isStrict = _isStrict;
 	                            });
 	                        });
 	                    }
@@ -951,6 +1004,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    size: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
 	    value: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
 	    defaultValue: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
+	    strict: _propTypes2.default.bool,
 	    mobile: function mobile(props, propName) {
 	        var prop = props[propName];
 	        if (prop !== true && prop !== false && prop !== 'auto' && typeof prop != 'function') {
@@ -962,10 +1016,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    step: 1,
 	    min: Number.MIN_SAFE_INTEGER || -9007199254740991,
 	    max: Number.MAX_SAFE_INTEGER || 9007199254740991,
-	    precision: 0,
+	    precision: null,
 	    parse: null,
 	    format: null,
 	    mobile: 'auto',
+	    strict: false,
 	    style: {}
 	};
 	NumericInput.style = {

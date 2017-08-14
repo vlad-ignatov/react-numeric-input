@@ -8,6 +8,9 @@ function testProp(cfg) {
     return Promise.all(cfg.map.map(entry => {
         return new Promise(resolve => {
             let props = { [cfg.propName] : entry.in }
+            if (entry.otherProps) {
+                props = { ...props, ...entry.otherProps}
+            }
             let app = TestUtils.renderIntoDocument(<NumericInput {...props} />)
             let result = cfg.getValue(app)
             expect(result).toEqual(
@@ -178,12 +181,18 @@ describe('NumericInput', () => {
             {
                 propName: "value",
                 map: [
-                    { in: ""       , out: ""    },
-                    { in: "a"      , out: "0"   },
-                    { in: "b"      , out: "0"   },
-                    { in: null     , out: ""    },
-                    { in: undefined, out: ""    },
-                    { in: 123      , out: "123" }
+                    { in: ""       , out: ""    , otherProps: { strict: true  }},
+                    { in: ""       , out: ""    , otherProps: { strict: false }},
+                    { in: "a"      , out: ""    , otherProps: { strict: true  }},
+                    { in: "a"      , out: "a"   , otherProps: { strict: false }},
+                    { in: "b"      , out: ""    , otherProps: { strict: true  }},
+                    { in: "b"      , out: "b"   , otherProps: { strict: false }},
+                    { in: null     , out: ""    , otherProps: { strict: true  }},
+                    { in: null     , out: ""    , otherProps: { strict: false }},
+                    { in: undefined, out: ""    , otherProps: { strict: true  }},
+                    { in: undefined, out: ""    , otherProps: { strict: false }},
+                    { in: 123      , out: "123" , otherProps: { strict: true  }},
+                    { in: 123      , out: "123" , otherProps: { strict: false }}
                 ]
             },
             {
@@ -191,12 +200,18 @@ describe('NumericInput', () => {
                 // attrName: "value",
                 getValue : (widget) => widget.refs.input.value,
                 map: [
-                    { in: ""       , out: ""    },
-                    { in: "a"      , out: "0"   },
-                    { in: "b"      , out: "0"   },
-                    { in: null     , out: ""    },
-                    { in: undefined, out: ""    },
-                    { in: 123      , out: "123" }
+                    { in: ""       , out: ""    , otherProps: { strict: true  }},
+                    { in: ""       , out: ""    , otherProps: { strict: false }},
+                    { in: "a"      , out: ""    , otherProps: { strict: true  }},
+                    { in: "a"      , out: "a"   , otherProps: { strict: false }},
+                    { in: "b"      , out: ""    , otherProps: { strict: true  }},
+                    { in: "b"      , out: "b"   , otherProps: { strict: false }},
+                    { in: null     , out: ""    , otherProps: { strict: true  }},
+                    { in: null     , out: ""    , otherProps: { strict: false }},
+                    { in: undefined, out: ""    , otherProps: { strict: true  }},
+                    { in: undefined, out: ""    , otherProps: { strict: false }},
+                    { in: 123      , out: "123" , otherProps: { strict: true  }},
+                    { in: 123      , out: "123" , otherProps: { strict: false }}
                 ]
             }//,
             // {
