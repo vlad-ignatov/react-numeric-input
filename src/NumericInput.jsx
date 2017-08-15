@@ -39,6 +39,14 @@ function removeClass(element, className) {
     }
 }
 
+function access(object, prop, defaultValue, ...args) {
+    let result = object[prop];
+    if (typeof result == "function") {
+        result = result(...args);
+    }
+    return result === undefined ? defaultValue : result;
+}
+
 /**
  * The structure of the InputEvents that we use (not complete but only the used
  * properties)
@@ -55,7 +63,7 @@ class NumericInput extends Component
         step         : PropTypes.number,
         min          : PropTypes.number,
         max          : PropTypes.number,
-        precision    : PropTypes.number,
+        precision    : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
         maxLength    : PropTypes.number,
         parse        : PropTypes.func,
         format       : PropTypes.func,
@@ -562,7 +570,8 @@ class NumericInput extends Component
         }
 
         if (this._isStrict) {
-            let q = Math.pow(10, this.props.precision === null ? 10 :this.props.precision);
+            let precision = access(this.props, "precision", null, this);
+            let q = Math.pow(10, precision === null ? 10 : precision);
             n = Math.min( Math.max(n, this.props.min), this.props.max );
             n = Math.round( n * q ) / q;
         }
@@ -593,9 +602,9 @@ class NumericInput extends Component
     _format(n: number): string
     {
         let _n = this._toNumber(n);
-
-        if (this.props.precision !== null) {
-            _n = n.toFixed(this.props.precision);
+        let precision = access(this.props, "precision", null, this);
+        if (precision !== null) {
+            _n = n.toFixed(precision);
         }
 
         _n += "";
