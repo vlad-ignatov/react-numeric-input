@@ -39,6 +39,18 @@ function removeClass(element, className) {
     }
 }
 
+/**
+ * Lookup the object.prop and returns it. If it happens to be a function,
+ * executes it with args and returns it's return value. It the prop does not
+ * exist on the object, or if it equals undefined, or if it is a function that
+ * returns undefined the defaultValue will be returned instead.
+ * @param  {Object} object       The object to look into
+ * @param  {String} prop         The property name
+ * @param  {*}      defaultValue The default value
+ * @param  {*[]}    args         Any additional arguments to pass to the
+ *                               function (if the prop is a function).
+ * @return {*}                   Whatever happens to be the return value
+ */
 function access(object, prop, defaultValue, ...args) {
     let result = object[prop];
     if (typeof result == "function") {
@@ -60,9 +72,9 @@ interface InputEvent {
 class NumericInput extends Component
 {
     static propTypes = {
-        step         : PropTypes.number,
-        min          : PropTypes.number,
-        max          : PropTypes.number,
+        step         : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
+        min          : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
+        max          : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
         precision    : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
         maxLength    : PropTypes.number,
         parse        : PropTypes.func,
@@ -285,6 +297,16 @@ class NumericInput extends Component
      * This is a static property and can be modified if needed.
      */
     static DELAY = 500;
+
+    /**
+     * The constant indicating up direction (or increasing in general)
+     */
+    static DIRECTION_UP = "up";
+
+    /**
+     * The constant indicating down direction (or decreasing in general)
+     */
+    static DIRECTION_DOWN = "down";
 
     /**
      * The step timer
@@ -573,7 +595,9 @@ class NumericInput extends Component
         if (this._isStrict) {
             let precision = access(this.props, "precision", null, this);
             let q = Math.pow(10, precision === null ? 10 : precision);
-            n = Math.min( Math.max(n, this.props.min), this.props.max );
+            let _min = access(this.props, "min", NumericInput.defaultProps.min, this);
+            let _max = access(this.props, "max", NumericInput.defaultProps.max, this);
+            n = Math.min( Math.max(n, _min), _max );
             n = Math.round( n * q ) / q;
         }
 
@@ -625,13 +649,27 @@ class NumericInput extends Component
     {
         let _isStrict = this._isStrict;
         this._isStrict = true;
-        let _n = this._toNumber((this.state.value || 0) + this.props.step * n);
+
+        let _step = access(
+            this.props,
+            "step",
+            NumericInput.defaultProps.step,
+            this,
+            (
+                n > 0 ?
+                NumericInput.DIRECTION_UP :
+                NumericInput.DIRECTION_DOWN
+            )
+        );
+
+        let _n = this._toNumber((this.state.value || 0) + _step * n);
 
         if (this.props.snap) {
-            _n = Math.round(_n / this.props.step) * this.props.step
+            _n = Math.round(_n / _step) * _step
         }
 
         this._isStrict = _isStrict;
+
         if (_n !== this.state.value) {
             this.setState({ value: _n, stringValue: _n }, callback);
             return true;
@@ -705,7 +743,8 @@ class NumericInput extends Component
     {
         this.stop();
         this._step(1, callback);
-        if (isNaN(this.state.value) || this.state.value < this.props.max) {
+        let _max = access(this.props, "max", NumericInput.defaultProps.max, this);
+        if (isNaN(this.state.value) || this.state.value < _max) {
             this._timer = setTimeout(() => {
                 this.increase(true);
             }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
@@ -724,7 +763,8 @@ class NumericInput extends Component
     {
         this.stop();
         this._step(-1, callback);
-        if (isNaN(this.state.value) || this.state.value > this.props.min) {
+        let _min = access(this.props, "min", NumericInput.defaultProps.min, this);
+        if (isNaN(this.state.value) || this.state.value > _min) {
             this._timer = setTimeout(() => {
                 this.decrease(true);
             }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);

@@ -293,19 +293,19 @@ exports['prop.step'] = browser => {
     browser.execute('$(".react-numeric-input input").focus();', [])
     browser.assert.value(".react-numeric-input input", "5.00");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.UP_ARROW]);
+    browser.keys([browser.Keys.ARROW_UP]);
     browser.assert.value(".react-numeric-input input", "5.25");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.UP_ARROW]);
+    browser.keys([browser.Keys.ARROW_UP]);
     browser.assert.value(".react-numeric-input input", "5.50");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.DOWN_ARROW]);
+    browser.keys([browser.Keys.ARROW_DOWN]);
     browser.assert.value(".react-numeric-input input", "5.25");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.DOWN_ARROW]);
+    browser.keys([browser.Keys.ARROW_DOWN]);
     browser.assert.value(".react-numeric-input input", "5.00");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.DOWN_ARROW]);
+    browser.keys([browser.Keys.ARROW_DOWN]);
     browser.assert.value(".react-numeric-input input", "4.75");
 };
 
@@ -314,10 +314,10 @@ exports['prop.min in strict mode'] = browser => {
     browser.execute('$(".react-numeric-input input").focus();', [])
     browser.assert.value(".react-numeric-input input", "3");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.DOWN_ARROW]);
+    browser.keys([browser.Keys.ARROW_DOWN]);
     browser.assert.value(".react-numeric-input input", "2");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.DOWN_ARROW]);
+    browser.keys([browser.Keys.ARROW_DOWN]);
     browser.assert.value(".react-numeric-input input", "2");
 };
 
@@ -326,10 +326,10 @@ exports['prop.min in loose mode'] = browser => {
     browser.execute('$(".react-numeric-input input").focus();', [])
     browser.assert.value(".react-numeric-input input", "3");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.DOWN_ARROW]);
+    browser.keys([browser.Keys.ARROW_DOWN]);
     browser.assert.value(".react-numeric-input input", "2");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.DOWN_ARROW]);
+    browser.keys([browser.Keys.ARROW_DOWN]);
     browser.assert.value(".react-numeric-input input", "2");
 };
 
@@ -338,10 +338,10 @@ exports['prop.max in strict mode'] = browser => {
     browser.execute('$(".react-numeric-input input").focus();', [])
     browser.assert.value(".react-numeric-input input", "3");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.UP_ARROW]);
+    browser.keys([browser.Keys.ARROW_UP]);
     browser.assert.value(".react-numeric-input input", "4");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.UP_ARROW]);
+    browser.keys([browser.Keys.ARROW_UP]);
     browser.assert.value(".react-numeric-input input", "4");
 };
 
@@ -350,10 +350,10 @@ exports['prop.max in loose mode'] = browser => {
     browser.execute('$(".react-numeric-input input").focus();', [])
     browser.assert.value(".react-numeric-input input", "3");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.UP_ARROW]);
+    browser.keys([browser.Keys.ARROW_UP]);
     browser.assert.value(".react-numeric-input input", "4");
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.UP_ARROW]);
+    browser.keys([browser.Keys.ARROW_UP]);
     browser.assert.value(".react-numeric-input input", "4");
 };
 
@@ -595,21 +595,55 @@ exports["Calls it's onKeyDown callback and makes the event cancelable"] = browse
     browser.expect.element('#log').value.to.equal('');
     browser.expect.element('.react-numeric-input input').value.to.equal('0');
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.UP_ARROW]);
+    browser.keys([browser.Keys.ARROW_UP]);
     browser.expect.element('#log').value.to.equal('test,');
     browser.expect.element('.react-numeric-input input').value.to.equal('1');
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.UP_ARROW]);
+    browser.keys([browser.Keys.ARROW_UP]);
     browser.expect.element('#log').value.to.equal('test,test,');
     browser.expect.element('.react-numeric-input input').value.to.equal('2');
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.UP_ARROW]);
+    browser.keys([browser.Keys.ARROW_UP]);
     browser.expect.element('#log').value.to.equal('test,test,test,');
     browser.expect.element('.react-numeric-input input').value.to.equal('2');
     browser.pause(PAUSE);
-    browser.keys([browser.Keys.UP_ARROW]);
+    browser.keys([browser.Keys.ARROW_UP]);
     browser.expect.element('#log').value.to.equal('test,test,test,test,');
     browser.expect.element('.react-numeric-input input').value.to.equal('2');
+};
+
+exports["supports dynamic max"] = browser => {
+    browser.execute(
+        `
+        window.max = 3;
+        ReactDOM.render(
+            React.createElement(NumericInput, {
+                max: function() { return max; },
+                value: 1
+            }),
+            document.getElementById("main")
+        )`,
+        []
+    );
+    browser.waitForElementPresent(".react-numeric-input", 500);
+    browser.execute('$(".react-numeric-input input").focus();', []);
+    browser.expect.element('.react-numeric-input input').value.to.equal('1');
+    browser.pause(PAUSE);
+    browser.keys([browser.Keys.ARROW_UP]);
+    browser.expect.element('.react-numeric-input input').value.to.equal('2');
+    browser.pause(PAUSE);
+    browser.keys([browser.Keys.ARROW_UP]);
+    browser.expect.element('.react-numeric-input input').value.to.equal('3');
+    browser.pause(PAUSE);
+    browser.keys([browser.Keys.ARROW_UP]);
+    browser.expect.element('.react-numeric-input input').value.to.equal('3');
+    browser.execute('window.max = 4;', []);
+    browser.pause(PAUSE);
+    browser.keys([browser.Keys.ARROW_UP]);
+    browser.expect.element('.react-numeric-input input').value.to.equal('4');
+    browser.pause(PAUSE);
+    browser.keys([browser.Keys.ARROW_UP]);
+    browser.expect.element('.react-numeric-input input').value.to.equal('4');
 };
 
 // =============================================================================
@@ -848,4 +882,3 @@ exports["Can NOT type arbitrary text in strict mode"] = browser => {
 //     // browser.getValue(".react-numeric-input input", result => console.log(result))
 //     // browser.assert.value(".react-numeric-input input", "1.5");
 // };
-

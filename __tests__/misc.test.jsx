@@ -234,4 +234,101 @@ describe ('NumericInput/misc', function() {
         expect(input.value).toEqual("9");
         done();
     });
+
+    it ("supports dynamic step", done => {
+        let widget = TestUtils.renderIntoDocument(
+            <NumericInput step={(component, direction) => {
+                if (component.state.value == 10) {
+                    return direction === NumericInput.DIRECTION_UP ?
+                    0.01 :
+                    0.1;
+                }
+                return NumericInput.defaultProps.step;
+            }} precision={2} value={9}/>
+        );
+        let input = widget.refs.input;
+        input.focus();
+        expect(input.value).toEqual('9.00');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
+        expect(input.value).toEqual('10.00');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
+        expect(input.value).toEqual('10.01');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
+        expect(input.value).toEqual('11.01');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
+        expect(input.value).toEqual('10.01');
+        input.setValue(11);
+        expect(input.value).toEqual('11.00');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
+        expect(input.value).toEqual('10.00');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
+        expect(input.value).toEqual('9.90');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
+        expect(input.value).toEqual('8.90');
+        done();
+    });
+
+    it ("supports dynamic precision", done => {
+        let widget = TestUtils.renderIntoDocument(
+            <NumericInput precision={component => {
+                return component.state.value;
+            }} value={0}/>
+        );
+        let input = widget.refs.input;
+        input.focus();
+        expect(input.value).toEqual('0');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
+        expect(input.value).toEqual('1.0');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
+        expect(input.value).toEqual('2.00');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
+        expect(input.value).toEqual('3.000');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
+        expect(input.value).toEqual('2.00');
+        done();
+    });
+
+    it ("supports dynamic min", done => {
+        let min = 2;
+        let widget = TestUtils.renderIntoDocument(
+            <NumericInput min={() => min} value={4}/>
+        );
+        let input = widget.refs.input;
+        input.focus();
+        expect(input.value).toEqual('4');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
+        expect(input.value).toEqual('3');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
+        expect(input.value).toEqual('2');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
+        expect(input.value).toEqual('2');
+        min = 1;
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
+        expect(input.value).toEqual('1');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
+        expect(input.value).toEqual('1');
+        done();
+    });
+
+    it ("supports dynamic max", done => {
+        let max = 3;
+        let widget = TestUtils.renderIntoDocument(
+            <NumericInput max={() => max} value={1}/>
+        );
+        let input = widget.refs.input;
+        input.focus();
+        expect(input.value).toEqual('1');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
+        expect(input.value).toEqual('2');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
+        expect(input.value).toEqual('3');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
+        expect(input.value).toEqual('3');
+        max = 4;
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
+        expect(input.value).toEqual('4');
+        TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
+        expect(input.value).toEqual('4');
+        done();
+    });
 });

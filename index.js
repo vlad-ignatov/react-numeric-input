@@ -93,6 +93,18 @@ module.exports =
 	    }
 	}
 
+	function access(object, prop, defaultValue) {
+	    var result = object[prop];
+	    if (typeof result == "function") {
+	        for (var _len = arguments.length, args = Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
+	            args[_key - 3] = arguments[_key];
+	        }
+
+	        result = result.apply(undefined, args);
+	    }
+	    return result === undefined ? defaultValue : result;
+	}
+
 	var NumericInput = function (_Component) {
 	    _inherits(NumericInput, _Component);
 
@@ -101,8 +113,8 @@ module.exports =
 
 	        _classCallCheck(this, NumericInput);
 
-	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	            args[_key] = arguments[_key];
+	        for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	            args[_key2] = arguments[_key2];
 	        }
 
 	        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(NumericInput)).call.apply(_Object$getPrototypeO, [this].concat(args)));
@@ -121,6 +133,7 @@ module.exports =
 	        }, _this._propsToState(_this.props));
 
 	        _this.stop = _this.stop.bind(_this);
+	        _this.onTouchEnd = _this.onTouchEnd.bind(_this);
 	        return _this;
 	    }
 
@@ -282,8 +295,11 @@ module.exports =
 	            }
 
 	            if (this._isStrict) {
-	                var q = Math.pow(10, this.props.precision === null ? 10 : this.props.precision);
-	                n = Math.min(Math.max(n, this.props.min), this.props.max);
+	                var precision = access(this.props, "precision", null, this);
+	                var q = Math.pow(10, precision === null ? 10 : precision);
+	                var _min = access(this.props, "min", NumericInput.defaultProps.min, this);
+	                var _max = access(this.props, "max", NumericInput.defaultProps.max, this);
+	                n = Math.min(Math.max(n, _min), _max);
 	                n = Math.round(n * q) / q;
 	            }
 
@@ -302,9 +318,9 @@ module.exports =
 	        key: '_format',
 	        value: function _format(n) {
 	            var _n = this._toNumber(n);
-
-	            if (this.props.precision !== null) {
-	                _n = n.toFixed(this.props.precision);
+	            var precision = access(this.props, "precision", null, this);
+	            if (precision !== null) {
+	                _n = n.toFixed(precision);
 	            }
 
 	            _n += "";
@@ -320,13 +336,17 @@ module.exports =
 	        value: function _step(n, callback) {
 	            var _isStrict = this._isStrict;
 	            this._isStrict = true;
-	            var _n = this._toNumber((this.state.value || 0) + this.props.step * n);
+
+	            var _step = access(this.props, "step", NumericInput.defaultProps.step, this, n > 0 ? NumericInput.DIRECTION_UP : NumericInput.DIRECTION_DOWN);
+
+	            var _n = this._toNumber((this.state.value || 0) + _step * n);
 
 	            if (this.props.snap) {
-	                _n = Math.round(_n / this.props.step) * this.props.step;
+	                _n = Math.round(_n / _step) * _step;
 	            }
 
 	            this._isStrict = _isStrict;
+
 	            if (_n !== this.state.value) {
 	                this.setState({ value: _n, stringValue: _n }, callback);
 	                return true;
@@ -337,8 +357,8 @@ module.exports =
 	    }, {
 	        key: '_onKeyDown',
 	        value: function _onKeyDown() {
-	            for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-	                args[_key2] = arguments[_key2];
+	            for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+	                args[_key3] = arguments[_key3];
 	            }
 
 	            args[0].persist();
@@ -386,7 +406,8 @@ module.exports =
 
 	            this.stop();
 	            this._step(1, callback);
-	            if (isNaN(this.state.value) || this.state.value < this.props.max) {
+	            var _max = access(this.props, "max", NumericInput.defaultProps.max, this);
+	            if (isNaN(this.state.value) || this.state.value < _max) {
 	                this._timer = setTimeout(function () {
 	                    _this4.increase(true);
 	                }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
@@ -403,7 +424,8 @@ module.exports =
 
 	            this.stop();
 	            this._step(-1, callback);
-	            if (isNaN(this.state.value) || this.state.value > this.props.min) {
+	            var _min = access(this.props, "min", NumericInput.defaultProps.min, this);
+	            if (isNaN(this.state.value) || this.state.value > _min) {
 	                this._timer = setTimeout(function () {
 	                    _this5.decrease(true);
 	                }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
@@ -429,13 +451,19 @@ module.exports =
 	            }
 	        }
 	    }, {
+	        key: 'onTouchEnd',
+	        value: function onTouchEnd(e) {
+	            e.preventDefault();
+	            this.stop();
+	        }
+	    }, {
 	        key: '_invokeEventCallback',
 	        value: function _invokeEventCallback(callbackName) {
 	            if (typeof this.props[callbackName] == "function") {
 	                var _props$callbackName;
 
-	                for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-	                    args[_key3 - 1] = arguments[_key3];
+	                for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+	                    args[_key4 - 1] = arguments[_key4];
 	                }
 
 	                (_props$callbackName = this.props[callbackName]).call.apply(_props$callbackName, [null].concat(args));
@@ -545,7 +573,7 @@ module.exports =
 
 	                _extends(attrs.btnUp, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'up'),
-	                    onTouchEnd: this.stop,
+	                    onTouchEnd: this.onTouchEnd,
 	                    onMouseEnter: function onMouseEnter() {
 	                        _this6.setState({
 	                            btnUpHover: true
@@ -565,8 +593,8 @@ module.exports =
 	                        });
 	                    },
 	                    onMouseDown: function onMouseDown() {
-	                        for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-	                            args[_key4] = arguments[_key4];
+	                        for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+	                            args[_key5] = arguments[_key5];
 	                        }
 
 	                        args[0].preventDefault();
@@ -584,7 +612,7 @@ module.exports =
 
 	                _extends(attrs.btnDown, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'down'),
-	                    onTouchEnd: this.stop,
+	                    onTouchEnd: this.onTouchEnd,
 	                    onMouseEnter: function onMouseEnter() {
 	                        _this6.setState({
 	                            btnDownHover: true
@@ -604,8 +632,8 @@ module.exports =
 	                        });
 	                    },
 	                    onMouseDown: function onMouseDown() {
-	                        for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-	                            args[_key5] = arguments[_key5];
+	                        for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+	                            args[_key6] = arguments[_key6];
 	                        }
 
 	                        args[0].preventDefault();
@@ -635,24 +663,24 @@ module.exports =
 	                    },
 	                    onKeyDown: this._onKeyDown.bind(this),
 	                    onInput: function onInput() {
-	                        for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-	                            args[_key6] = arguments[_key6];
+	                        for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+	                            args[_key7] = arguments[_key7];
 	                        }
 
 	                        _this6.saveSelection();
 	                        _this6._invokeEventCallback.apply(_this6, ["onInput"].concat(args));
 	                    },
 	                    onSelect: function onSelect() {
-	                        for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
-	                            args[_key7] = arguments[_key7];
+	                        for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
+	                            args[_key8] = arguments[_key8];
 	                        }
 
 	                        _this6.saveSelection();
 	                        _this6._invokeEventCallback.apply(_this6, ["onSelect"].concat(args));
 	                    },
 	                    onFocus: function onFocus() {
-	                        for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
-	                            args[_key8] = arguments[_key8];
+	                        for (var _len9 = arguments.length, args = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
+	                            args[_key9] = arguments[_key9];
 	                        }
 
 	                        args[0].persist();
@@ -667,8 +695,8 @@ module.exports =
 	                        });
 	                    },
 	                    onBlur: function onBlur() {
-	                        for (var _len9 = arguments.length, args = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
-	                            args[_key9] = arguments[_key9];
+	                        for (var _len10 = arguments.length, args = Array(_len10), _key10 = 0; _key10 < _len10; _key10++) {
+	                            args[_key10] = arguments[_key10];
 	                        }
 
 	                        var _isStrict = _this6._isStrict;
@@ -732,10 +760,10 @@ module.exports =
 	}(_react.Component);
 
 	NumericInput.propTypes = {
-	    step: _propTypes2.default.number,
-	    min: _propTypes2.default.number,
-	    max: _propTypes2.default.number,
-	    precision: _propTypes2.default.number,
+	    step: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.func]),
+	    min: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.func]),
+	    max: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.func]),
+	    precision: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.func]),
 	    maxLength: _propTypes2.default.number,
 	    parse: _propTypes2.default.func,
 	    format: _propTypes2.default.func,
@@ -922,6 +950,8 @@ module.exports =
 	};
 	NumericInput.SPEED = 50;
 	NumericInput.DELAY = 500;
+	NumericInput.DIRECTION_UP = "up";
+	NumericInput.DIRECTION_DOWN = "down";
 
 	module.exports = NumericInput;
 

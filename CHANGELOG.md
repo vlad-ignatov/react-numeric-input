@@ -1,10 +1,19 @@
+2.1.1
+--------------------------------------------------------------------------------
+* If the component gets re-rendered with new value the onChange callback will not be called.
+* If the component is rendered with invalid string value prop the input will render empty instead of having value of `0`.
+* Fixed an issue where preventDefault in "onTouchStart" causes double step to happen.
+* Added the `strict` prop.
+* Added e2e tests.
+* The precision prop can also be a function that can decide what precision to use at runtime.
+* The min, max and step props can also be functions.
+
 2.1.0
 --------------------------------------------------------------------------------
 * Added `snap` prop to make the value snap to the closest step when using buttons or up/down keys to change it.
 * Pass a reference to the input element to the onChange callbacks
 * Fixed an issue preventing the input from being editable when it's entire value is selected
 * Fixed an issue that might cause the component to loose its value if re-rendered without value prop
-
 
 2.0.9
 --------------------------------------------------------------------------------
