@@ -18,8 +18,8 @@ module.exports = {
         ]
     },
     externals : {
-        "react": "React",
-        "prop-types": "prop-types"
+        "react"     : "React",
+        "prop-types": "PropTypes"
     },
     resolve : {
         extensions : [ "", ".jsx", ".js" ]
