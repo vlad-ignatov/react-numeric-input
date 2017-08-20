@@ -2,10 +2,11 @@
 import React, { Component } from "react"
 import PropTypes from 'prop-types'
 
-const KEYCODE_UP   = 38;
-const KEYCODE_DOWN = 40;
-const IS_BROWSER   = typeof document != 'undefined';
-const RE_NUMBER    = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
+const KEYCODE_UP           = 38;
+const KEYCODE_DOWN         = 40;
+const IS_BROWSER           = typeof document != 'undefined';
+const RE_NUMBER            = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
+const RE_INCOMPLETE_NUMBER = /^([+-]|\.0*|[+-]\.0*|[+-]?\d+\.)?$/;
 
 /**
  * Just a simple helper to provide support for older IEs. This is not exactly a
@@ -59,15 +60,19 @@ function access(object, prop, defaultValue, ...args) {
     return result === undefined ? defaultValue : result;
 }
 
-/**
- * The structure of the InputEvents that we use (not complete but only the used
- * properties)
- */
-interface InputEvent {
-    type: string;
-    target: { value: string };
-    persist: Function;
+/* eslint-disable */
+type NumericInputState = {
+    selectionStart?: number | null;
+    selectionEnd  ?: number | null;
+    btnDownHover  ?: boolean;
+    btnDownActive ?: boolean;
+    btnUpHover    ?: boolean;
+    btnUpActive   ?: boolean;
+    inputFocus    ?: boolean;
+    value         ?: number | null;
+    stringValue   ?: string;
 }
+/*eslint-enable*/
 
 class NumericInput extends Component
 {
@@ -321,11 +326,16 @@ class NumericInput extends Component
      */
     _valid: string;
 
+    _isStrict: boolean;
+    _ignoreValueChange: boolean;
+    _isMounted: boolean;
+    onTouchEnd: Function;
+
     /**
      * The state of the component
      * @type {Object}
      */
-    state: Object;
+    state: NumericInputState;
 
     /**
      * The stop method (need to declare it here to use it in the constructor)
@@ -343,14 +353,15 @@ class NumericInput extends Component
         this._isStrict = !!this.props.strict;
 
         this.state = {
-            selectionStart: null,
-            selectionEnd  : null,
+            // selectionStart: null,
+            // selectionEnd  : null,
             btnDownHover  : false,
             btnDownActive : false,
             btnUpHover    : false,
             btnUpActive   : false,
             inputFocus    : false,
-            value         : null,
+            // value         : null,
+            stringValue   : "",
             ...this._propsToState(this.props)
         };
 
@@ -358,13 +369,13 @@ class NumericInput extends Component
         this.onTouchEnd = this.onTouchEnd.bind(this);
     }
 
-    _propsToState(props) {
-        let out = {};
+    _propsToState(props: Object) {
+        let out:NumericInputState = {};
 
         if (props.hasOwnProperty("value")) {
             out.stringValue = String(
                 props.value || props.value === 0 ? props.value : ''
-            ).trim()
+            ).trim();
 
             out.value = out.stringValue !== '' ?
                 this._parse(props.value) :
@@ -395,6 +406,7 @@ class NumericInput extends Component
      */
     componentWillReceiveProps(props: Object): void
     {
+        this._isStrict = !!props.strict;
         let nextState = this._propsToState(props)
         if (Object.keys(nextState).length) {
             this._ignoreValueChange = true
@@ -595,8 +607,8 @@ class NumericInput extends Component
         if (this._isStrict) {
             let precision = access(this.props, "precision", null, this);
             let q = Math.pow(10, precision === null ? 10 : precision);
-            let _min = access(this.props, "min", NumericInput.defaultProps.min, this);
-            let _max = access(this.props, "max", NumericInput.defaultProps.max, this);
+            let _min = +access(this.props, "min", NumericInput.defaultProps.min, this);
+            let _max = +access(this.props, "max", NumericInput.defaultProps.max, this);
             n = Math.min( Math.max(n, _min), _max );
             n = Math.round( n * q ) / q;
         }
@@ -612,7 +624,7 @@ class NumericInput extends Component
      */
     _parse(x: string): number
     {
-        x = String(x)
+        x = String(x);
         if (typeof this.props.parse == 'function') {
             return parseFloat(this.props.parse(x));
         }
@@ -650,7 +662,7 @@ class NumericInput extends Component
         let _isStrict = this._isStrict;
         this._isStrict = true;
 
-        let _step = access(
+        let _step = +access(
             this.props,
             "step",
             NumericInput.defaultProps.step,
@@ -671,7 +683,7 @@ class NumericInput extends Component
         this._isStrict = _isStrict;
 
         if (_n !== this.state.value) {
-            this.setState({ value: _n, stringValue: _n }, callback);
+            this.setState({ value: _n, stringValue: _n + "" }, callback);
             return true;
         }
 
@@ -743,8 +755,8 @@ class NumericInput extends Component
     {
         this.stop();
         this._step(1, callback);
-        let _max = access(this.props, "max", NumericInput.defaultProps.max, this);
-        if (isNaN(this.state.value) || this.state.value < _max) {
+        let _max = +access(this.props, "max", NumericInput.defaultProps.max, this);
+        if (isNaN(this.state.value) || +this.state.value < _max) {
             this._timer = setTimeout(() => {
                 this.increase(true);
             }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
@@ -763,8 +775,8 @@ class NumericInput extends Component
     {
         this.stop();
         this._step(-1, callback);
-        let _min = access(this.props, "min", NumericInput.defaultProps.min, this);
-        if (isNaN(this.state.value) || this.state.value > _min) {
+        let _min = +access(this.props, "min", NumericInput.defaultProps.min, this);
+        if (isNaN(this.state.value) || +this.state.value > _min) {
             this._timer = setTimeout(() => {
                 this.decrease(true);
             }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
@@ -926,24 +938,35 @@ class NumericInput extends Component
             }
         };
 
+        let stringValue = String(
+            // if state.stringValue is set and not empty
+            state.stringValue ||
+
+            // else if state.value is set and not null|undefined
+            (state.value || state.value === 0 ? state.value : "") ||
+
+            // or finally use ""
+            ""
+        );
+
         // incomplete number
-        if (/^[+-.]{1,2}$/.test(state.stringValue)) {
-            attrs.input.value = state.stringValue;
+        if (RE_INCOMPLETE_NUMBER.test(stringValue)) {
+            attrs.input.value = stringValue;
         }
 
         // Not a number and not empty (loose mode only)
-        else if (!this._isStrict && state.stringValue && !RE_NUMBER.test(state.stringValue)) {
-            attrs.input.value = state.stringValue;
+        else if (!this._isStrict && stringValue && !RE_NUMBER.test(stringValue)) {
+            attrs.input.value = stringValue;
         }
 
         // number
         else if (state.value || state.value === 0) {
-            attrs.input.value = this._format(state.value)
+            attrs.input.value = this._format(state.value);
         }
 
         // empty
         else {
-            attrs.input.value = ""
+            attrs.input.value = "";
         }
 
         if (hasFormControl && style !== false) {
@@ -1062,7 +1085,7 @@ class NumericInput extends Component
                         const val = this._parse(args[0].target.value);
                         this.setState({
                             value: val,
-                            stringValue: val
+                            stringValue: val || val === 0 ? val + "" : ""
                         }, () => {
                             this._invokeEventCallback("onFocus", ...args)
                         })

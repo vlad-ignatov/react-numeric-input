@@ -43,7 +43,7 @@ module.exports =
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -73,6 +73,7 @@ module.exports =
 	var KEYCODE_DOWN = 40;
 	var IS_BROWSER = typeof document != 'undefined';
 	var RE_NUMBER = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
+	var RE_INCOMPLETE_NUMBER = /^([+-]|\.0*|[+-]\.0*|[+-]?\d+\.)?$/;
 
 	function addClass(element, className) {
 	    if (element.classList) {
@@ -109,7 +110,7 @@ module.exports =
 	    _inherits(NumericInput, _Component);
 
 	    function NumericInput() {
-	        var _Object$getPrototypeO;
+	        var _ref;
 
 	        _classCallCheck(this, NumericInput);
 
@@ -117,19 +118,18 @@ module.exports =
 	            args[_key2] = arguments[_key2];
 	        }
 
-	        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(NumericInput)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+	        var _this = _possibleConstructorReturn(this, (_ref = NumericInput.__proto__ || Object.getPrototypeOf(NumericInput)).call.apply(_ref, [this].concat(args)));
 
 	        _this._isStrict = !!_this.props.strict;
 
 	        _this.state = _extends({
-	            selectionStart: null,
-	            selectionEnd: null,
 	            btnDownHover: false,
 	            btnDownActive: false,
 	            btnUpHover: false,
 	            btnUpActive: false,
 	            inputFocus: false,
-	            value: null
+
+	            stringValue: ""
 	        }, _this._propsToState(_this.props));
 
 	        _this.stop = _this.stop.bind(_this);
@@ -159,6 +159,7 @@ module.exports =
 	        value: function componentWillReceiveProps(props) {
 	            var _this2 = this;
 
+	            this._isStrict = !!props.strict;
 	            var nextState = this._propsToState(props);
 	            if (Object.keys(nextState).length) {
 	                this._ignoreValueChange = true;
@@ -236,7 +237,7 @@ module.exports =
 	    }, {
 	        key: 'checkValidity',
 	        value: function checkValidity() {
-	            var valid = undefined,
+	            var valid = void 0,
 	                validationError = "";
 
 	            var supportsValidation = !!this.refs.input.checkValidity;
@@ -297,8 +298,8 @@ module.exports =
 	            if (this._isStrict) {
 	                var precision = access(this.props, "precision", null, this);
 	                var q = Math.pow(10, precision === null ? 10 : precision);
-	                var _min = access(this.props, "min", NumericInput.defaultProps.min, this);
-	                var _max = access(this.props, "max", NumericInput.defaultProps.max, this);
+	                var _min = +access(this.props, "min", NumericInput.defaultProps.min, this);
+	                var _max = +access(this.props, "max", NumericInput.defaultProps.max, this);
 	                n = Math.min(Math.max(n, _min), _max);
 	                n = Math.round(n * q) / q;
 	            }
@@ -337,7 +338,7 @@ module.exports =
 	            var _isStrict = this._isStrict;
 	            this._isStrict = true;
 
-	            var _step = access(this.props, "step", NumericInput.defaultProps.step, this, n > 0 ? NumericInput.DIRECTION_UP : NumericInput.DIRECTION_DOWN);
+	            var _step = +access(this.props, "step", NumericInput.defaultProps.step, this, n > 0 ? NumericInput.DIRECTION_UP : NumericInput.DIRECTION_DOWN);
 
 	            var _n = this._toNumber((this.state.value || 0) + _step * n);
 
@@ -348,7 +349,7 @@ module.exports =
 	            this._isStrict = _isStrict;
 
 	            if (_n !== this.state.value) {
-	                this.setState({ value: _n, stringValue: _n }, callback);
+	                this.setState({ value: _n, stringValue: _n + "" }, callback);
 	                return true;
 	            }
 
@@ -400,14 +401,14 @@ module.exports =
 	        value: function increase() {
 	            var _this4 = this;
 
-	            var _recursive = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+	            var _recursive = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
 	            var callback = arguments[1];
 
 	            this.stop();
 	            this._step(1, callback);
-	            var _max = access(this.props, "max", NumericInput.defaultProps.max, this);
-	            if (isNaN(this.state.value) || this.state.value < _max) {
+	            var _max = +access(this.props, "max", NumericInput.defaultProps.max, this);
+	            if (isNaN(this.state.value) || +this.state.value < _max) {
 	                this._timer = setTimeout(function () {
 	                    _this4.increase(true);
 	                }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
@@ -418,14 +419,14 @@ module.exports =
 	        value: function decrease() {
 	            var _this5 = this;
 
-	            var _recursive = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+	            var _recursive = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
 	            var callback = arguments[1];
 
 	            this.stop();
 	            this._step(-1, callback);
-	            var _min = access(this.props, "min", NumericInput.defaultProps.min, this);
-	            if (isNaN(this.state.value) || this.state.value > _min) {
+	            var _min = +access(this.props, "min", NumericInput.defaultProps.min, this);
+	            if (isNaN(this.state.value) || +this.state.value > _min) {
 	                this._timer = setTimeout(function () {
 	                    _this5.decrease(true);
 	                }, _recursive ? NumericInput.SPEED : NumericInput.DELAY);
@@ -478,24 +479,23 @@ module.exports =
 	            var state = this.state;
 	            var css = {};
 
-	            var _props = this.props;
-	            var step = _props.step;
-	            var min = _props.min;
-	            var max = _props.max;
-	            var precision = _props.precision;
-	            var parse = _props.parse;
-	            var format = _props.format;
-	            var mobile = _props.mobile;
-	            var snap = _props.snap;
-	            var value = _props.value;
-	            var type = _props.type;
-	            var style = _props.style;
-	            var defaultValue = _props.defaultValue;
-	            var onInvalid = _props.onInvalid;
-	            var onValid = _props.onValid;
-	            var strict = _props.strict;
-
-	            var rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'snap', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid', 'strict']);
+	            var _props = this.props,
+	                step = _props.step,
+	                min = _props.min,
+	                max = _props.max,
+	                precision = _props.precision,
+	                parse = _props.parse,
+	                format = _props.format,
+	                mobile = _props.mobile,
+	                snap = _props.snap,
+	                value = _props.value,
+	                type = _props.type,
+	                style = _props.style,
+	                defaultValue = _props.defaultValue,
+	                onInvalid = _props.onInvalid,
+	                onValid = _props.onValid,
+	                strict = _props.strict,
+	                rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'snap', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid', 'strict']);
 
 	            for (var x in NumericInput.style) {
 	                css[x] = _extends({}, NumericInput.style[x], style ? style[x] || {} : {});
@@ -545,10 +545,12 @@ module.exports =
 	                }
 	            };
 
-	            if (/^[+-.]{1,2}$/.test(state.stringValue)) {
-	                attrs.input.value = state.stringValue;
-	            } else if (!this._isStrict && state.stringValue && !RE_NUMBER.test(state.stringValue)) {
-	                    attrs.input.value = state.stringValue;
+	            var stringValue = String(state.stringValue || (state.value || state.value === 0 ? state.value : "") || "");
+
+	            if (RE_INCOMPLETE_NUMBER.test(stringValue)) {
+	                attrs.input.value = stringValue;
+	            } else if (!this._isStrict && stringValue && !RE_NUMBER.test(stringValue)) {
+	                    attrs.input.value = stringValue;
 	                } else if (state.value || state.value === 0) {
 	                        attrs.input.value = this._format(state.value);
 	                    } else {
@@ -688,7 +690,7 @@ module.exports =
 	                            var val = _this6._parse(args[0].target.value);
 	                            _this6.setState({
 	                                value: val,
-	                                stringValue: val
+	                                stringValue: val || val === 0 ? val + "" : ""
 	                            }, function () {
 	                                _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
 	                            });
@@ -953,19 +955,20 @@ module.exports =
 	NumericInput.DIRECTION_UP = "up";
 	NumericInput.DIRECTION_DOWN = "down";
 
+
 	module.exports = NumericInput;
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = require("react");
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = require("prop-types");
 
-/***/ }
+/***/ })
 /******/ ]);
