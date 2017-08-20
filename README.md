@@ -14,7 +14,7 @@ numeric value).
 ```sh
 npm install react-numeric-input --save
 ```
-Then in your scrips:
+Then in your scripts:
 ```js
 // es6
 import NumericInput from 'react-numeric-input';
@@ -70,10 +70,10 @@ function myFormat(num) {
 Name         | Type                                | Default
 -------------|-------------------------------------|:-------:
 **value**    |`number` or `string`                 | `""` which converts to 0
-**min**      |`number`                             | `Number.MIN_SAFE_INTEGER`
-**max**      |`number`                             | `Number.MAX_SAFE_INTEGER`
-**step**     |`number`                             | 1
-**precision**|`number`                             | 0
+**min**      |`number` or `function`               | `Number.MIN_SAFE_INTEGER`
+**max**      |`number` or `function`               | `Number.MAX_SAFE_INTEGER`
+**step**     |`number` or `function`               | 1
+**precision**|`number` or `function`               | 0
 **parse**    |`function`                           | parseFloat
 **format**   |`function`                           | none
 **className**|`string`                             | none
@@ -148,14 +148,38 @@ example an input showing "12.30" will have `getValueAsNumber()` returning `12.3`
 is empty the result would be `0`.
 
 ### setValue()
-An external script that does not "understand" React can still work with this component by reading
-the `getValueAsNumber()` or by calling the `setValue()` method exposed on the input element. Here is
-an example with jQuery:
+An external script that does not "understand" React can still work with this
+component by reading the `getValueAsNumber()` or by calling the `setValue()`
+method exposed on the input element. Here is an example with jQuery:
 ```js
 $('input[name="some-input"]')[0].setValue('123mph');
 ```
-Calling this method will invoke the component's `parse` method with the provided argument and then
-it will `setState` causing the usual re-rendering.
+Calling this method will invoke the component's `parse` method with the provided
+argument and then it will `setState` causing the usual re-rendering.
+
+## function props
+In rare cases it might be better to "decide" what the value of certain prop is at
+runtime without having to through the entire ceremony of redux, flux, or whatever
+will make your component to be re-rendered with other props. For example one might
+want to have a variable `step` prop based on the current input value and the change
+direction:
+```js
+<NumericInput step={(component, direction) => {
+	// for values smaller than 10 the step is 0.1
+	// for values greater than 10 the step is 0.01
+	return component.state.value < 10 ? 0.1 : 0.01
+
+	// or have different step depending on the direction
+	return direction === NumericInput.DIRECTION_UP ? 0.01 : 0.1;
+
+	// or just obtain it from somewhere
+	return window.outerWidth % 100 + 1;
+}}>
+```
+The props that support being a function are currently `min`, `max`, `step` and
+`precision`. All those function will be passed the component instance as argument
+and the `step` will also receive the direction as second parameter.
+
 
 ## License
 MIT

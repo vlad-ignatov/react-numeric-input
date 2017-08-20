@@ -1,9 +1,9 @@
-2.1.1
+2.2.0
 --------------------------------------------------------------------------------
 * If the component gets re-rendered with new value the onChange callback will not be called.
 * If the component is rendered with invalid string value prop the input will render empty instead of having value of `0`.
 * Fixed an issue where preventDefault in "onTouchStart" causes double step to happen.
-* Added the `strict` prop.
+* Added the `strict` prop. In strict mode the value is converted to number (and formated) while the user types. In loose mode (the default mode) you can type anything and the value gets reformatted on blur.
 * Added e2e tests.
 * The precision prop can also be a function that can decide what precision to use at runtime.
 * The min, max and step props can also be functions.
