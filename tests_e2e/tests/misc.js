@@ -856,6 +856,54 @@ exports["Can NOT type arbitrary text in strict mode"] = browser => {
 };
 
 /**
+ * @see https://github.com/vlad-ignatov/react-numeric-input/issues/41
+ */
+exports["Does not reset the input value on re-render"] = browser => {
+    browser.execute(
+        `
+        function onChange() {
+            document.getElementById("log").value += "*";
+        }
+
+        class ParentComponent extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = { value: 1 };
+            }
+            render() {
+                return React.createElement(
+                    "div",
+                    null,
+                    [
+                        React.createElement("input", {
+                            type: "text",
+                            id: "log",
+                            onClick: () => {
+                                this.setState({ value: this.state.value + 1 });
+                            }
+                        }),
+                        React.createElement(NumericInput)
+                    ]
+                );
+            }
+        }
+
+        ReactDOM.render(
+            React.createElement(ParentComponent),
+            document.getElementById("main")
+        )`,
+        []
+    );
+    browser.waitForElementPresent(".react-numeric-input", 500);
+    browser.execute('$(".react-numeric-input input").focus();', []);
+    browser.pause(PAUSE);
+    browser.keys(browser.Keys.ARROW_UP);
+    browser.assert.value(".react-numeric-input input", "1");
+    browser.click("#log");
+    browser.assert.value(".react-numeric-input input", "1");
+};
+
+/**
  * @see https://github.com/vlad-ignatov/react-numeric-input/issues/21
  * Answer: dynamic precision (no precision) as bad idea since for example
  * in JS 0.2 + 0.4 = 0.6000000000000001
