@@ -8,7 +8,7 @@ the browsers. Additionally this component offers more flexible options and can
 be used for any values (differently formatted representations of the internal
 numeric value).
 
-[Live demo](http://vlad-ignatov.github.io/react-numeric-input/examples/v2.1.0/index.html)
+[Live demo](http://vlad-ignatov.github.io/react-numeric-input/)
 
 ## Installation
 ```sh
@@ -64,6 +64,17 @@ function myFormat(num) {
     return num + '$';
 }
 <NumericInput precision={2} value={50.3} step={0.1} format={myFormat}/>
+```
+Please note that the example above is fine but in most situations if you have custom
+`format` function you will also need to provide custom `parse` function that is able to
+convert whatever the `format` returns back to numeric value. In the example above the
+built-in `parse` function will strip the "$" suffix because internally it uses `parseFloat`.
+However, if the `format` function was returning `"$" + num`, then the `parse` function
+should do something like:
+```js
+function parse(stringValue) {
+    return stringValue.replace(/^\$/, "");
+}
 ```
 
 ## Props
