@@ -131,7 +131,6 @@ module.exports =
 
 	            stringValue: ""
 	        }, _this._propsToState(_this.props));
-
 	        _this.stop = _this.stop.bind(_this);
 	        _this.onTouchEnd = _this.onTouchEnd.bind(_this);
 	        return _this;
@@ -516,12 +515,16 @@ module.exports =
 	                wrap: {
 	                    style: style === false ? null : css.wrap,
 	                    className: 'react-numeric-input',
-	                    ref: 'wrapper',
+	                    ref: function ref(e) {
+	                        _this6.refsWrapper = e;
+	                    },
 	                    onMouseUp: undefined,
 	                    onMouseLeave: undefined
 	                },
 	                input: _extends({
-	                    ref: 'input',
+	                    ref: function ref(e) {
+	                        _this6.refsInput = e;
+	                    },
 	                    type: 'text',
 	                    style: style === false ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
 	                }, rest),
