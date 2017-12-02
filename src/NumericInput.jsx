@@ -366,6 +366,9 @@ class NumericInput extends Component
         };
         this.stop = this.stop.bind(this);
         this.onTouchEnd = this.onTouchEnd.bind(this);
+        this.refsInput = {};
+        this.refsWrapper = {};
+
     }
 
     _propsToState(props: Object) {

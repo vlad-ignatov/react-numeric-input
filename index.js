@@ -133,6 +133,9 @@ module.exports =
 	        }, _this._propsToState(_this.props));
 	        _this.stop = _this.stop.bind(_this);
 	        _this.onTouchEnd = _this.onTouchEnd.bind(_this);
+	        _this.refsInput = {};
+	        _this.refsWrapper = {};
+
 	        return _this;
 	    }
 
