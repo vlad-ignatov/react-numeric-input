@@ -15,8 +15,8 @@ describe('NumericInput', function() {
 
     it('works like inpit[type="number"] by default', () => {
         var widget = TestUtils.renderIntoDocument(<NumericInput />);
-        expect(widget.refs.input.value).toEqual('');
-        expect(widget.refs.input.type).toEqual('text');
+        expect(widget.refsInput.value).toEqual('');
+        expect(widget.refsInput.type).toEqual('text');
     });
 
     it('accepts all the props', () => {
@@ -30,7 +30,7 @@ describe('NumericInput', function() {
                     className="form-control"
                 />
             ),
-            inputNode  = widget.refs.input;
+            inputNode  = widget.refsInput;
 
         // Test the precision
         expect(inputNode.value).toEqual('5.00');
@@ -53,19 +53,19 @@ describe('NumericInput', function() {
 
     it('accepts value of 0', () => {
         var widget = TestUtils.renderIntoDocument(<NumericInput value={0}/>),
-            inputNode = widget.refs.input;
+            inputNode = widget.refsInput;
         expect(inputNode.value).toEqual('0');
     });
 
     it('accepts value of "0"', () => {
         var widget = TestUtils.renderIntoDocument(<NumericInput value="0"/>),
-            inputNode = widget.refs.input;
+            inputNode = widget.refsInput;
         expect(inputNode.value).toEqual('0');
     });
 
     it('accepts value of ""', () => {
         var widget = TestUtils.renderIntoDocument(<NumericInput value=""/>),
-            inputNode = widget.refs.input;
+            inputNode = widget.refsInput;
         expect(inputNode.value).toEqual('');
     });
 
@@ -196,9 +196,9 @@ describe('NumericInput', function() {
     // setValue() and getValueAsNumber() ---------------------------------------
     it('exposes setValue() and getValueAsNumber() on the input', () => {
         var widget = TestUtils.renderIntoDocument(<NumericInput />);
-        expect(widget.refs.input.getValueAsNumber()).toEqual(0);
-        widget.refs.input.setValue(123.56);
-        expect(widget.refs.input.getValueAsNumber()).toEqual(123.56);
+        expect(widget.refsInput.getValueAsNumber()).toEqual(0);
+        widget.refsInput.setValue(123.56);
+        expect(widget.refsInput.getValueAsNumber()).toEqual(123.56);
     });
 
     // Testing styles ----------------------------------------------------------
@@ -372,7 +372,7 @@ describe('NumericInput', function() {
             ),
             widgetNode = ReactDOM.findDOMNode(widget),
             btnUpNode  = widgetNode.firstChild.nextElementSibling,
-            inputNode  = widget.refs.input;
+            inputNode  = widget.refsInput;
 
         expect(inputNode.value).toEqual('0x');
         expect(value).toEqual(null);
@@ -393,7 +393,7 @@ describe('NumericInput', function() {
         var widget = TestUtils.renderIntoDocument(
                 <NumericInput onFocus={onFocus} onBlur={onBlur} />
             ),
-            inputNode = widget.refs.input;
+            inputNode = widget.refsInput;
 
         expect(hasFocus).toEqual(null);
         TestUtils.Simulate.focus(inputNode);
@@ -414,7 +414,7 @@ describe('NumericInput', function() {
         widget = TestUtils.renderIntoDocument(
             <NumericInput value={0} onKeyDown={onKeyDown} />
         );
-        inputNode = widget.refs.input;
+        inputNode = widget.refsInput;
 
         expect(hits).toEqual(0);
         expect(inputNode.value).toEqual('0');

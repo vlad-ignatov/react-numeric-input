@@ -32,7 +32,7 @@ describe ('NumericInput/misc', function() {
         Promise.all(tests.map(test => (new Promise((resolve, reject) => {
             let { selectionStart, selectionEnd, ...props } = test.from;
             let widget = TestUtils.renderIntoDocument(<NumericInput {...props}/>);
-            let input = widget.refs.input;
+            let input = widget.refsInput;
 
             try {
                 expect(input.value).toEqual(props.value);

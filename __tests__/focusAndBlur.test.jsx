@@ -26,16 +26,16 @@ describe('NumericInput', function() {
             window.focus()
             // Trigger a focus on the input and assert that
             // the onFocus callback receives it
-            TestUtils.Simulate.focus(widget.refs.input)
+            TestUtils.Simulate.focus(widget.refsInput)
 
             setTimeout(() => {
                 expect(onFocusCalls).toEqual(1)
 
                 // Now blur and then click on the up button. That should return
                 // the focus back to the input and call the onFocus callback again
-                TestUtils.Simulate.blur(widget.refs.input)
+                TestUtils.Simulate.blur(widget.refsInput)
                 setTimeout(() => {
-                    TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling)
+                    TestUtils.Simulate.mouseDown(widget.refsInput.nextElementSibling)
                     setTimeout(() => {
                         expect(onFocusCalls).toEqual(2)
                         done()
@@ -61,7 +61,7 @@ describe('NumericInput', function() {
         window.focus()
 
         // Start by focusing the input
-        TestUtils.Simulate.focus(widget.refs.input)
+        TestUtils.Simulate.focus(widget.refsInput)
 
         // Test again to see if after focus the input didn't blur somehow
         setTimeout(() => {
@@ -69,17 +69,17 @@ describe('NumericInput', function() {
 
             // Trigger a blur on the input and assert that
             // the onBlur callback receives it
-            TestUtils.Simulate.blur(widget.refs.input)
+            TestUtils.Simulate.blur(widget.refsInput)
             setTimeout(() => {
                 expect(onBlurCalls).toEqual(1)
 
                 // Hit the up button. This should bring the focus back to the
                 // input
-                TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling)
+                TestUtils.Simulate.mouseDown(widget.refsInput.nextElementSibling)
                 setTimeout(() => {
 
                     // Now blur it again and see if it counts
-                    TestUtils.Simulate.blur(widget.refs.input)
+                    TestUtils.Simulate.blur(widget.refsInput)
                     setTimeout(() => {
                         expect(onBlurCalls).toEqual(2)
                         done()
@@ -102,7 +102,7 @@ describe('NumericInput', function() {
 
         // Rendering must bring the focus to the input
         setTimeout(() => {
-            if (document.activeElement === widget.refs.input) {
+            if (document.activeElement === widget.refsInput) {
                 expect(onFocusCalls).toEqual(1)
                 done()
             }
