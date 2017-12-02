@@ -881,12 +881,12 @@ class NumericInput extends Component
             wrap : {
                 style       : style === false ? null : css.wrap,
                 className   : 'react-numeric-input',
-                ref: (e)=>{this.refsWrapper=e},
+                ref: (e)=>{if(e!=null && e!= undefined){this.refsWrapper=e;}},
                 onMouseUp   : undefined,
                 onMouseLeave: undefined
             },
             input : {
-                ref: (e)=>{this.refsInput=e},
+                ref: (e)=>{if(e!=null && e!= undefined){this.refsInput=e;}},
                 type: 'text',
                 style: style === false ? null : Object.assign(
                     {},

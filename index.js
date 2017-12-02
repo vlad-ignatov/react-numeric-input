@@ -519,14 +519,18 @@ module.exports =
 	                    style: style === false ? null : css.wrap,
 	                    className: 'react-numeric-input',
 	                    ref: function ref(e) {
-	                        _this6.refsWrapper = e;
+	                        if (e != null && e != undefined) {
+	                            _this6.refsWrapper = e;
+	                        }
 	                    },
 	                    onMouseUp: undefined,
 	                    onMouseLeave: undefined
 	                },
 	                input: _extends({
 	                    ref: function ref(e) {
-	                        _this6.refsInput = e;
+	                        if (e != null && e != undefined) {
+	                            _this6.refsInput = e;
+	                        }
 	                    },
 	                    type: 'text',
 	                    style: style === false ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
