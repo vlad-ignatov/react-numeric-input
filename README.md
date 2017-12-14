@@ -8,7 +8,8 @@ the browsers. Additionally this component offers more flexible options and can
 be used for any values (differently formatted representations of the internal
 numeric value).
 
-[Live demo](http://vlad-ignatov.github.io/react-numeric-input/)
+![Demo](https://i.imgur.com/uUnxO73.gif)
+### [**Live demo**](http://vlad-ignatov.github.io/react-numeric-input/)
 
 ## Installation
 ```sh
