@@ -11,7 +11,7 @@ const DELAY        = NumericInput.DELAY;
 
 
 describe('NumericInput', function() {
-    this.timeout(10000);
+    this.timeout(20000);
 
     it('works like inpit[type="number"] by default', () => {
         var widget = TestUtils.renderIntoDocument(<NumericInput />);
