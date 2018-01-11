@@ -747,6 +747,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                format = _props.format,
 	                mobile = _props.mobile,
 	                snap = _props.snap,
+	                componentClass = _props.componentClass,
 	                value = _props.value,
 	                type = _props.type,
 	                style = _props.style,
@@ -754,7 +755,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                onInvalid = _props.onInvalid,
 	                onValid = _props.onValid,
 	                strict = _props.strict,
-	                rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'snap', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid', 'strict']);
+	                rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'snap', 'componentClass', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid', 'strict']);
 
 	            // Build the styles
 
@@ -1003,11 +1004,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 
+	            var InputTag = componentClass || 'input';
+
 	            if (mobile) {
 	                return _react2.default.createElement(
 	                    'span',
 	                    attrs.wrap,
-	                    _react2.default.createElement('input', attrs.input),
+	                    _react2.default.createElement(InputTag, attrs.input),
 	                    _react2.default.createElement(
 	                        'b',
 	                        attrs.btnUp,
@@ -1025,7 +1028,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return _react2.default.createElement(
 	                'span',
 	                attrs.wrap,
-	                _react2.default.createElement('input', attrs.input),
+	                _react2.default.createElement(InputTag, attrs.input),
 	                _react2.default.createElement(
 	                    'b',
 	                    attrs.btnUp,
@@ -1072,6 +1075,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
 	    defaultValue: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
 	    strict: _propTypes2.default.bool,
+	    componentClass: _propTypes2.default.string,
 	    mobile: function mobile(props, propName) {
 	        var prop = props[propName];
 	        if (prop !== true && prop !== false && prop !== 'auto' && typeof prop != 'function') {
@@ -1088,6 +1092,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    format: null,
 	    mobile: 'auto',
 	    strict: false,
+	    componentClass: "input",
 	    style: {}
 	};
 	NumericInput.style = {
@@ -1215,7 +1220,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // The input (input[type="text"])
 	    input: {
 	        paddingRight: '3ex',
-	        boxSizing: 'border-box'
+	        boxSizing: 'border-box',
+	        fontSize: 'inherit'
 	    },
 
 	    // The input with bootstrap class
