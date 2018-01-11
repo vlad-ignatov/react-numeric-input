@@ -266,7 +266,8 @@ class NumericInput extends Component
         // The input (input[type="text"])
         input: {
             paddingRight: '3ex',
-            boxSizing   : 'border-box'
+            boxSizing   : 'border-box',
+            fontSize    : 'inherit'
         },
 
         // The input with bootstrap class
