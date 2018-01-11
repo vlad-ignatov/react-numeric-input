@@ -4,6 +4,7 @@
 * Added the componentClass prop (thanks to @Yukioru)
 * Fixed small issues in tests
 * Added live demo preview (thanks to @ipiranhaa)
+* Accept React 16 as peer dependency
 
 2.2.0
 --------------------------------------------------------------------------------
