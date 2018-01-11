@@ -79,22 +79,23 @@ function parse(stringValue) {
 ```
 
 ## Props
-Name         | Type                                | Default
--------------|-------------------------------------|:-------:
-**value**    |`number` or `string`                 | `""` which converts to 0
-**min**      |`number` or `function`               | `Number.MIN_SAFE_INTEGER`
-**max**      |`number` or `function`               | `Number.MAX_SAFE_INTEGER`
-**step**     |`number` or `function`               | 1
-**precision**|`number` or `function`               | 0
-**parse**    |`function`                           | parseFloat
-**format**   |`function`                           | none
-**className**|`string`                             | none
-**disabled** |`boolean`                            | none
-**readOnly** |`boolean`                            | none
-**style**    |`object` or `false`                  | none
-**size**     |`number` or `string`                 | none
-**mobile**   |`true`, `false`, 'auto' or `function`|`auto`
-**snap**     |`boolean`                            | none (false)
+Name              | Type                                | Default
+------------------|-------------------------------------|:-------:
+**value**         |`number` or `string`                 |`""` which converts to 0
+**min**           |`number` or `function`               |`Number.MIN_SAFE_INTEGER`
+**max**           |`number` or `function`               |`Number.MAX_SAFE_INTEGER`
+**step**          |`number` or `function`               | 1
+**precision**     |`number` or `function`               | 0
+**parse**         |`function`                           | parseFloat
+**format**        |`function`                           | none
+**className**     |`string`                             | none
+**disabled**      |`boolean`                            | none
+**readOnly**      |`boolean`                            | none
+**style**         |`object` or `false`                  | none
+**size**          |`number` or `string`                 | none
+**mobile**        |`true`, `false`, 'auto' or `function`|`auto`
+**snap**          |`boolean`                            | none (false)
+**componentClass**|`string`                             |`input`
 
 Any other option is passed directly the input created by the component. Just
 don't forget to camelCase the attributes. For example `readonly` must be `readOnly`.
