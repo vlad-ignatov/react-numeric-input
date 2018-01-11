@@ -1112,11 +1112,13 @@ class NumericInput extends Component
                 Object.assign(attrs.input.style, css['input:disabled'])
             }
         }
+        
+        const InputTag = props.componentClass || 'input';
 
         if (mobile) {
             return (
                 <span {...attrs.wrap}>
-                    <input {...attrs.input}/>
+                    <InputTag {...attrs.input}/>
                     <b {...attrs.btnUp}>
                         <i style={ style === false ? null : css.minus }/>
                         <i style={ style === false ? null : css.plus }/>
@@ -1130,7 +1132,7 @@ class NumericInput extends Component
 
         return (
             <span {...attrs.wrap}>
-                <input {...attrs.input}/>
+                <InputTag {...attrs.input}/>
                 <b {...attrs.btnUp}>
                     <i style={ style === false ? null : css.arrowUp }/>
                 </b>
