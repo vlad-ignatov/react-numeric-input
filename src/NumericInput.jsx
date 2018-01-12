@@ -333,6 +333,8 @@ class NumericInput extends Component
     _ignoreValueChange: boolean;
     _isMounted: boolean;
     onTouchEnd: Function;
+    refsWrapper: Object;
+    refsInput: Object;
 
     /**
      * The state of the component
