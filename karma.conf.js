@@ -12,6 +12,7 @@ module.exports = function (config) {
                 'Safari'
             ],
         singleRun: true,
+        browserNoActivityTimeout: 30000,
         frameworks: [ 'mocha' ],
         files: [
 

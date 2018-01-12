@@ -1,3 +1,11 @@
+2.2.1
+--------------------------------------------------------------------------------
+* The input will now use "fontSize: inherit" style.
+* Added the componentClass prop (thanks to @Yukioru)
+* Fixed small issues in tests
+* Added live demo preview (thanks to @ipiranhaa)
+* Accept React 16 as peer dependency
+
 2.2.0
 --------------------------------------------------------------------------------
 * If the component gets re-rendered with new value the onChange callback will not be called.

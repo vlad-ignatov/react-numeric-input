@@ -105,6 +105,7 @@ class NumericInput extends Component
         value        : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         defaultValue : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         strict       : PropTypes.bool,
+        componentClass: PropTypes.string,
         mobile(props, propName) {
             let prop = props[propName]
             if (prop !== true && prop !== false && prop !== 'auto' &&
@@ -121,15 +122,16 @@ class NumericInput extends Component
      * integers
      */
     static defaultProps = {
-        step      : 1,
-        min       : Number.MIN_SAFE_INTEGER || -9007199254740991,
-        max       : Number.MAX_SAFE_INTEGER ||  9007199254740991,
-        precision : null,
-        parse     : null,
-        format    : null,
-        mobile    : 'auto',
-        strict    : false,
-        style     : {}
+        step          : 1,
+        min           : Number.MIN_SAFE_INTEGER || -9007199254740991,
+        max           : Number.MAX_SAFE_INTEGER ||  9007199254740991,
+        precision     : null,
+        parse         : null,
+        format        : null,
+        mobile        : 'auto',
+        strict        : false,
+        componentClass: "input",
+        style         : {}
     };
 
     /**
@@ -264,7 +266,8 @@ class NumericInput extends Component
         // The input (input[type="text"])
         input: {
             paddingRight: '3ex',
-            boxSizing   : 'border-box'
+            boxSizing   : 'border-box',
+            fontSize    : 'inherit'
         },
 
         // The input with bootstrap class
@@ -848,7 +851,7 @@ class NumericInput extends Component
 
         let {
             // These are ignored in rendering
-            step, min, max, precision, parse, format, mobile, snap,
+            step, min, max, precision, parse, format, mobile, snap, componentClass,
             value, type, style, defaultValue, onInvalid, onValid, strict,
 
             // The rest are passed to the input
@@ -1115,10 +1118,12 @@ class NumericInput extends Component
             }
         }
 
+        const InputTag = componentClass || 'input';
+
         if (mobile) {
             return (
                 <span {...attrs.wrap}>
-                    <input {...attrs.input}/>
+                    <InputTag {...attrs.input}/>
                     <b {...attrs.btnUp}>
                         <i style={ style === false ? null : css.minus }/>
                         <i style={ style === false ? null : css.plus }/>
@@ -1132,7 +1137,7 @@ class NumericInput extends Component
 
         return (
             <span {...attrs.wrap}>
-                <input {...attrs.input}/>
+                <InputTag {...attrs.input}/>
                 <b {...attrs.btnUp}>
                     <i style={ style === false ? null : css.arrowUp }/>
                 </b>
