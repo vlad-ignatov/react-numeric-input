@@ -558,9 +558,11 @@ module.exports =
 
 	            var stringValue = String(state.stringValue || (state.value || state.value === 0 ? state.value : "") || "");
 
-	            if (RE_INCOMPLETE_NUMBER.test(stringValue)) {
+	            var loose = !this._isStrict && this.state.inputFocus;
+
+	            if (loose && RE_INCOMPLETE_NUMBER.test(stringValue)) {
 	                attrs.input.value = stringValue;
-	            } else if (!this._isStrict && stringValue && !RE_NUMBER.test(stringValue)) {
+	            } else if (loose && stringValue && !RE_NUMBER.test(stringValue)) {
 	                    attrs.input.value = stringValue;
 	                } else if (state.value || state.value === 0) {
 	                        attrs.input.value = this._format(state.value);

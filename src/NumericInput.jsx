@@ -956,13 +956,15 @@ class NumericInput extends Component
             ""
         );
 
+        let loose = !this._isStrict && this.state.inputFocus
+
         // incomplete number
-        if (RE_INCOMPLETE_NUMBER.test(stringValue)) {
+        if (loose && RE_INCOMPLETE_NUMBER.test(stringValue)) {
             attrs.input.value = stringValue;
         }
 
         // Not a number and not empty (loose mode only)
-        else if (!this._isStrict && stringValue && !RE_NUMBER.test(stringValue)) {
+        else if (loose && stringValue && !RE_NUMBER.test(stringValue)) {
             attrs.input.value = stringValue;
         }
 
