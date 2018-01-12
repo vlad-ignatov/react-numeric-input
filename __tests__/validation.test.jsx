@@ -43,7 +43,7 @@ describe('NumericInput', function() {
             ).toEqual(false)
 
             expect(
-                widget.refs.wrapper.className.indexOf(INVALID_CLASS),
+                widget.refsWrapper.className.indexOf(INVALID_CLASS),
                 "Must not have the '" + INVALID_CLASS + "' class"
             ).toEqual(-1)
 
@@ -63,15 +63,15 @@ describe('NumericInput', function() {
         )
 
         setTimeout(() => {
-            expect(widget.refs.input.required).toEqual(true, "Must be required")
-            expect(widget.refs.input.validity.valid).toEqual(false, "Must not be valid")
-            expect(widget.refs.input.value).toEqual("", "Must have empty value")
+            expect(widget.refsInput.required).toEqual(true, "Must be required")
+            expect(widget.refsInput.validity.valid).toEqual(false, "Must not be valid")
+            expect(widget.refsInput.value).toEqual("", "Must have empty value")
             expect(onInvalidCalled).toEqual(
                 true,
                 "Must call the onInvalid callback"
             )
             expect(
-                widget.refs.wrapper.className.indexOf(INVALID_CLASS),
+                widget.refsWrapper.className.indexOf(INVALID_CLASS),
                 "Must have the '" + INVALID_CLASS + "' class"
             ).toNotEqual(-1)
             done()
@@ -90,8 +90,8 @@ describe('NumericInput', function() {
         )
 
         setTimeout(() => {
-            expect(widget.refs.input.value).toEqual('1234')
-            expect(widget.refs.wrapper.className.indexOf(INVALID_CLASS)).toNotEqual(-1)
+            expect(widget.refsInput.value).toEqual('1234')
+            expect(widget.refsWrapper.className.indexOf(INVALID_CLASS)).toNotEqual(-1)
             expect(onInvalidCalled).toEqual(
                 true,
                 "Must trigger 'invalid' if the initial value is longer than the maxLength"
@@ -112,7 +112,7 @@ describe('NumericInput', function() {
         )
 
         setTimeout(() => {
-            expect(widget.refs.wrapper.className.indexOf(INVALID_CLASS)).toNotEqual(-1)
+            expect(widget.refsWrapper.className.indexOf(INVALID_CLASS)).toNotEqual(-1)
             expect(onInvalidCalled).toEqual(true)
             done()
         }, 50)
@@ -130,7 +130,7 @@ describe('NumericInput', function() {
         )
 
         setTimeout(() => {
-            expect(widget.refs.wrapper.className.indexOf(INVALID_CLASS)).toEqual(-1)
+            expect(widget.refsWrapper.className.indexOf(INVALID_CLASS)).toEqual(-1)
             expect(onInvalidCalled).toEqual(false)
             done()
         }, 50)
@@ -149,12 +149,12 @@ describe('NumericInput', function() {
             <NumericInput pattern="\\d+" value={12.34} precision={2} onInvalid={ testInvalidEvent } />
         )
 
-        widget.refs.input.value = "abc"
-        widget.refs.input.setCustomValidity("This is a test")
-        TestUtils.Simulate.change(widget.refs.input)
+        widget.refsInput.value = "abc"
+        widget.refsInput.setCustomValidity("This is a test")
+        TestUtils.Simulate.change(widget.refsInput)
 
         setTimeout(() => {
-            expect(widget.refs.wrapper.className.indexOf(INVALID_CLASS)).toNotEqual(-1)
+            expect(widget.refsWrapper.className.indexOf(INVALID_CLASS)).toNotEqual(-1)
             expect(onInvalidCalled).toEqual(true)
             expect(validationError).toEqual("This is a test")
             done()
@@ -168,19 +168,19 @@ describe('NumericInput', function() {
         expect(_called).toEqual(1, "Must call the onValid callback when the initial render produces valid value")
 
         widget.setState({ value: 5 })
-        expect(widget.refs.NumericInput.refs.input.value).toEqual('5')
+        expect(widget.refs.NumericInput.refsInput.value).toEqual('5')
         expect(_called).toEqual(1, "Must not call the onValid callback after setting valid value")
 
         widget.setState({ maxLength: 5 })
-        expect(widget.refs.NumericInput.refs.input.maxLength).toEqual(5)
+        expect(widget.refs.NumericInput.refsInput.maxLength).toEqual(5)
         expect(_called).toEqual(1, "Must not call the onValid callback after setting big enough maxLength")
 
         widget.setState({ required: true })
-        expect(widget.refs.NumericInput.refs.input.required).toEqual(true)
+        expect(widget.refs.NumericInput.refsInput.required).toEqual(true)
         expect(_called).toEqual(1, "Must not call the onValid callback after setting required to true while the value is not empty")
 
         widget.setState({ value: 6 })
-        expect(widget.refs.NumericInput.refs.input.value).toEqual('6')
+        expect(widget.refs.NumericInput.refsInput.value).toEqual('6')
         expect(_called).toEqual(1, "Must not call the onValid callback after transition to another valid value")
 
         done()

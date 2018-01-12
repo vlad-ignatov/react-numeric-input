@@ -21,7 +21,7 @@ describe ('NumericInput/misc', function() {
      */
     it ('can type in number when `min` prop is set', done => {
         let widget = TestUtils.renderIntoDocument(<NumericInput min={100}/>)
-        let input  = widget.refs.input
+        let input  = widget.refsInput
 
         input.focus()
 
@@ -54,7 +54,7 @@ describe ('NumericInput/misc', function() {
         let widget = TestUtils.renderIntoDocument(
             <NumericInput min={100} onChange={function(...args) { log.push(...args) }}/>
         )
-        let input  = widget.refs.input
+        let input  = widget.refsInput
 
         TestUtils.Simulate.focus(input)
         input.value = 1
@@ -79,9 +79,9 @@ describe ('NumericInput/misc', function() {
             <NumericInput format={ parseFloat } precision={10}/>
         )
         widget.setState({ value: 1.25 })
-        expect(widget.refs.input.value).toEqual('1.25')
+        expect(widget.refsInput.value).toEqual('1.25')
         widget.setState({ value: 1.5 })
-        expect(widget.refs.input.value).toEqual('1.5')
+        expect(widget.refsInput.value).toEqual('1.5')
         done()
     })
 
@@ -95,15 +95,15 @@ describe ('NumericInput/misc', function() {
             let widget = TestUtils.renderIntoDocument(
                 <NumericInput format={ n => `${n}%`} value={10}/>
             )
-            expect(widget.refs.input.value).toEqual('10%')
-            TestUtils.Simulate.focus(widget.refs.input)
-            widget.refs.input.selectionStart = 1
-            widget.refs.input.selectionEnd = 1
+            expect(widget.refsInput.value).toEqual('10%')
+            TestUtils.Simulate.focus(widget.refsInput)
+            widget.refsInput.selectionStart = 1
+            widget.refsInput.selectionEnd = 1
             widget.saveSelection()
             widget.increase()
-            expect(widget.refs.input.value).toEqual('11%')
-            expect(widget.refs.input.selectionStart).toEqual(1)
-            expect(widget.refs.input.selectionEnd).toEqual(1)
+            expect(widget.refsInput.value).toEqual('11%')
+            expect(widget.refsInput.selectionStart).toEqual(1)
+            expect(widget.refsInput.selectionEnd).toEqual(1)
             done()
         })
     }
@@ -117,7 +117,7 @@ describe ('NumericInput/misc', function() {
         let widget = TestUtils.renderIntoDocument(
             <NumericInput min={100} value={1} onChange={(...args) => log.push(...args)}/>
         )
-        let input = widget.refs.input
+        let input = widget.refsInput
 
         TestUtils.Simulate.focus(input)
         input.value = 2
@@ -135,7 +135,7 @@ describe ('NumericInput/misc', function() {
      */
     it ('The field should accept "-.", "+.", ".", "-", and "+" at beginning of input value', done => {
         let widget = TestUtils.renderIntoDocument(<NumericInput min={-10} max={10}/>)
-        let input  = widget.refs.input
+        let input  = widget.refsInput
 
         input.focus();
 
@@ -174,7 +174,7 @@ describe ('NumericInput/misc', function() {
             let widget = TestUtils.renderIntoDocument(
                 <NumericInput min={-10} max={10} precision={1} step={0.5} value={inputValue} snap />
             );
-            let input = widget.refs.input;
+            let input = widget.refsInput;
             TestUtils.Simulate.keyDown(input, { keyCode: key });
             expect(input.value).toEqual(result);
         });
@@ -197,7 +197,7 @@ describe ('NumericInput/misc', function() {
             }
         }
         let parentComponent = TestUtils.renderIntoDocument(<ParentComponent/>);
-        let input = parentComponent.refs.numericInput.refs.input;
+        let input = parentComponent.refs.numericInput.refsInput;
         expect(input.value).toEqual("1");
         expect(log).toEqual(0);
         parentComponent.setState({ value: 2 })
@@ -210,7 +210,7 @@ describe ('NumericInput/misc', function() {
         let widget = TestUtils.renderIntoDocument(
             <NumericInput min={-10} max={10} value={50} />
         );
-        let input = widget.refs.input;
+        let input = widget.refsInput;
         expect(input.value).toEqual("50");
         done();
     });
@@ -223,7 +223,7 @@ describe ('NumericInput/misc', function() {
         let widget = TestUtils.renderIntoDocument(
             <NumericInput min={-10} max={10} value={50} onChange={onChange}/>
         );
-        let input = widget.refs.input;
+        let input = widget.refsInput;
         expect(log).toEqual(0);
         expect(input.value).toEqual("50");
         TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
@@ -246,7 +246,7 @@ describe ('NumericInput/misc', function() {
                 return NumericInput.defaultProps.step;
             }} precision={2} value={9}/>
         );
-        let input = widget.refs.input;
+        let input = widget.refsInput;
         input.focus();
         expect(input.value).toEqual('9.00');
         TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
@@ -274,7 +274,7 @@ describe ('NumericInput/misc', function() {
                 return component.state.value;
             }} value={0}/>
         );
-        let input = widget.refs.input;
+        let input = widget.refsInput;
         input.focus();
         expect(input.value).toEqual('0');
         TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });
@@ -293,7 +293,7 @@ describe ('NumericInput/misc', function() {
         let widget = TestUtils.renderIntoDocument(
             <NumericInput min={() => min} value={4}/>
         );
-        let input = widget.refs.input;
+        let input = widget.refsInput;
         input.focus();
         expect(input.value).toEqual('4');
         TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_DOWN });
@@ -315,7 +315,7 @@ describe ('NumericInput/misc', function() {
         let widget = TestUtils.renderIntoDocument(
             <NumericInput max={() => max} value={1}/>
         );
-        let input = widget.refs.input;
+        let input = widget.refsInput;
         input.focus();
         expect(input.value).toEqual('1');
         TestUtils.Simulate.keyDown(input, { keyCode: KEYCODE_UP });

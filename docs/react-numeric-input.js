@@ -213,9 +213,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // value         : null,
 	            stringValue: ""
 	        }, _this._propsToState(_this.props));
-
 	        _this.stop = _this.stop.bind(_this);
 	        _this.onTouchEnd = _this.onTouchEnd.bind(_this);
+	        _this.refsInput = {};
+	        _this.refsWrapper = {};
+
 	        return _this;
 	    }
 
@@ -306,22 +308,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	            && prevState.value !== this.state.value // no onChange if the value remains the same
 	            && (!isNaN(this.state.value) || this.state.value === null) // only if changing to number or null
 	            ) {
-	                    this._invokeEventCallback("onChange", this.state.value, this.refs.input.value, this.refs.input);
+	                    this._invokeEventCallback("onChange", this.state.value, this.refsInput.value, this.refsInput);
 	                }
 
 	            // focus the input is needed (for example up/down buttons set
 	            // this.state.inputFocus to true)
 	            if (this.state.inputFocus) {
-	                this.refs.input.focus();
+	                this.refsInput.focus();
 
 	                // Restore selectionStart (if any)
 	                if (this.state.selectionStart || this.state.selectionStart === 0) {
-	                    this.refs.input.selectionStart = this.state.selectionStart;
+	                    this.refsInput.selectionStart = this.state.selectionStart;
 	                }
 
 	                // Restore selectionEnd (if any)
 	                if (this.state.selectionEnd || this.state.selectionEnd === 0) {
-	                    this.refs.input.selectionEnd = this.state.selectionEnd;
+	                    this.refsInput.selectionEnd = this.state.selectionEnd;
 	                }
 	            }
 
@@ -349,11 +351,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _this3 = this;
 
 	            this._isMounted = true;
-	            this.refs.input.getValueAsNumber = function () {
+	            this.refsInput.getValueAsNumber = function () {
 	                return _this3.state.value || 0;
 	            };
 
-	            this.refs.input.setValue = function (value) {
+	            this.refsInput.setValue = function (value) {
 	                _this3.setState({
 	                    value: _this3._parse(value),
 	                    stringValue: value
@@ -362,11 +364,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // This is a special case! If the component has the "autoFocus" prop
 	            // and the browser did focus it we have to pass that to the onFocus
-	            if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refs.input) {
+	            if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refsInput) {
 	                this.state.inputFocus = true;
-	                this.refs.input.focus();
+	                this.refsInput.focus();
 	                this._invokeEventCallback("onFocus", {
-	                    target: this.refs.input,
+	                    target: this.refsInput,
 	                    type: "focus"
 	                });
 	            }
@@ -382,8 +384,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'saveSelection',
 	        value: function saveSelection() {
-	            this.state.selectionStart = this.refs.input.selectionStart;
-	            this.state.selectionEnd = this.refs.input.selectionEnd;
+	            this.state.selectionStart = this.refsInput.selectionStart;
+	            this.state.selectionEnd = this.refsInput.selectionEnd;
 	        }
 
 	        /**
@@ -398,12 +400,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var valid = void 0,
 	                validationError = "";
 
-	            var supportsValidation = !!this.refs.input.checkValidity;
+	            var supportsValidation = !!this.refsInput.checkValidity;
 
 	            // noValidate
 	            var noValidate = !!(this.props.noValidate && this.props.noValidate != "false");
 
-	            this.refs.input.noValidate = noValidate;
+	            this.refsInput.noValidate = noValidate;
 
 	            // If "noValidate" is set or "checkValidity" is not supported then
 	            // consider the element valid. Otherwise consider it invalid and
@@ -417,41 +419,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // In some browsers once a pattern is set it cannot be removed. The
 	                // browser sets it to "" instead which results in validation
 	                // failures...
-	                if (this.refs.input.pattern === "") {
-	                    this.refs.input.pattern = this.props.required ? ".+" : ".*";
+	                if (this.refsInput.pattern === "") {
+	                    this.refsInput.pattern = this.props.required ? ".+" : ".*";
 	                }
 
 	                // Now check validity
 	                if (supportsValidation) {
-	                    this.refs.input.checkValidity();
-	                    valid = this.refs.input.validity.valid;
+	                    this.refsInput.checkValidity();
+	                    valid = this.refsInput.validity.valid;
 
 	                    if (!valid) {
-	                        validationError = this.refs.input.validationMessage;
+	                        validationError = this.refsInput.validationMessage;
 	                    }
 	                }
 
 	                // Some browsers might fail to validate maxLength
 	                if (valid && supportsValidation && this.props.maxLength) {
-	                    if (this.refs.input.value.length > this.props.maxLength) {
+	                    if (this.refsInput.value.length > this.props.maxLength) {
 	                        validationError = "This value is too long";
 	                    }
 	                }
 	            }
 
-	            validationError = validationError || (valid ? "" : this.refs.input.validationMessage || "Unknown Error");
+	            validationError = validationError || (valid ? "" : this.refsInput.validationMessage || "Unknown Error");
 
 	            var validStateChanged = this._valid !== validationError;
 	            this._valid = validationError;
 	            if (validationError) {
-	                addClass(this.refs.wrapper, "has-error");
+	                addClass(this.refsWrapper, "has-error");
 	                if (validStateChanged) {
-	                    this._invokeEventCallback("onInvalid", validationError, this.state.value, this.refs.input.value);
+	                    this._invokeEventCallback("onInvalid", validationError, this.state.value, this.refsInput.value);
 	                }
 	            } else {
-	                removeClass(this.refs.wrapper, "has-error");
+	                removeClass(this.refsWrapper, "has-error");
 	                if (validStateChanged) {
-	                    this._invokeEventCallback("onValid", this.state.value, this.refs.input.value);
+	                    this._invokeEventCallback("onValid", this.state.value, this.refsInput.value);
 	                }
 	            }
 	        }
@@ -576,19 +578,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    e.preventDefault();
 	                    this._step(e.ctrlKey || e.metaKey ? -0.1 : e.shiftKey ? -10 : -1);
 	                } else {
-	                    var _value = this.refs.input.value,
+	                    var _value = this.refsInput.value,
 	                        length = _value.length;
 	                    if (e.keyCode === 8) {
 	                        // backspace
-	                        if (this.refs.input.selectionStart == this.refs.input.selectionEnd && this.refs.input.selectionEnd > 0 && _value.length && _value.charAt(this.refs.input.selectionEnd - 1) === ".") {
+	                        if (this.refsInput.selectionStart == this.refsInput.selectionEnd && this.refsInput.selectionEnd > 0 && _value.length && _value.charAt(this.refsInput.selectionEnd - 1) === ".") {
 	                            e.preventDefault();
-	                            this.refs.input.selectionStart = this.refs.input.selectionEnd = this.refs.input.selectionEnd - 1;
+	                            this.refsInput.selectionStart = this.refsInput.selectionEnd = this.refsInput.selectionEnd - 1;
 	                        }
 	                    } else if (e.keyCode === 46) {
 	                        // delete
-	                        if (this.refs.input.selectionStart == this.refs.input.selectionEnd && this.refs.input.selectionEnd < length + 1 && _value.length && _value.charAt(this.refs.input.selectionEnd) === ".") {
+	                        if (this.refsInput.selectionStart == this.refsInput.selectionEnd && this.refsInput.selectionEnd < length + 1 && _value.length && _value.charAt(this.refsInput.selectionEnd) === ".") {
 	                            e.preventDefault();
-	                            this.refs.input.selectionStart = this.refs.input.selectionEnd = this.refs.input.selectionEnd + 1;
+	                            this.refsInput.selectionStart = this.refsInput.selectionEnd = this.refsInput.selectionEnd + 1;
 	                        }
 	                    }
 	                }
@@ -779,12 +781,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	                wrap: {
 	                    style: style === false ? null : css.wrap,
 	                    className: 'react-numeric-input',
-	                    ref: 'wrapper',
+	                    ref: function ref(e) {
+	                        if (e != null && e != undefined) {
+	                            _this6.refsWrapper = e;
+	                        }
+	                    },
 	                    onMouseUp: undefined,
 	                    onMouseLeave: undefined
 	                },
 	                input: _extends({
-	                    ref: 'input',
+	                    ref: function ref(e) {
+	                        if (e != null && e != undefined) {
+	                            _this6.refsInput = e;
+	                        }
+	                    },
 	                    type: 'text',
 	                    style: style === false ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
 	                }, rest),

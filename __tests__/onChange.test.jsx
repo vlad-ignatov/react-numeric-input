@@ -23,8 +23,8 @@ describe('NumericInput', function() {
         )
 
         // Press "5"
-        widget.refs.input.value = "5"
-        TestUtils.Simulate.change(widget.refs.input)
+        widget.refsInput.value = "5"
+        TestUtils.Simulate.change(widget.refsInput)
 
         // Rendering must bring the focus to the input
         setTimeout(() => {
@@ -48,7 +48,7 @@ describe('NumericInput', function() {
         )
 
         // Press "r"
-        TestUtils.Simulate.keyDown(widget.refs.input, { keyCode: 114 })
+        TestUtils.Simulate.keyDown(widget.refsInput, { keyCode: 114 })
 
         setTimeout(() => {
             expect(onChangeCalls).toEqual(0)
@@ -70,7 +70,7 @@ describe('NumericInput', function() {
             <NumericInput onChange={ onChange } />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, { keyCode: KEYCODE_UP })
+        TestUtils.Simulate.keyDown(widget.refsInput, { keyCode: KEYCODE_UP })
 
         setTimeout(() => {
             expect(onChangeCalls).toEqual(1)
@@ -92,7 +92,7 @@ describe('NumericInput', function() {
             <NumericInput onChange={ onChange } precision={2} />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, {
+        TestUtils.Simulate.keyDown(widget.refsInput, {
             keyCode: KEYCODE_UP,
             ctrlKey: true
         })
@@ -117,7 +117,7 @@ describe('NumericInput', function() {
             <NumericInput onChange={ onChange } precision={2} />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, {
+        TestUtils.Simulate.keyDown(widget.refsInput, {
             keyCode: KEYCODE_UP,
             metaKey: true
         })
@@ -142,7 +142,7 @@ describe('NumericInput', function() {
             <NumericInput onChange={ onChange } precision={2} />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, {
+        TestUtils.Simulate.keyDown(widget.refsInput, {
             keyCode : KEYCODE_UP,
             shiftKey: true
         })
@@ -167,7 +167,7 @@ describe('NumericInput', function() {
             <NumericInput onChange={ onChange } />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, { keyCode: KEYCODE_DOWN })
+        TestUtils.Simulate.keyDown(widget.refsInput, { keyCode: KEYCODE_DOWN })
 
         setTimeout(() => {
             expect(onChangeCalls).toEqual(1)
@@ -189,7 +189,7 @@ describe('NumericInput', function() {
             <NumericInput onChange={ onChange } precision={2} />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, {
+        TestUtils.Simulate.keyDown(widget.refsInput, {
             keyCode: KEYCODE_DOWN,
             ctrlKey: true
         })
@@ -214,7 +214,7 @@ describe('NumericInput', function() {
             <NumericInput onChange={ onChange } precision={2} />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, {
+        TestUtils.Simulate.keyDown(widget.refsInput, {
             keyCode: KEYCODE_DOWN,
             metaKey: true
         })
@@ -239,7 +239,7 @@ describe('NumericInput', function() {
             <NumericInput onChange={ onChange } precision={2} />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, {
+        TestUtils.Simulate.keyDown(widget.refsInput, {
             keyCode : KEYCODE_DOWN,
             shiftKey: true
         })
@@ -265,7 +265,7 @@ describe('NumericInput', function() {
         )
 
         // Press "5"
-        TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling)
+        TestUtils.Simulate.mouseDown(widget.refsInput.nextElementSibling)
 
         // Rendering must bring the focus to the input
         setTimeout(() => {
@@ -289,7 +289,7 @@ describe('NumericInput', function() {
         )
 
         // Press "5"
-        TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling.nextElementSibling)
+        TestUtils.Simulate.mouseDown(widget.refsInput.nextElementSibling.nextElementSibling)
 
         // Rendering must bring the focus to the input
         setTimeout(() => {
@@ -312,7 +312,7 @@ describe('NumericInput', function() {
             <NumericInput onChange={ onChange } />
         )
 
-        TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling)
+        TestUtils.Simulate.mouseDown(widget.refsInput.nextElementSibling)
 
         setTimeout(() => {
             expect(onChangeCalls).toEqual(2)
@@ -334,7 +334,7 @@ describe('NumericInput', function() {
             <NumericInput onChange={ onChange } />
         )
 
-        TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling.nextElementSibling)
+        TestUtils.Simulate.mouseDown(widget.refsInput.nextElementSibling.nextElementSibling)
 
         setTimeout(() => {
             expect(onChangeCalls).toEqual(2)
