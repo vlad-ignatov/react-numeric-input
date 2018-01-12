@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build-examples": "npm run build-dist && webpack --config ./build_config/examples.js && cp dist/react-numeric-input.js docs/react-numeric-input.js",
-    "build-dist"    : "webpack --config ./build_config/dist.js",
+    "build-dist": "webpack --config ./build_config/dist.js",
     "build-dist-min": "webpack --config ./build_config/dist-min.js",
-    "build"         : "webpack --config ./build_config/main.js",
+    "build": "webpack --config ./build_config/main.js",
     "build-all": "npm run build && npm run build-dist-min && npm run build-examples",
     "test": "karma start",
     "test:e2e": "node ./selenium-download.js && ./node_modules/nightwatch/bin/nightwatch"
@@ -44,7 +44,7 @@
     "eslint": "^1.10.3",
     "eslint-plugin-react": "^3.15.0",
     "expect": "^1.12.2",
-    "karma": "^0.13.14",
+    "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.1",
     "karma-firefox-launcher": "^0.1.6",
     "karma-mocha": "^0.2.0",
