@@ -127,7 +127,6 @@ module.exports =
 	            btnDownActive: false,
 	            btnUpHover: false,
 	            btnUpActive: false,
-
 	            stringValue: ""
 	        }, _this._propsToState(_this.props));
 	        _this.stop = _this.stop.bind(_this);
@@ -571,11 +570,11 @@ module.exports =
 	                            attrs.input.value = "";
 	                        }
 
-	            if (hasFormControl && style !== false) {
+	            if (hasFormControl && !noStyle) {
 	                _extends(attrs.wrap.style, css['wrap.hasFormControl']);
 	            }
 
-	            if (mobile && style !== false) {
+	            if (mobile && !noStyle) {
 	                _extends(attrs.input.style, css['input.mobile']);
 	                _extends(attrs.btnUp.style, css['btnUp.mobile']);
 	                _extends(attrs.btnDown.style, css['btnDown.mobile']);

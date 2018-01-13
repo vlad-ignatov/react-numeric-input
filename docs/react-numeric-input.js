@@ -203,13 +203,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this._isStrict = !!_this.props.strict;
 
 	        _this.state = _extends({
-	            // selectionStart: null,
-	            // selectionEnd  : null,
 	            btnDownHover: false,
 	            btnDownActive: false,
 	            btnUpHover: false,
 	            btnUpActive: false,
-	            // value         : null,
 	            stringValue: ""
 	        }, _this._propsToState(_this.props));
 	        _this.stop = _this.stop.bind(_this);
@@ -849,12 +846,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            attrs.input.value = "";
 	                        }
 
-	            if (hasFormControl && style !== false) {
+	            if (hasFormControl && !noStyle) {
 	                _extends(attrs.wrap.style, css['wrap.hasFormControl']);
 	            }
 
 	            // mobile
-	            if (mobile && style !== false) {
+	            if (mobile && !noStyle) {
 	                _extends(attrs.input.style, css['input.mobile']);
 	                _extends(attrs.btnUp.style, css['btnUp.mobile']);
 	                _extends(attrs.btnDown.style, css['btnDown.mobile']);
