@@ -359,13 +359,10 @@ class NumericInput extends Component
         this._isStrict = !!this.props.strict;
 
         this.state = {
-            // selectionStart: null,
-            // selectionEnd  : null,
             btnDownHover  : false,
             btnDownActive : false,
             btnUpHover    : false,
             btnUpActive   : false,
-            // value         : null,
             stringValue   : "",
             ...this._propsToState(this.props)
         };
