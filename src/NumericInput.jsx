@@ -68,7 +68,6 @@ type NumericInputState = {
     btnDownActive ?: boolean;
     btnUpHover    ?: boolean;
     btnUpActive   ?: boolean;
-    inputFocus    ?: boolean;
     value         ?: number | null;
     stringValue   ?: string;
 }
@@ -333,6 +332,7 @@ class NumericInput extends Component
     _isStrict: boolean;
     _ignoreValueChange: boolean;
     _isMounted: boolean;
+    _inputFocus: boolean;
     onTouchEnd: Function;
     refsWrapper: Object;
     refsInput: Object;
@@ -365,7 +365,6 @@ class NumericInput extends Component
             btnDownActive : false,
             btnUpHover    : false,
             btnUpActive   : false,
-            inputFocus    : false,
             // value         : null,
             stringValue   : "",
             ...this._propsToState(this.props)
@@ -374,7 +373,6 @@ class NumericInput extends Component
         this.onTouchEnd = this.onTouchEnd.bind(this);
         this.refsInput = {};
         this.refsWrapper = {};
-
     }
 
     _propsToState(props: Object) {
@@ -450,8 +448,8 @@ class NumericInput extends Component
         }
 
         // focus the input is needed (for example up/down buttons set
-        // this.state.inputFocus to true)
-        if (this.state.inputFocus) {
+        // this._inputFocus to true)
+        if (this._inputFocus) {
             this.refsInput.focus()
 
             // Restore selectionStart (if any)
@@ -494,8 +492,8 @@ class NumericInput extends Component
 
         // This is a special case! If the component has the "autoFocus" prop
         // and the browser did focus it we have to pass that to the onFocus
-        if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refsInput) {
-            this.state.inputFocus = true
+        if (!this._inputFocus && IS_BROWSER && document.activeElement === this.refsInput) {
+            this._inputFocus = true
             this.refsInput.focus()
             this._invokeEventCallback("onFocus", {
                 target: this.refsInput,
@@ -902,7 +900,7 @@ class NumericInput extends Component
                     !hasFormControl ?
                         css['input:not(.form-control)'] :
                         {},
-                    state.inputFocus ? css['input:focus'] : {}
+                    this._inputFocus ? css['input:focus'] : {}
                 ),
                 ...rest
             },
@@ -1023,10 +1021,10 @@ class NumericInput extends Component
                 onMouseDown: (...args) => {
                     args[0].preventDefault();
                     args[0].persist();
+                    this._inputFocus = true;
                     this.setState({
                         btnUpHover  : true,
-                        btnUpActive : true,
-                        inputFocus  : true
+                        btnUpActive : true
                     }, () => {
                         this._invokeEventCallback("onFocus", ...args)
                         this.onMouseDown('up');
@@ -1059,10 +1057,10 @@ class NumericInput extends Component
                 onMouseDown: (...args) => {
                     args[0].preventDefault();
                     args[0].persist();
+                    this._inputFocus = true;
                     this.setState({
                         btnDownHover  : true,
-                        btnDownActive : true,
-                        inputFocus    : true
+                        btnDownActive : true
                     }, () => {
                         this._invokeEventCallback("onFocus", ...args)
                         this.onMouseDown('down');
@@ -1093,28 +1091,26 @@ class NumericInput extends Component
                 },
                 onFocus: (...args) => {
                     args[0].persist();
-                    this.setState({ inputFocus: true }, () => {
+                    this._inputFocus = true;
                         const val = this._parse(args[0].target.value);
                         this.setState({
                             value: val,
                             stringValue: val || val === 0 ? val + "" : ""
                         }, () => {
                             this._invokeEventCallback("onFocus", ...args)
-                        })
                     });
                 },
                 onBlur: (...args) => {
                     let _isStrict = this._isStrict
                     this._isStrict = true
                     args[0].persist();
-                    this.setState({ inputFocus: false }, () => {
+                    this._inputFocus = false;
                         const val = this._parse(args[0].target.value);
                         this.setState({
                             value: val
                         }, () => {
                             this._invokeEventCallback("onBlur", ...args)
                             this._isStrict = _isStrict
-                        })
                     });
                 }
             });
