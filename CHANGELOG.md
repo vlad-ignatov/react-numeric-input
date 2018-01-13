@@ -1,3 +1,7 @@
+2.2.3
+--------------------------------------------------------------------------------
+* Small fix for a bug introduced in 2.2.2.
+
 2.2.2
 --------------------------------------------------------------------------------
 * style={false} produces eslint warning so it is deprecated now. There is new `noStyle` boolean prop for that.
