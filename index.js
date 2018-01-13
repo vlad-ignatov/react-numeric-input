@@ -498,7 +498,10 @@ module.exports =
 	                onInvalid = _props.onInvalid,
 	                onValid = _props.onValid,
 	                strict = _props.strict,
-	                rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'snap', 'componentClass', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid', 'strict']);
+	                noStyle = _props.noStyle,
+	                rest = _objectWithoutProperties(_props, ['step', 'min', 'max', 'precision', 'parse', 'format', 'mobile', 'snap', 'componentClass', 'value', 'type', 'style', 'defaultValue', 'onInvalid', 'onValid', 'strict', 'noStyle']);
+
+	            noStyle = noStyle || style === false;
 
 	            for (var x in NumericInput.style) {
 	                css[x] = _extends({}, NumericInput.style[x], style ? style[x] || {} : {});
@@ -517,7 +520,7 @@ module.exports =
 
 	            var attrs = {
 	                wrap: {
-	                    style: style === false ? null : css.wrap,
+	                    style: noStyle ? null : css.wrap,
 	                    className: 'react-numeric-input',
 	                    ref: function ref(e) {
 	                        if (e != null && e != undefined) {
@@ -534,7 +537,7 @@ module.exports =
 	                        }
 	                    },
 	                    type: 'text',
-	                    style: style === false ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
+	                    style: noStyle ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
 	                }, rest),
 	                btnUp: {
 	                    onMouseEnter: undefined,
@@ -543,7 +546,7 @@ module.exports =
 	                    onMouseLeave: undefined,
 	                    onTouchStart: undefined,
 	                    onTouchEnd: undefined,
-	                    style: style === false ? null : _extends({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
+	                    style: noStyle ? null : _extends({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
 	                },
 	                btnDown: {
 	                    onMouseEnter: undefined,
@@ -552,7 +555,7 @@ module.exports =
 	                    onMouseLeave: undefined,
 	                    onTouchStart: undefined,
 	                    onTouchEnd: undefined,
-	                    style: style === false ? null : _extends({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
+	                    style: noStyle ? null : _extends({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
 	                }
 	            };
 
@@ -744,13 +747,13 @@ module.exports =
 	                    _react2.default.createElement(
 	                        'b',
 	                        attrs.btnUp,
-	                        _react2.default.createElement('i', { style: style === false ? null : css.minus }),
-	                        _react2.default.createElement('i', { style: style === false ? null : css.plus })
+	                        _react2.default.createElement('i', { style: noStyle ? null : css.minus }),
+	                        _react2.default.createElement('i', { style: noStyle ? null : css.plus })
 	                    ),
 	                    _react2.default.createElement(
 	                        'b',
 	                        attrs.btnDown,
-	                        _react2.default.createElement('i', { style: style === false ? null : css.minus })
+	                        _react2.default.createElement('i', { style: noStyle ? null : css.minus })
 	                    )
 	                );
 	            }
@@ -762,12 +765,12 @@ module.exports =
 	                _react2.default.createElement(
 	                    'b',
 	                    attrs.btnUp,
-	                    _react2.default.createElement('i', { style: style === false ? null : css.arrowUp })
+	                    _react2.default.createElement('i', { style: noStyle ? null : css.arrowUp })
 	                ),
 	                _react2.default.createElement(
 	                    'b',
 	                    attrs.btnDown,
-	                    _react2.default.createElement('i', { style: style === false ? null : css.arrowDown })
+	                    _react2.default.createElement('i', { style: noStyle ? null : css.arrowDown })
 	                )
 	            );
 	        }
@@ -791,6 +794,7 @@ module.exports =
 	    snap: _propTypes2.default.bool,
 	    noValidate: _propTypes2.default.oneOfType([_propTypes2.default.bool, _propTypes2.default.string]),
 	    style: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.bool]),
+	    noStyle: _propTypes2.default.bool,
 	    type: _propTypes2.default.string,
 	    pattern: _propTypes2.default.string,
 	    onFocus: _propTypes2.default.func,

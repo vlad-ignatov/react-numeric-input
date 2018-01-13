@@ -91,6 +91,7 @@ class NumericInput extends Component
         snap         : PropTypes.bool,
         noValidate   : PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
         style        : PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+        noStyle      : PropTypes.bool,
         type         : PropTypes.string,
         pattern      : PropTypes.string,
         onFocus      : PropTypes.func,
@@ -854,11 +855,13 @@ class NumericInput extends Component
         let {
             // These are ignored in rendering
             step, min, max, precision, parse, format, mobile, snap, componentClass,
-            value, type, style, defaultValue, onInvalid, onValid, strict,
+            value, type, style, defaultValue, onInvalid, onValid, strict, noStyle,
 
             // The rest are passed to the input
             ...rest
         } = this.props;
+
+        noStyle = noStyle || style === false;
 
         // Build the styles
         for (let x in NumericInput.style) {
@@ -884,7 +887,7 @@ class NumericInput extends Component
 
         let attrs = {
             wrap : {
-                style       : style === false ? null : css.wrap,
+                style       : noStyle ? null : css.wrap,
                 className   : 'react-numeric-input',
                 ref: (e)=>{if(e!=null && e!= undefined){this.refsWrapper=e;}},
                 onMouseUp   : undefined,
@@ -893,7 +896,7 @@ class NumericInput extends Component
             input : {
                 ref: (e)=>{if(e!=null && e!= undefined){this.refsInput=e;}},
                 type: 'text',
-                style: style === false ? null : Object.assign(
+                style: noStyle ? null : Object.assign(
                     {},
                     css.input,
                     !hasFormControl ?
@@ -910,7 +913,7 @@ class NumericInput extends Component
                 onMouseLeave: undefined,
                 onTouchStart: undefined,
                 onTouchEnd  : undefined,
-                style: style === false ? null : Object.assign(
+                style: noStyle ? null : Object.assign(
                     {},
                     css.btn,
                     css.btnUp,
@@ -930,7 +933,7 @@ class NumericInput extends Component
                 onMouseLeave: undefined,
                 onTouchStart: undefined,
                 onTouchEnd  : undefined,
-                style: style === false ? null : Object.assign(
+                style: noStyle ? null : Object.assign(
                     {},
                     css.btn,
                     css.btnDown,
@@ -1129,11 +1132,11 @@ class NumericInput extends Component
                 <span {...attrs.wrap}>
                     <InputTag {...attrs.input}/>
                     <b {...attrs.btnUp}>
-                        <i style={ style === false ? null : css.minus }/>
-                        <i style={ style === false ? null : css.plus }/>
+                        <i style={ noStyle ? null : css.minus }/>
+                        <i style={ noStyle ? null : css.plus }/>
                     </b>
                     <b {...attrs.btnDown}>
-                        <i style={ style === false ? null : css.minus }/>
+                        <i style={ noStyle ? null : css.minus }/>
                     </b>
                 </span>
             )
@@ -1143,10 +1146,10 @@ class NumericInput extends Component
             <span {...attrs.wrap}>
                 <InputTag {...attrs.input}/>
                 <b {...attrs.btnUp}>
-                    <i style={ style === false ? null : css.arrowUp }/>
+                    <i style={ noStyle ? null : css.arrowUp }/>
                 </b>
                 <b {...attrs.btnDown}>
-                    <i style={ style === false ? null : css.arrowDown }/>
+                    <i style={ noStyle ? null : css.arrowDown }/>
                 </b>
             </span>
         );
