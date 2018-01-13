@@ -976,12 +976,12 @@ class NumericInput extends Component
             attrs.input.value = "";
         }
 
-        if (hasFormControl && style !== false) {
+        if (hasFormControl && !noStyle) {
             Object.assign(attrs.wrap.style, css['wrap.hasFormControl'])
         }
 
         // mobile
-        if (mobile && style !== false) {
+        if (mobile && !noStyle) {
             Object.assign(attrs.input  .style, css['input.mobile'  ])
             Object.assign(attrs.btnUp  .style, css['btnUp.mobile'  ])
             Object.assign(attrs.btnDown.style, css['btnDown.mobile'])
