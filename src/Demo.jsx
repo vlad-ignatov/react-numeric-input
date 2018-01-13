@@ -24,7 +24,8 @@ export default class Demo extends React.Component
                 title     : { value: "The title attr",   on: false },
                 snap      : { value: true,               on: false },
                 inputmode : { value: "numeric",          on: false },
-                strict    : { value: true,               on: false }
+                strict    : { value: true,               on: false },
+                noStyle   : { value: true,               on: false }
                 // library
             }
         }
@@ -191,7 +192,8 @@ export default class Demo extends React.Component
                                         { name: "noValidate", type: "bool"   },
                                         { name: "inputmode" , type: "text"   },
                                         { name: "snap"      , type: "bool"   },
-                                        { name: "strict"    , type: "bool"   }
+                                        { name: "strict"    , type: "bool"   },
+                                        { name: "noStyle"   , type: "bool"   }
                                     ])}
                                     {/*
                                     parse	function	parseFloat
