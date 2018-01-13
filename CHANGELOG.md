@@ -1,3 +1,11 @@
+2.2.2
+--------------------------------------------------------------------------------
+* style={false} produces eslint warning so it is deprecated now. There is new `noStyle` boolean prop for that.
+* Fixes the case where string value reappears in input when mouse hovers over the up/down button after clicking away.
+* Document the `strict` prop.
+* A readOnly input is almost like disabled one now. The only difference is that you can copy the value.
+* Various small code improvements.
+
 2.2.1
 --------------------------------------------------------------------------------
 * The input will now use "fontSize: inherit" style.
