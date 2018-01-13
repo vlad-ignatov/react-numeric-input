@@ -915,7 +915,7 @@ class NumericInput extends Component
                     {},
                     css.btn,
                     css.btnUp,
-                    props.disabled ?
+                    props.disabled || props.readOnly ?
                         css['btn:disabled'] :
                         state.btnUpActive ?
                             css['btn:active'] :
@@ -935,7 +935,7 @@ class NumericInput extends Component
                     {},
                     css.btn,
                     css.btnDown,
-                    props.disabled ?
+                    props.disabled || props.readOnly ?
                         css['btn:disabled'] :
                         state.btnDownActive ?
                             css['btn:active'] :
@@ -957,7 +957,7 @@ class NumericInput extends Component
             ""
         );
 
-        let loose = !this._isStrict && this.state.inputFocus
+        let loose = !this._isStrict && (this._inputFocus || !this._isMounted)
 
         // incomplete number
         if (loose && RE_INCOMPLETE_NUMBER.test(stringValue)) {
@@ -991,7 +991,7 @@ class NumericInput extends Component
         }
 
         // Attach event listeners if the widget is not disabled
-        if (!props.disabled) {
+        if (!props.disabled && !props.readOnly) {
             Object.assign(attrs.wrap, {
                 onMouseUp    : this.stop,
                 onMouseLeave : this.stop
@@ -1092,12 +1092,12 @@ class NumericInput extends Component
                 onFocus: (...args) => {
                     args[0].persist();
                     this._inputFocus = true;
-                        const val = this._parse(args[0].target.value);
-                        this.setState({
-                            value: val,
-                            stringValue: val || val === 0 ? val + "" : ""
-                        }, () => {
-                            this._invokeEventCallback("onFocus", ...args)
+                    const val = this._parse(args[0].target.value);
+                    this.setState({
+                        value: val,
+                        stringValue: val || val === 0 ? val + "" : ""
+                    }, () => {
+                        this._invokeEventCallback("onFocus", ...args)
                     });
                 },
                 onBlur: (...args) => {
@@ -1105,18 +1105,18 @@ class NumericInput extends Component
                     this._isStrict = true
                     args[0].persist();
                     this._inputFocus = false;
-                        const val = this._parse(args[0].target.value);
-                        this.setState({
-                            value: val
-                        }, () => {
-                            this._invokeEventCallback("onBlur", ...args)
-                            this._isStrict = _isStrict
+                    const val = this._parse(args[0].target.value);
+                    this.setState({
+                        value: val
+                    }, () => {
+                        this._invokeEventCallback("onBlur", ...args)
+                        this._isStrict = _isStrict
                     });
                 }
             });
         }
         else {
-            if (style !== false) {
+            if (!noStyle && props.disabled) {
                 Object.assign(attrs.input.style, css['input:disabled'])
             }
         }
