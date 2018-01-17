@@ -105,7 +105,7 @@ class NumericInput extends Component
         value        : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         defaultValue : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         strict       : PropTypes.bool,
-        componentClass: PropTypes.string,
+        componentClass: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
         mobile(props, propName) {
             let prop = props[propName]
             if (prop !== true && prop !== false && prop !== 'auto' &&

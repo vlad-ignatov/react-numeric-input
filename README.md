@@ -101,7 +101,7 @@ Name              | Type                                | Default
 **size**          |`number` or `string`                 | none
 **mobile**        |`true`, `false`, 'auto' or `function`|`auto`
 **snap**          |`boolean`                            | none (false)
-**componentClass**|`string`                             |`input`
+**componentClass**|`string` or `function`               |`"input"`
 **strict**        |`boolean`                            |`false`
 
 Any other option is passed directly the input created by the component. Just
