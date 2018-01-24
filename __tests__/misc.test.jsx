@@ -100,13 +100,34 @@ describe ('NumericInput/misc', function() {
             widget.refsInput.selectionStart = 1
             widget.refsInput.selectionEnd = 1
             widget.saveSelection()
-            widget.increase()
+            widget.refsInput.value = 11
+            TestUtils.Simulate.change(widget.refsInput)
             expect(widget.refsInput.value).toEqual('11%')
             expect(widget.refsInput.selectionStart).toEqual(1)
             expect(widget.refsInput.selectionEnd).toEqual(1)
             done()
         })
     }
+
+    /**
+     * Selection have to be moved to the right after increment/decrement
+     * the value according to common behavior of html <input type=number /> element
+     */
+    it ('persists selection', done => {
+        let widget = TestUtils.renderIntoDocument(
+            <NumericInput value={9}/>
+        )
+        expect(widget.refsInput.value).toEqual('9')
+        TestUtils.Simulate.focus(widget.refsInput)
+        widget.refsInput.selectionStart = 1
+        widget.refsInput.selectionEnd = 1
+        widget.saveSelection()
+        widget.increase()
+        expect(widget.refsInput.value).toEqual('10')
+        expect(widget.refsInput.selectionStart).toEqual(2)
+        expect(widget.refsInput.selectionEnd).toEqual(2)
+        done()
+    })
 
     /**
      * onChange gets called when input content is deleted

@@ -686,7 +686,13 @@ class NumericInput extends Component
         this._isStrict = _isStrict;
 
         if (_n !== this.state.value) {
-            this.setState({ value: _n, stringValue: _n + "" }, callback);
+            var _nString = _n + "";
+            this.setState({
+                value: _n,
+                stringValue: _nString,
+                selectionStart: _nString.length,
+                selectionEnd: _nString.length
+            }, callback);
             return true;
         }
 

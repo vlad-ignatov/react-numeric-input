@@ -348,7 +348,13 @@ module.exports =
 	            this._isStrict = _isStrict;
 
 	            if (_n !== this.state.value) {
-	                this.setState({ value: _n, stringValue: _n + "" }, callback);
+	                var _nString = _n + "";
+	                this.setState({
+	                    value: _n,
+	                    stringValue: _nString,
+	                    selectionStart: _nString.length,
+	                    selectionEnd: _nString.length
+	                }, callback);
 	                return true;
 	            }
 
@@ -804,7 +810,7 @@ module.exports =
 	    value: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
 	    defaultValue: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
 	    strict: _propTypes2.default.bool,
-	    componentClass: _propTypes2.default.string,
+	    componentClass: _propTypes2.default.oneOfType([_propTypes2.default.func, _propTypes2.default.string]),
 	    mobile: function mobile(props, propName) {
 	        var prop = props[propName];
 	        if (prop !== true && prop !== false && prop !== 'auto' && typeof prop != 'function') {
