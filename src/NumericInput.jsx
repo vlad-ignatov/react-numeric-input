@@ -106,6 +106,7 @@ class NumericInput extends Component
         defaultValue : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         strict       : PropTypes.bool,
         componentClass: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+        renderInput  : PropTypes.func,
         mobile(props, propName) {
             let prop = props[propName]
             if (prop !== true && prop !== false && prop !== 'auto' &&
@@ -131,6 +132,7 @@ class NumericInput extends Component
         mobile        : 'auto',
         strict        : false,
         componentClass: "input",
+        renderInput   : (TagName, props) => (<TagName {...props} />),
         style         : {}
     };
 
@@ -849,7 +851,7 @@ class NumericInput extends Component
 
         let {
             // These are ignored in rendering
-            step, min, max, precision, parse, format, mobile, snap, componentClass,
+            step, min, max, precision, parse, format, mobile, snap, componentClass, renderInput,
             value, type, style, defaultValue, onInvalid, onValid, strict, noStyle,
 
             // The rest are passed to the input
@@ -1118,12 +1120,12 @@ class NumericInput extends Component
             }
         }
 
-        const InputTag = componentClass || 'input';
+        const input = renderInput(componentClass || 'input', attrs.input);
 
         if (mobile) {
             return (
                 <span {...attrs.wrap}>
-                    <InputTag {...attrs.input}/>
+                    {input}
                     <b {...attrs.btnUp}>
                         <i style={ noStyle ? null : css.minus }/>
                         <i style={ noStyle ? null : css.plus }/>
