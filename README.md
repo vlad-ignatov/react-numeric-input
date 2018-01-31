@@ -102,7 +102,8 @@ Name              | Type                                | Default
 **mobile**        |`true`, `false`, 'auto' or `function`|`auto`
 **snap**          |`boolean`                            | none (false)
 **componentClass**|`string` or `function`               |`"input"`
-**strict**        |`boolean`                            |`false`
+**renderInput**   |`function`                           |`(TagName, props) => (<TagName {...props} />)`
+**strict**        |`boolean`                            |`false`
 
 Any other option is passed directly the input created by the component. Just
 don't forget to camelCase the attributes. For example `readonly` must be `readOnly`.
@@ -200,6 +201,19 @@ The props that support being a function are currently `min`, `max`, `step` and
 `precision`. All those function will be passed the component instance as argument
 and the `step` will also receive the direction as second parameter.
 
+## Customize input component
+You can customize the input component by using the `componentClass` and `renderInput` properties.
+The `componentClass` property allows you to specify any React node that should be used as the input field.
+Please note that the input field is accessed by using a [ref](https://reactjs.org/docs/refs-and-the-dom.html),
+so if you want or need to wrap the input inside of another component, you should rather use the `renderInput` property.
+This allows you to pass the ref property to any child of your input component. You can even combine these properties, as `componentClass` is being passed to `renderInput` as the first parameter.
+```jsx
+<NumericInput renderInput={(ComponentClass, { ref, style, ...otherProps }) => (
+  <Wrapper style={style}>
+    <ComponentClass ref={ref} />
+  </Wrapper>
+)} />
+```
 
 ## License
 MIT
