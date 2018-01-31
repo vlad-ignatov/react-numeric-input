@@ -1139,7 +1139,7 @@ class NumericInput extends Component
 
         return (
             <span {...attrs.wrap}>
-                <InputTag {...attrs.input}/>
+                {input}
                 <b {...attrs.btnUp}>
                     <i style={ noStyle ? null : css.arrowUp }/>
                 </b>
