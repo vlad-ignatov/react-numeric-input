@@ -102,6 +102,22 @@
             </fieldset>
 
             <fieldset>
+                <legend class="text-success">Without selection restoration</legend>
+                <p>
+                    By default NumericInput restores the user's selection when an input is focused.
+                    You can turn this off with <code>restoreOnFocus</code>.
+                </p>
+                <blockquote>
+                    <div class="code jsx">&lt;NumericInput restoreOnFocus={false} value={1234}/&gt;</div>
+                    <div class="col-sm-5 col-md-4 col-lg-3">
+                        <script class="jsx" type="text/plain">
+                        {"restoreOnFocus":false, "value":1234}
+                        </script>
+                    </div>
+                </blockquote>
+            </fieldset>
+
+            <fieldset>
                 <legend class="text-success">Working with floats</legend>
                 <p>
                     You can use to use <code>step</code> and <code>precision</code>

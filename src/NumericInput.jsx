@@ -76,35 +76,36 @@ type NumericInputState = {
 class NumericInput extends Component
 {
     static propTypes = {
-        step         : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
-        min          : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
-        max          : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
-        precision    : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
-        maxLength    : PropTypes.number,
-        parse        : PropTypes.func,
-        format       : PropTypes.func,
-        className    : PropTypes.string,
-        disabled     : PropTypes.bool,
-        readOnly     : PropTypes.bool,
-        required     : PropTypes.bool,
-        snap         : PropTypes.bool,
-        noValidate   : PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-        style        : PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-        noStyle      : PropTypes.bool,
-        type         : PropTypes.string,
-        pattern      : PropTypes.string,
-        onFocus      : PropTypes.func,
-        onBlur       : PropTypes.func,
-        onKeyDown    : PropTypes.func,
-        onChange     : PropTypes.func,
-        onInvalid    : PropTypes.func,
-        onValid      : PropTypes.func,
-        onInput      : PropTypes.func,
-        onSelect     : PropTypes.func,
-        size         : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        value        : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        defaultValue : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        strict       : PropTypes.bool,
+        step          : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
+        min           : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
+        max           : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
+        precision     : PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
+        maxLength     : PropTypes.number,
+        restoreOnFocus: PropTypes.bool,
+        parse         : PropTypes.func,
+        format        : PropTypes.func,
+        className     : PropTypes.string,
+        disabled      : PropTypes.bool,
+        readOnly      : PropTypes.bool,
+        required      : PropTypes.bool,
+        snap          : PropTypes.bool,
+        noValidate    : PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+        style         : PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+        noStyle       : PropTypes.bool,
+        type          : PropTypes.string,
+        pattern       : PropTypes.string,
+        onFocus       : PropTypes.func,
+        onBlur        : PropTypes.func,
+        onKeyDown     : PropTypes.func,
+        onChange      : PropTypes.func,
+        onInvalid     : PropTypes.func,
+        onValid       : PropTypes.func,
+        onInput       : PropTypes.func,
+        onSelect      : PropTypes.func,
+        size          : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        value         : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        defaultValue  : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        strict        : PropTypes.bool,
         componentClass: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
         mobile(props, propName) {
             let prop = props[propName]
@@ -126,6 +127,7 @@ class NumericInput extends Component
         min           : Number.MIN_SAFE_INTEGER || -9007199254740991,
         max           : Number.MAX_SAFE_INTEGER ||  9007199254740991,
         precision     : null,
+        restoreOnFocus: true,
         parse         : null,
         format        : null,
         mobile        : 'auto',
@@ -333,6 +335,7 @@ class NumericInput extends Component
     _ignoreValueChange: boolean;
     _isMounted: boolean;
     _inputFocus: boolean;
+    _onFocusReceived: boolean;
     onTouchEnd: Function;
     refsWrapper: Object;
     refsInput: Object;
@@ -449,15 +452,19 @@ class NumericInput extends Component
         if (this._inputFocus) {
             this.refsInput.focus()
 
-            // Restore selectionStart (if any)
-            if (this.state.selectionStart || this.state.selectionStart === 0) {
-                this.refsInput.selectionStart = this.state.selectionStart
-            }
+            if (!this._onFocusReceived || this.props.restoreOnFocus) {
+                // Restore selectionStart (if any)
+                if (this.state.selectionStart || this.state.selectionStart === 0) {
+                    this.refsInput.selectionStart = this.state.selectionStart
+                }
 
-            // Restore selectionEnd (if any)
-            if (this.state.selectionEnd || this.state.selectionEnd === 0) {
-                this.refsInput.selectionEnd = this.state.selectionEnd
+                // Restore selectionEnd (if any)
+                if (this.state.selectionEnd || this.state.selectionEnd === 0) {
+                    this.refsInput.selectionEnd = this.state.selectionEnd
+                }
             }
+            // Reset flag
+            this._onFocusReceived = false;
         }
 
         this.checkValidity()
@@ -849,7 +856,7 @@ class NumericInput extends Component
 
         let {
             // These are ignored in rendering
-            step, min, max, precision, parse, format, mobile, snap, componentClass,
+            step, min, max, precision, restoreOnFocus, parse, format, mobile, snap, componentClass,
             value, type, style, defaultValue, onInvalid, onValid, strict, noStyle,
 
             // The rest are passed to the input
@@ -1089,6 +1096,7 @@ class NumericInput extends Component
                 onFocus: (...args) => {
                     args[0].persist();
                     this._inputFocus = true;
+                    this._onFocusReceived = true;
                     const val = this._parse(args[0].target.value);
                     this.setState({
                         value: val,
