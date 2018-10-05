@@ -792,7 +792,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    },
 	                    type: 'text',
-	                    style: noStyle ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, this._inputFocus ? css['input:focus'] : {})
+	                    style: noStyle ? null : _extends({}, css.input, !hasFormControl && !style.input ? css['input:not(.form-control)'] : {}, this._inputFocus ? css['input:focus'] : {})
 	                }, rest),
 	                btnUp: {
 	                    onMouseEnter: undefined,
@@ -1231,7 +1231,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        fontSize: 'inherit'
 	    },
 
-	    // The input with bootstrap class
+	    // The input without bootstrap class
 	    'input:not(.form-control)': {
 	        border: '1px solid #ccc',
 	        borderRadius: 2,

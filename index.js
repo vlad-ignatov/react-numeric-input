@@ -534,7 +534,7 @@ module.exports =
 	                        }
 	                    },
 	                    type: 'text',
-	                    style: noStyle ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, this._inputFocus ? css['input:focus'] : {})
+	                    style: noStyle ? null : _extends({}, css.input, !hasFormControl && !style.input ? css['input:not(.form-control)'] : {}, this._inputFocus ? css['input:focus'] : {})
 	                }, rest),
 	                btnUp: {
 	                    onMouseEnter: undefined,
