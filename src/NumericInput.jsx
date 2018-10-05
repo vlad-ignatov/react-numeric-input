@@ -270,7 +270,7 @@ class NumericInput extends Component
             fontSize    : 'inherit'
         },
 
-        // The input with bootstrap class
+        // The input without bootstrap class
         'input:not(.form-control)': {
             border           : '1px solid #ccc',
             borderRadius     : 2,
@@ -894,7 +894,7 @@ class NumericInput extends Component
                 style: noStyle ? null : Object.assign(
                     {},
                     css.input,
-                    !hasFormControl ?
+                    !hasFormControl && !style.input ?
                         css['input:not(.form-control)'] :
                         {},
                     this._inputFocus ? css['input:focus'] : {}
