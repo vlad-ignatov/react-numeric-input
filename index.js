@@ -73,7 +73,7 @@ module.exports =
 	var KEYCODE_DOWN = 40;
 	var IS_BROWSER = typeof document != 'undefined';
 	var RE_NUMBER = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
-	var RE_INCOMPLETE_NUMBER = /^([+-]|\.0*|[+-]\.0*|[+-]?\d+\.)?$/;
+	var RE_INCOMPLETE_NUMBER = /^([+-]|[0-9]*\.0*|[+-]\.0*|[+-]?\d+\.)?$/;
 
 	function addClass(element, className) {
 	    if (element.classList) {
@@ -804,7 +804,7 @@ module.exports =
 	    value: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
 	    defaultValue: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
 	    strict: _propTypes2.default.bool,
-	    componentClass: _propTypes2.default.string,
+	    componentClass: _propTypes2.default.oneOfType([_propTypes2.default.func, _propTypes2.default.string]),
 	    mobile: function mobile(props, propName) {
 	        var prop = props[propName];
 	        if (prop !== true && prop !== false && prop !== 'auto' && typeof prop != 'function') {
