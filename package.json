@@ -10,7 +10,7 @@
     "build": "webpack --config ./build_config/main.js",
     "build-all": "npm run build && npm run build-dist-min && npm run build-examples",
     "test": "karma start",
-    "test:e2e": "node ./selenium-download.js && ./node_modules/nightwatch/bin/nightwatch"
+    "test:e2e": "node ./selenium-download.js && node ./node_modules/nightwatch/bin/nightwatch"
   },
   "repository": {
     "type": "git",
