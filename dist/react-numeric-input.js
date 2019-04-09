@@ -1082,7 +1082,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
 	    defaultValue: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string]),
 	    strict: _propTypes2.default.bool,
-	    componentClass: _propTypes2.default.string,
+	    componentClass: _propTypes2.default.oneOfType([_propTypes2.default.func, _propTypes2.default.string]),
 	    mobile: function mobile(props, propName) {
 	        var prop = props[propName];
 	        if (prop !== true && prop !== false && prop !== 'auto' && typeof prop != 'function') {
