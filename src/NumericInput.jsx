@@ -460,6 +460,13 @@ class NumericInput extends Component
             }
         }
 
+        // if readOnly or disabled props were just set to true stop() increase/decrease interval and blur() the input
+        // check if current readOnly or disabled props are true and both previous are false
+        if ((this.props.readOnly || this.props.disabled) && !prevProps.readOnly && !prevProps.disabled) {
+            this.stop();
+            this.refsInput.blur();
+        }
+
         this.checkValidity()
     }
 
