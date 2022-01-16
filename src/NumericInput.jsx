@@ -422,7 +422,7 @@ class NumericInput extends Component
     /**
      * Save the input selection right before rendering
      */
-    componentWillUpdate(): void
+    UNSAFE_componentWillUpdate(): void
     {
         this.saveSelection()
     }
